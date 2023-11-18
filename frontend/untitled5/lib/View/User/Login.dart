@@ -53,7 +53,7 @@ class LoginPage extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => HomePage()),
                         );                      },
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.black, // Change the button color to teal
+                        primary: Colors.teal, // Change the button color to teal
                         padding: EdgeInsets.symmetric(horizontal: 40.0),
                       ),
                       child: Text('Se connecter'),
