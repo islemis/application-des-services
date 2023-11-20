@@ -36,6 +36,10 @@ public class UserServiceImp implements UserService {
             passwordEncoder.encode(user.getPassword()),
             Arrays.asList(new Role("ROLE_USER"))
         );
+        userRepository.save(user1);
+        System.out.println("User saved: " + user1.toString());
+
+
         return user1;
     }
 

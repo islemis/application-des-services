@@ -4,17 +4,17 @@ import 'package:fluttertoast/fluttertoast.dart' ;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Model/user.dart';
-String VPNURL="http://localhost:8083/";
-Future <dynamic> register (first_name,last_name,email,password) async{
+String VPNURL="http://192.168.1.13:8083/";
+Future <User> register (firstName,lastName,email,password) async{
 String   url ="registration";
 final response = await http.post(
-  Uri.parse(VPNURL + 'user/register'),
+  Uri.parse(VPNURL + 'registration'),
   headers: <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   },
   body: jsonEncode(<String, dynamic>{
-    'first_name': first_name,
-    'last_name': last_name,
+    'firstName': firstName,
+    'lastName': lastName,
     'email': email,
     'password': password
   }),
@@ -30,14 +30,14 @@ if (response.statusCode == 201 || response.statusCode == 200) {
   print(u);
   return u;
 } else {
-  var mess = jsonDecode(response.body)['message'];
-  print(mess.runtimeType);
+ // var mess = jsonDecode(response.body)['message'];
+ // print(mess.runtimeType);
   // If the server did not return a 201 CREATED response,
   // then throw an exception.
 
   print("not logged");
   Fluttertoast.showToast(
-      msg: mess,
+      msg: "Problem de register ",
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 1,

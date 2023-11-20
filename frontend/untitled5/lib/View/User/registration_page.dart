@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:untitled5/Services/user/UserService.dart';
 
 import '../../Model/user.dart';
+import 'Login.dart';
 
 class RegistrationPage extends StatefulWidget {
   @override
@@ -13,41 +15,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  void _register() {
-    // Create a User object with the entered values
-    User newUser = User(
-      firstName: _firstNameController.text,
-      lastName: _lastNameController.text,
-      email: _emailController.text,
-      password: _passwordController.text,
-    );
-
-    // Add your registration logic here, e.g., send the user data to a server
-    print('User Registered: ${newUser.firstName} ${newUser.lastName}, ${newUser.email}, ${newUser.password}');
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.teal,
       appBar: AppBar(
         title: Text('Inscription'),
       ),
-      body: Container(
-        color: Colors.teal,
-        child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Card(
-            color: Colors.white,
-            elevation: 8.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Card(
+          color: Colors.white,
+          elevation: 8.0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Padding(
+            padding:  EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+           const     Text(
               'Inscription',
                     style: TextStyle(
                       fontSize: 40.0,
@@ -57,7 +47,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   TextField(
                     controller: _firstNameController,
-                    decoration: InputDecoration(labelText: 'Prénom'),
+                    decoration:const  InputDecoration(labelText: 'Prénom'),
                   ),
                   SizedBox(height: 16.0),
                   TextField(
@@ -77,7 +67,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ),
                   SizedBox(height: 32.0),
                   ElevatedButton(
-                    onPressed: _register,
+                    onPressed: () async {
+                      String firstName = _firstNameController.text;
+                      String lastName = _lastNameController.text;
+                      String email = _emailController.text;
+                      String password = _passwordController.text;
+                      User u = await register(firstName,lastName,email,password);
+                      print(u );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LoginPage()),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: Colors.teal, // Utilisez la même couleur que la page de connexion
                     ),
