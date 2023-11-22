@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import '../component/home/Home.dart';
 import 'registration_page.dart';
+import 'package:untitled5/Services/user/UserService.dart';
 
 class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,6 +37,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(height: 20.0),
                     TextField(
+                      controller: emailController,
                       decoration: InputDecoration(
                         labelText: 'Email',
                         prefixIcon: Icon(Icons.email),
@@ -39,6 +45,7 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(height: 16.0),
                     TextField(
+                      controller: passwordController,
                       obscureText: true,
                       decoration: InputDecoration(
                         labelText: 'Mot de passe',
@@ -47,11 +54,19 @@ class LoginPage extends StatelessWidget {
                     ),
                     SizedBox(height: 20.0),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );                      },
+                      onPressed: () async {
+                        String email = emailController.text;
+                        String password = passwordController.text;
+
+                        // Call the method from your UserService
+                        var response = await authenticateUser(email, password);
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+
+                      },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.teal, // Change the button color to teal
                         padding: EdgeInsets.symmetric(horizontal: 40.0),

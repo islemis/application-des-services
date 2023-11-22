@@ -1,0 +1,57 @@
+package com.example.demo.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.JwtAuthenticationResponse;
+import com.example.demo.model.LoginRequest;
+import com.example.demo.security.JwtTokenProvider;
+import com.example.demo.service.UserServiceImp;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final UserServiceImp userService;
+
+    @Autowired
+    public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserServiceImp userService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userService = userService;
+    }
+
+    @PostMapping("")
+    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        try {
+        	  Authentication authentication = authenticationManager.authenticate(
+                      new UsernamePasswordAuthenticationToken(
+                              loginRequest.getEmail(),
+                              loginRequest.getPassword()
+                      )
+              );
+
+              SecurityContextHolder.getContext().setAuthentication(authentication);
+
+              String jwt = jwtTokenProvider.generateToken(authentication);
+              return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+        } catch (Exception e) {
+            // Log the exception
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+      
+    }
+}

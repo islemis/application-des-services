@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,13 +18,12 @@ import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 
 @Service
-@Lazy
-public class UserServiceImp implements UserService {
+public class UserServiceImp implements UserService, UserDetailsService {
 
 	  private final UserRepository userRepository;
 	    private final BCryptPasswordEncoder passwordEncoder;
 
-	    public UserServiceImp(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+	    public UserServiceImp( UserRepository userRepository, @Lazy BCryptPasswordEncoder passwordEncoder) {
 	        this.userRepository = userRepository;
 	        this.passwordEncoder = passwordEncoder;
 	    }
