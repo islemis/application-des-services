@@ -47,7 +47,7 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
             String jwt = jwtTokenProvider.generateToken(authentication);
-
+//helloo
             // Fetch additional user data
             User user = userService.findByEmail(loginRequest.getEmail());
 
