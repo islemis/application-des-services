@@ -27,6 +27,23 @@ public class UserServiceImp implements UserService, UserDetailsService {
 	        this.userRepository = userRepository;
 	        this.passwordEncoder = passwordEncoder;
 	    }
+	    
+	    public User findByEmail(String email) {
+	        return userRepository.findByEmail(email);
+	                
+	    }  
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
     @Override
     public User save(User user) {
         User user1 = new User(
@@ -55,6 +72,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
             mapRolesToAuthorities(user.getRoles())
         );
     }
+ 
+
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
         return roles.stream()

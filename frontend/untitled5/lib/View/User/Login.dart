@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../component/home/Home.dart';
 import 'registration_page.dart';
 import 'package:untitled5/Services/user/UserService.dart';
@@ -60,6 +61,10 @@ class LoginPage extends StatelessWidget {
 
                         // Call the method from your UserService
                         var response = await authenticateUser(email, password);
+                        SharedPreferences.getInstance().then((prefs) {
+                          prefs.setString('accessToken', response.accessToken ?? '');
+
+                        });
 
                           Navigator.push(
                             context,

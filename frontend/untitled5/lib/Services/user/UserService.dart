@@ -1,9 +1,11 @@
 //
+import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart' ;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../../Model/user.dart';
+
 String VPNURL="http://192.168.1.15:8083/";
 //user registre
 Future <User> register (firstName,lastName,email,password) async{
@@ -93,3 +95,20 @@ Future<User> authenticateUser(String email, String password) async {
   }
 
 }
+
+void logout() {
+  // 1. Clear the stored token
+  clearAuthToken();
+
+}
+
+void clearAuthToken() {
+  // Clear the authentication token from local storage or cookies
+  // For example, in Flutter/Dart using shared_preferences package:
+  SharedPreferences.getInstance().then((prefs) {
+    prefs.remove('accesToken');
+  });
+}
+
+
+

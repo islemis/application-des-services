@@ -53,8 +53,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .apply(new JwtConfigurer(this.jwtTokenProvider))
                 .and()
+            .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout") // you can customize the redirect URL
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .deleteCookies("JSESSIONID")
+            .and()
             .csrf().disable();
     }
+
 
 
 

@@ -5,6 +5,7 @@ class User {
   String? email;
   String? password;
   List<Role>? roles;
+  String? accessToken ;
 
   User({
     this.id,
@@ -13,6 +14,7 @@ class User {
     this.email,
     this.password,
     this.roles,
+    this.accessToken
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -22,6 +24,7 @@ class User {
       lastName: json['last_name'],
       email: json['email'],
       password: json['password'],
+      accessToken: json['accessToken'],
       roles: json['roles'] != null
           ? List<Role>.from(json['roles'].map((role) => Role.fromJson(role)))
           : null,
@@ -31,7 +34,7 @@ class User {
 
   @override
   String toString() {
-    return 'User{id: $id, firstName: $firstName, lastName: $lastName, email: $email, password: $password, roles: $roles}';
+    return 'User{id: $id, firstName: $firstName, lastName: $lastName, email: $email, password: $password,accessToken: $accessToken, roles: $roles}';
   }
 
   Map<String, dynamic> toJson() {
@@ -41,6 +44,7 @@ class User {
       'last_name': lastName,
       'email': email,
       'password': password,
+      'accesToken': accessToken,
       'roles': roles?.map((role) => role.toJson()).toList(),
     };
   }

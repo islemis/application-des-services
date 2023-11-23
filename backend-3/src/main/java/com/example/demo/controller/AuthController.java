@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.JwtAuthenticationResponse;
 import com.example.demo.model.LoginRequest;
+import com.example.demo.model.User;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserServiceImp;
 
@@ -36,22 +37,36 @@ public class AuthController {
     @PostMapping("")
     public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
         try {
-        	  Authentication authentication = authenticationManager.authenticate(
-                      new UsernamePasswordAuthenticationToken(
-                              loginRequest.getEmail(),
-                              loginRequest.getPassword()
-                      )
-              );
+            Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                    loginRequest.getEmail(),
+                    loginRequest.getPassword()
+                )
+            );
 
-              SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-              String jwt = jwtTokenProvider.generateToken(authentication);
-              return ResponseEntity.ok(new JwtAuthenticationResponse(jwt));
+            String jwt = jwtTokenProvider.generateToken(authentication);
+
+            // Fetch additional user data
+            User user = userService.findByEmail(loginRequest.getEmail());
+
+            // Create the response with token and user details
+            JwtAuthenticationResponse response = new JwtAuthenticationResponse();
+            response.setAccessToken(jwt);
+            response.setUserId(user.getId());
+            response.setFirstName(user.getFirstName());
+            response.setLastName(user.getLastName());
+            response.setEmail(user.getEmail());
+
+            // Add other user-related fields as needed
+
+            return ResponseEntity.ok(response);
         } catch (Exception e) {
             // Log the exception
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-      
     }
+
 }
