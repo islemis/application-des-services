@@ -4,15 +4,19 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
+
+import com.example.demo.model.MyUser;
+import com.example.demo.service.UserServiceImp;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
@@ -26,7 +30,8 @@ public class JwtTokenProvider {
 
     @Value("${jwt.secret}")
     private String secret;
-
+    @Autowired
+    private UserServiceImp userService;
     @Value("${jwt.expiration}")
     private Long expiration;
 
@@ -36,13 +41,21 @@ public class JwtTokenProvider {
         this.secret = secret;
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
-
     public String generateToken(Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        Map<String, Object> claims = new HashMap<>();
-        // Add additional claims if needed
-        return createToken(claims, userDetails.getUsername());
+        UserDetails userDetails =  (UserDetails) authentication.getPrincipal();
+        String email = userDetails.getUsername();
+
+
+
+            // Get the user ID (assuming you have a method to retrieve it from the user details)
+            Long userId = userService.findByEmail(email).getId() ; 
+
+            Map<String, Object> claims = new HashMap<>();
+            claims.put("userId", userId);
+
+            return createToken(claims, email);
     }
+
 
     private String createToken(Map<String, Object> claims, String subject) {
         Date now = new Date();
@@ -77,11 +90,16 @@ public class JwtTokenProvider {
     public UserDetails getUserDetailsFromToken(String token) {
         Claims claims = getAllClaimsFromToken(token);
         String username = claims.getSubject();
-        List<GrantedAuthority> authorities = Arrays.stream(claims.get("roles").toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+
+        // Retrieve the userId claim
+        Long userId = claims.get("userId", Long.class);
+
+        // Create authorities as needed
+        List<GrantedAuthority> authorities = new ArrayList<>();
+
         return new User(username, "", authorities);
     }
+
 
     private Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();

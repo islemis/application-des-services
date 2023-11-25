@@ -50,7 +50,7 @@ dev_dependencies:
 
   flutter_nice_ui: ^0.0.9
   google_fonts: ^4.0.3
-
+  colorfilter_generator: ^0.0.8
 
   # add this line to your dependencies
   fluttertoast: ^8.2.4

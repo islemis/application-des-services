@@ -16,7 +16,8 @@ public class Role {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	
+    public static final String DEFAULT_ROLE = "user";
+
 	public Role() {
 		
 	}

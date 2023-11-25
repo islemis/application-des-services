@@ -44,11 +44,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
+    
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/registration", "/api/auth").permitAll()
+                .antMatchers("/registration", "/api/auth","/services","/services/{id}","/image","/image/get/{imageName}","/image/upload","/services/addService").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(this.jwtTokenProvider))
