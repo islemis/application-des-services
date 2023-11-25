@@ -11,6 +11,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -19,10 +21,12 @@ import javax.persistence.UniqueConstraint;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 @Entity
 @Table(name = "my_user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
-public class MyUser implements UserDetails {
+public class MyUser  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,16 +41,38 @@ public class MyUser implements UserDetails {
     private String email;
 
     private String password;
+   private String tel   ;
 
+
+	private String diplome ;
+    
+    private String adresseDomicile ;
+    
+    private String adresseTravail ;
+    
+    
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Service> services;
+    
+    
+    
 
-
-
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Image> images;
+    
+    @ManyToMany
+    @JoinTable(
+        name = "my_user_categories",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private Set<Category> categories;
+ 
+    
+    
     public MyUser() {
 
     }
@@ -59,7 +85,9 @@ public class MyUser implements UserDetails {
         this.password = password;
         this.role = role != null ? role : new Role(Role.DEFAULT_ROLE);
     }
-
+  
+    
+    
     public Long getId() {
         return id;
     }
@@ -67,7 +95,13 @@ public class MyUser implements UserDetails {
     public void setId(Long id) {
         this.id = id;
     }
+    public String getTel() {
+	return tel;
+}
 
+public void setTel(String tel) {
+	this.tel = tel;
+}
     public String getFirstName() {
         return firstName;
     }
@@ -100,6 +134,59 @@ public class MyUser implements UserDetails {
         this.password = password;
     }
 
+    public String getDiplome() {
+    	return diplome;
+    }
+
+    public void setDiplome(String diplome) {
+    	this.diplome = diplome;
+    }
+
+    public String getAdresseDomicile() {
+    	return adresseDomicile;
+    }
+
+    public void setAdresseDomicile(String adresseDomicile) {
+    	this.adresseDomicile = adresseDomicile;
+    }
+
+    public String getAdresseTravail() {
+    	return adresseTravail;
+    }
+
+    public void setAdresseTravail(String adresseTravail) {
+    	this.adresseTravail = adresseTravail;
+    }
+    
+    
+    
+    
+    
+    
+    
+ 
+    
+    
+    
+public Set<Category> getCategories() {
+    return categories;
+}
+
+public void setCategories(Set<Category> categories) {
+    this.categories = categories;
+}
+
+ 
+
+	public Set<Image> getImages() {
+		return images;
+	}
+
+	public void setImages(Set<Image> images) {
+		this.images = images;
+	}
+
+	
     public Set<Service> getServices() {
         return services;
     }
@@ -116,39 +203,5 @@ public class MyUser implements UserDetails {
         this.role = role;
     }
 
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
-	@Override
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		// TODO Auto-generated method stub
-		return false;
-	}
 }

@@ -14,9 +14,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.demo.model.Category;
 import com.example.demo.model.Image;
 import com.example.demo.model.MyUser;
 import com.example.demo.model.Service;
+import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ServiceRepository;
 import com.example.demo.repository.StorageRepository;
 import com.example.demo.service.UserServiceImp;
@@ -26,6 +28,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 	@RestController
@@ -39,7 +42,8 @@ import java.util.Set;
 		private  StorageRepository storageRepository;
 		@Autowired
 		private  UserServiceImp userService;
-		    
+		@Autowired
+		private  CategoryRepository CategoryRepository;
 		   
 		    @GetMapping
 		    public List<Service> getAllServices() {
@@ -59,9 +63,10 @@ import java.util.Set;
 		        // Set the date
 		        service.setDate(new Date());
 service.setImages(service.getImages());
+service.setCategories(service.getCategories());
 		        // Get the currently authenticated user
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	  UserDetails userDetails =  (UserDetails) authentication.getPrincipal();
+	  UserDetails userDetails =   (UserDetails) authentication.getPrincipal();
       String email = userDetails.getUsername();
     MyUser  currentUser=userService.findByEmail(email);
 		        // Set the user for the service
@@ -74,29 +79,21 @@ image.forEach(a->{ a.setService(s);
 
 	});
 
-	
+Set<Category> categories=s.getCategories();
+Set<Service> services= new HashSet<>();
+services.add(service);
+
+categories.forEach(x->{x.setServices(services);
+
+CategoryRepository.save(x);
+	});
 
 		        // Save the service
 		        return ResponseEntity.ok("ok") ;
 		    }
 		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-/*
-		    @PostMapping
 
-		    public Service saveService(@RequestBody Service service) {
-		    	service.setDate(new Date());
-		        return serviceRepository.save(service);
-		    }*/
 		    
-		    @CrossOrigin(origins = "http://localhost:4200")
 
 		    @DeleteMapping("/{id}")
 		    public void deleteService(@PathVariable Long id) {

@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
 
 import lombok.Builder;
@@ -20,23 +21,46 @@ import javax.persistence.Table;
 @Builder
 public  class Image {
 	 @Id
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-
+	 @GeneratedValue(strategy = GenerationType.IDENTITY)
 	 private Long id;
-
+	 
     @Column(name = "name")
     private String name;
     
     @Column(name = "type")
-private String type ;
+    private String type ;
     @Lob
     @Column(name = "imagedata",length=1000)
-private byte [] imageData ;
-
+    private byte [] imageData ;
+    
     @ManyToOne
     @JoinColumn(name = "service_id")
     private Service service;
+    @JsonBackReference
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private MyUser user;
+    
+    public Image()
+    {};
+    
+    public Image( String name, String type, byte[] imageData) {
+        this.name = name;
+        this.type = type;
+        this.imageData = imageData;
+    }
+    public Image(Long id, String name, String type, byte[] imageData, Service service) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.imageData = imageData;
+        this.service = service;
+    }
+    
+    
+    
+    
     public Long getId() {
         return id;
     }
@@ -44,32 +68,6 @@ private byte [] imageData ;
     public void setId(Long id) {
         this.id = id;
     }
-
- 
-    public Service getService() {
-        return service;
-    }
-
-    public void setService(Service service) {
-        this.service = service;
-    }
-
-	  public Image( String name, String type, byte[] imageData) {
-	        this.name = name;
-	        this.type = type;
-	        this.imageData = imageData;
-	        this.service = service;
-	    }
-
-	  public Image(Long id, String name, String type, byte[] imageData, Service service) {
-	        this.id = id;
-	        this.name = name;
-	        this.type = type;
-	        this.imageData = imageData;
-	        this.service = service;
-	    }
-	  public Image() {
-	    }
 
 	public byte[] getImageData() {
 		return imageData;
@@ -94,6 +92,25 @@ private byte [] imageData ;
 	public void setType(String type) {
 		this.type = type;
 	}
+
+	public MyUser getUser() {
+		return user;
+	}
+
+	public void setUser(MyUser user) {
+		this.user = user;
+	}
+	
+    public Service getService() {
+        return service;
+    }
+
+    public void setService(Service service) {
+        this.service = service;
+    }
+	
+	
+	
 
 }
 

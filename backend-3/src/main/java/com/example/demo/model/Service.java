@@ -1,5 +1,6 @@
 package com.example.demo.model;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -9,11 +10,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 
@@ -49,11 +54,24 @@ public class Service {
 		   @ManyToOne
 		    @JoinColumn(name = "user_id")
 		    private MyUser user;
-
+		   @ManyToMany
+		    @JoinTable(
+		        name = "service_category",
+		        joinColumns = @JoinColumn(name = "service_id"),
+		        inverseJoinColumns = @JoinColumn(name = "category_id"))
+		    private Set<Category> categories = new HashSet<>();
 		    
 
 
-		    public MyUser getUser() {
+		    public Set<Category> getCategories() {
+			return categories;
+		}
+
+		public void setCategories(Set<Category> categories) {
+			this.categories = categories;
+		}
+
+			public MyUser getUser() {
 		        return user;
 		    }
 
