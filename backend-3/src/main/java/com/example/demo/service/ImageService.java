@@ -11,7 +11,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ImageService {
@@ -21,18 +24,41 @@ public class ImageService {
     
     
     
-    public ResponseEntity<String> uploadImage(MultipartFile file) throws IOException {
-        imageDataRepository.save(Image.builder()
-                .name(file.getOriginalFilename())
-                .type(file.getContentType())
-                .imageData(ImageUtil.compressImage(file.getBytes())).build());
+    public ResponseEntity<String> uploadImage(MultipartFile[] files,com.example.demo.model.Service service) throws IOException {
+    	 String message="\"Images uploaded successfully: \"";
+    	   for (MultipartFile file : files) {
+    	        imageDataRepository.save(Image.builder()
+    	                .name(file.getOriginalFilename())
+    	                .type(file.getContentType())
+    	                .imageData(ImageUtil.compressImage(file.getBytes()))
+    	          .service(service)
+                  .build());
 
-        String message = "Image uploaded successfully: " + file.getOriginalFilename();
+    	       message =   file.getOriginalFilename();
+           }
+    	  
+
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+    /*
+    private void saveImages( List<String> imageFileNames) {
+        Set<Image> images = new HashSet<>();
+
+        for (String fileName : imageFileNames) {
+            Image image = Image.builder()
+                    .name(fileName)
+                    .type("image/jpeg") // Set the appropriate content type
+                    .imageData(ImageUtil.compressImage(fileName.getBytes()))
+                  
+
+            images.add(image);
+        }
+
+        // Set the images for the service
+        service.setImages(images);
+    }
     
-    
-    
+    */
     
     
     

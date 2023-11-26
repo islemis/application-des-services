@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Image;
+import com.example.demo.model.Service;
 import com.example.demo.service.ImageService;
 
 import java.io.IOException;
@@ -20,13 +21,15 @@ public class StorageController {
 
     @Autowired
     private ImageService imageDataService;
+    @Autowired
+    private ServiceController serviceController ;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        imageDataService.uploadImage(file);
-        String message = "Image uploaded successfully: " + file.getOriginalFilename();
+    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile[] files,@RequestParam("id")  Long id)throws IOException {
+        imageDataService.uploadImage(files,serviceController.getServiceById(id));
+       
         return ResponseEntity.status(HttpStatus.OK)
-                .body(message);
+                .body("ok");
     }
 
     @GetMapping("/info/{name}")
