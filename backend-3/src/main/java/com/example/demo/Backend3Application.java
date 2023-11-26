@@ -5,6 +5,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.example.demo", "com.example.demo.config"})
 
@@ -14,5 +16,11 @@ public class Backend3Application {
 		
 		SpringApplication.run(Backend3Application.class, args);
 	}
+	  @Bean
 
+	  public ObjectMapper getObjectMapper() {
+
+	    return new ObjectMapper();
+
+	  }
 }

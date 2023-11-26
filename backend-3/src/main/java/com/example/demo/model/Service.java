@@ -49,8 +49,9 @@ public class Service {
 		    @Column(name = "adresse")
 		    private String adresse;
 		    
-		   /* @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
-		    private Set<Image> images;*/
+		    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+		    private Set<Image> images;
+		    
 		   @ManyToOne
 		    @JoinColumn(name = "user_id")
 		    private MyUser user;
@@ -78,16 +79,17 @@ public class Service {
 		    public void setUser(MyUser user) {
 		        this.user = user;
 		    }
-/*
-		    // Getters et Setters pour les images
-		    public Set<Image> getImages() {
-		        return images;
-		    }
 
-		    public void setImages(Set<Image> images) {
-		        this.images = images;
-		    }
-		 */
+		  
+		 
+		public Set<Image> getImages() {
+				return images;
+			}
+
+			public void setImages(Set<Image> images) {
+				this.images = images;
+			}
+
 		public Long getIdService() {
 			return idService;
 		}

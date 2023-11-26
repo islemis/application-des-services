@@ -30,6 +30,18 @@ public class ImageService {
         String message = "Image uploaded successfully: " + file.getOriginalFilename();
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     @Transactional
     public Image getInfoByImageByName(String name) {
         Optional<Image> dbImage = imageDataRepository.findByName(name);
