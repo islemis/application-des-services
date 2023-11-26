@@ -75,7 +75,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 	public MyUser save(MyUser user) {
 		   // Get or create the role with the name "user"
         Role userRole = RoleRepository.findByName(Role.DEFAULT_ROLE);
-        user.setImages(user.getImages());
+      //  user.setImages(user.getImages());
 
         // Set the obtained role to the user
         user.setRole(userRole);
@@ -90,9 +90,9 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
         return savedUser;
 	}
-	/*
+	
 	//UpdateUser
-
+/*
 	public MyUser updateMyUser(Long userId, MyUser updatedUserData) {
 	    MyUser existingUser = userRepository.findById(userId)
 	            .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
@@ -100,7 +100,6 @@ public class UserServiceImp implements UserService, UserDetailsService {
 	    // Mettez à jour les champs nécessaires
 	    existingUser.setFirstName(updatedUserData.getFirstName());
 	    existingUser.setLastName(updatedUserData.getLastName());
-	    existingUser.setEmail(updatedUserData.getEmail());
 	    existingUser.setDiplome(updatedUserData.getDiplome());
 	    existingUser.setAdresseDomicile(updatedUserData.getAdresseDomicile());
 	    existingUser.setAdresseTravail(updatedUserData.getAdresseTravail());
@@ -120,8 +119,8 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
 	    return userRepository.save(existingUser);
 	}
-
-	*/
+*/
+	
 	
 	
 	

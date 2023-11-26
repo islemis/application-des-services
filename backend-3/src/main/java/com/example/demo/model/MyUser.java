@@ -1,6 +1,5 @@
 package com.example.demo.model;
 
-import java.util.Collection;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,10 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 
 @Entity
@@ -61,9 +57,9 @@ public class MyUser  {
     
     
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    /*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Image> images;
-    
+    */
     @ManyToMany
     @JoinTable(
         name = "my_user_categories",
@@ -176,7 +172,7 @@ public void setCategories(Set<Category> categories) {
     this.categories = categories;
 }
 
- 
+ /*
 
 	public Set<Image> getImages() {
 		return images;
@@ -186,7 +182,7 @@ public void setCategories(Set<Category> categories) {
 		this.images = images;
 	}
 
-	
+	*/
     public Set<Service> getServices() {
         return services;
     }

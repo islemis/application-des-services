@@ -62,7 +62,7 @@ import java.util.Set;
 		    public ResponseEntity<?> saveService(@RequestBody Service service) {
 		        // Set the date
 		        service.setDate(new Date());
-service.setImages(service.getImages());
+//service.setImages(service.getImages());
 service.setCategories(service.getCategories());
 		        // Get the currently authenticated user
 	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -72,12 +72,12 @@ service.setCategories(service.getCategories());
 		        // Set the user for the service
 		        service.setUser(currentUser); 
 Service s=serviceRepository.save(service);
-
+/*
 Set<Image> image=s.getImages();
 image.forEach(a->{ a.setService(s);
 	storageRepository.save(a);
 
-	});
+	});*/
 
 Set<Category> categories=s.getCategories();
 Set<Service> services= new HashSet<>();

@@ -1,116 +1,30 @@
 package com.example.demo.model;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.databind.annotation.JsonPOJOBuilder;
-
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table(name = "Images")
-
+@Table(name = "images")
+@Data
 @Builder
-public  class Image {
-	 @Id
-	 @GeneratedValue(strategy = GenerationType.IDENTITY)
-	 private Long id;
-	 
-    @Column(name = "name")
-    private String name;
-    
-    @Column(name = "type")
-    private String type ;
-    @Lob
-    @Column(name = "imagedata",length=1000)
-    private byte [] imageData ;
-    
-    @ManyToOne
-    @JoinColumn(name = "service_id")
-    private Service service;
-    @JsonBackReference
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private MyUser user;
-    
-    public Image()
-    {};
-    
-    public Image( String name, String type, byte[] imageData) {
-        this.name = name;
-        this.type = type;
-        this.imageData = imageData;
-    }
-    public Image(Long id, String name, String type, byte[] imageData, Service service) {
-        this.id = id;
-        this.name = name;
-        this.type = type;
-        this.imageData = imageData;
-        this.service = service;
-    }
-    
-    
-    
-    
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-	public byte[] getImageData() {
-		return imageData;
-	}
-
-	public void setImageData(byte[] imageData) {
-		this.imageData = imageData;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getType() {
-		return type;
-	}
-
-	public void setType(String type) {
-		this.type = type;
-	}
-
-	public MyUser getUser() {
-		return user;
-	}
-
-	public void setUser(MyUser user) {
-		this.user = user;
-	}
-	
-    public Service getService() {
-        return service;
-    }
-
-    public void setService(Service service) {
-        this.service = service;
-    }
-	
-	
+@NoArgsConstructor
+@AllArgsConstructor
+public class Image {
 	
 
+	    @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private Long id;
+
+	    private String name;
+
+	    private String type;
+
+	    @Lob
+	    @Column(name = "imagedata", length = 1000)
+	    private byte[] imageData;
+	
 }
-
