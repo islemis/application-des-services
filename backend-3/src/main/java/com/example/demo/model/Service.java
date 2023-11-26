@@ -133,6 +133,13 @@ public class Service {
 			this.adresse = adresse;
 		}
 
+		@Override
+		public String toString() {
+			return "Service [idService=" + idService + ", titre=" + titre + ", price=" + price + ", description="
+					+ description + ", details=" + details + ", date=" + date + ", adresse=" + adresse + "]";
+		}
+
+		
 	
 
 	

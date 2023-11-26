@@ -15,6 +15,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.example.demo.dto.CategoryDto;
+import com.example.demo.dto.ImageDto;
+import com.example.demo.dto.MyUserDto;
+import com.example.demo.dto.ServiceDto;
 import com.example.demo.model.Category;
 import com.example.demo.model.Image;
 import com.example.demo.model.MyUser;
@@ -24,15 +28,14 @@ import com.example.demo.repository.ServiceRepository;
 import com.example.demo.repository.StorageRepository;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.UserServiceImp;
-import com.example.demo.util.ImageUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -66,10 +69,48 @@ import java.util.Set;
 		    //getServiceById
 
 		    @GetMapping("/{id}")
-		    public ResponseEntity<Service> getServiceById(@PathVariable Long id) {
-		        Service service = serviceRepository.findById(id)
-		                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found with id " + id));
-		        return ResponseEntity.ok(service);
+		    public ServiceDto getServiceById(@PathVariable Long id) {
+		        
+		            Service service = serviceRepository.findById(id)
+		                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found with id " + id));
+		            System.out.println(service.toString());
+		            ServiceDto servicedto=new ServiceDto();
+		          List  <ImageDto> imagedto= new ArrayList <>();
+		          List  <CategoryDto> categorydto= new ArrayList <>();
+
+		            MyUserDto userdto=new MyUserDto();
+		            servicedto.setIdService(id);
+		            servicedto.setTitre(service.getTitre());
+		            servicedto.setPrice(service.getPrice());
+		            servicedto.setAdresse(service.getAdresse());
+                    servicedto.setDescription(service.getDescription());
+                    servicedto.setDetails(service.getDetails());
+                    for(Image  image :service.getImages()  )
+                    {
+                    	imagedto.add(new ImageDto(image.getId(),image.getName(),image.getType()));
+                    	
+                    }
+                    servicedto.setImages(imagedto);
+
+                    userdto.setId(id);
+                    userdto.setFirstName(service.getUser().getFirstName());
+                    userdto.setLastName(service.getUser().getLastName());
+                    userdto.setEmail(service.getUser().getEmail());
+                    userdto.setDiplome(service.getUser().getDiplome());
+                    userdto.setAdresseDomicile(service.getUser().getAdresseDomicile());
+                    userdto.setAdresseTravail(service.getUser().getAdresseTravail());
+                    
+                   servicedto.setUser(userdto);
+                   
+                   for(Category  category :service.getCategories()  )
+                   {
+                	   categorydto.add(new CategoryDto(category.getId(), category.getName())) ;      
+                   	
+                   }
+                   servicedto.setCategory(categorydto);
+
+		            return servicedto;
+		      
 		    }
 
 
@@ -77,11 +118,9 @@ import java.util.Set;
 		    @PostMapping("/addService")
 		    public ResponseEntity<?> saveService(
 		            @RequestParam("service") String serviceJson,
-		            @RequestParam("file") MultipartFile file
+		            @RequestParam("file") MultipartFile[] file
 		    ) {
 		        try {
-		            ResponseEntity<String> imageResponse = imageDataService.uploadImage(file);
-		            String fileName = imageResponse.getBody(); // Assuming the file upload response contains the file name
 
 		            Service service = objectMapper.readValue(serviceJson, Service.class);
 		            service.setDate(new Date());
@@ -91,14 +130,15 @@ import java.util.Set;
 		            String email = userDetails.getUsername();
 		            MyUser currentUser = userService.findByEmail(email);
 		            service.setUser(currentUser);
-
 		            Service savedService = serviceRepository.save(service);
+		            saveCategories(savedService);
+
+		            ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, savedService);
 
 		            // Save images
-		            saveImages(savedService, fileName);
 
 		            // Save categories
-		            saveCategories(savedService);
+		            
 
 		            return ResponseEntity.ok("Service saved successfully");
 		        } catch (IOException e) {
@@ -118,16 +158,7 @@ import java.util.Set;
 		            CategoryRepository.save(category);
 		        });
 		    }	    
-		    private void saveImages(com.example.demo.model.Service  service, String fileName) {
-		        Image image = Image.builder()
-		                .name(fileName)
-		                .type("image/jpeg") // Set the appropriate content type
-		                .imageData(ImageUtil.compressImage(fileName.getBytes()))
-		                .service(service)
-		                .build();
 
-		        storageRepository.save(image);
-		    }
 		    
 		    
 		    
@@ -139,9 +170,9 @@ import java.util.Set;
 		    
 //deleteService
 		    @DeleteMapping("/{id}")
-		    public void deleteService(@PathVariable Long id) {
+		    public ResponseEntity<String> deleteService(@PathVariable Long id) {
 		        serviceRepository.deleteById(id);
-		    }
+		       return  ResponseEntity.ok("deleted successfully")	;	    }
 
 //UpdateService
 		    @PutMapping("/{id}")
@@ -167,53 +198,18 @@ import java.util.Set;
 		    
 		    
 		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    /*
-		    @PostMapping("/addService")
 
 		    
-		    public ResponseEntity<?> saveService(@RequestBody Service service) {
-		        // Set the date
-		        service.setDate(new Date());
-service.setImages(service.getImages());
-//service.setImages(service.getImages());
-service.setCategories(service.getCategories());
-// Get the currently authenticated user
-
-    	Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-  	  UserDetails userDetails =   (UserDetails) authentication.getPrincipal();
-        String email = userDetails.getUsername();
-      MyUser  currentUser=userService.findByEmail(email);
-  		        // Set the user for the service
-  		        service.setUser(currentUser);
-Service s=serviceRepository.save(service);
-/*
-Set<Image> image=s.getImages();
-image.forEach(a->{ a.setService(s);
-	storageRepository.save(a);
-	});
-	});
-Set<Category> categories=s.getCategories();
-Set<Service> services= new HashSet<>();
-services.add(service);
-categories.forEach(x->{x.setServices(services);
-CategoryRepository.save(x);
-	});
-		        // Save the service
-		        return ResponseEntity.ok("ok") ;
-		    }
 		    
-		    */
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+		    
+
 		    
 		    
 		    

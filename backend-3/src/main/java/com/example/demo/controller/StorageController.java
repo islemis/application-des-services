@@ -21,12 +21,10 @@ public class StorageController {
 
     @Autowired
     private ImageService imageDataService;
-    @Autowired
-    private ServiceController serviceController ;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile[] files,@RequestParam("id")  Long id)throws IOException {
-        imageDataService.uploadImage(files,serviceController.getServiceById(id));
+    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile[] files,@RequestParam("service")  Service service)throws IOException {
+        imageDataService.uploadImage(files,service);
        
         return ResponseEntity.status(HttpStatus.OK)
                 .body("ok");
