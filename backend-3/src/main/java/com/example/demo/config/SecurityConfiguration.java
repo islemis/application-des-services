@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/registration","/registration/{userId}", "/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService").permitAll()
+                .antMatchers("/registration","/registration/{userId}", "/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService","/services/UserServices").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(this.jwtTokenProvider))
