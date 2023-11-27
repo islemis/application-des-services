@@ -40,25 +40,7 @@ public class ImageService {
 
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
-    /*
-    private void saveImages( List<String> imageFileNames) {
-        Set<Image> images = new HashSet<>();
 
-        for (String fileName : imageFileNames) {
-            Image image = Image.builder()
-                    .name(fileName)
-                    .type("image/jpeg") // Set the appropriate content type
-                    .imageData(ImageUtil.compressImage(fileName.getBytes()))
-                  
-
-            images.add(image);
-        }
-
-        // Set the images for the service
-        service.setImages(images);
-    }
-    
-    */
     
     
     

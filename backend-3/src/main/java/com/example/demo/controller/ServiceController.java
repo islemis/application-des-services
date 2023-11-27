@@ -28,7 +28,8 @@ import com.example.demo.repository.ServiceRepository;
 import com.example.demo.repository.StorageRepository;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.UserServiceImp;
-
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.springframework.http.HttpStatus;
@@ -62,8 +63,15 @@ import java.util.Set;
 		
 		//getServices
 		    @GetMapping
-		    public List<Service> getAllServices() {
-		        return serviceRepository.findAll();
+		    public List<ServiceDto> getAllServices() {
+		        List<Service> liste= serviceRepository.findAll();
+		        List<ServiceDto> listeDto =new ArrayList<>();
+		        for(Service service:liste)
+		        {
+		        	listeDto.add(getServiceById(service.getIdService()));
+		        }
+		        return listeDto ;
+		        
 		    }
 		    
 		    //getServiceById
@@ -176,20 +184,42 @@ import java.util.Set;
 
 //UpdateService
 		    @PutMapping("/{id}")
-		    public ResponseEntity<Service> updateService(@PathVariable Long id, @RequestBody Service serviceDetails) {
+		    public ResponseEntity<?> updateService(@PathVariable Long id, @RequestParam("service") String serviceJson,
+		    		@RequestParam("file") MultipartFile[] file)
+ {
+	            Service serviceUpdate = new Service();
+
 		        Service service = serviceRepository.findById(id)
 		                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found with id " + id));
+				try {
+					serviceUpdate = objectMapper.readValue(serviceJson, Service.class);
+				} catch (JsonMappingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (JsonProcessingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
-		        service.setTitre(serviceDetails.getTitre());
-		        service.setPrice(serviceDetails.getPrice());
-		        service.setDescription(serviceDetails.getDescription());
-		        service.setDetails(serviceDetails.getDetails());
-		        service.setDate(serviceDetails.getDate());
-		        service.setAdresse(serviceDetails.getAdresse());
-		        service.setImages(serviceDetails.getImages());
+		        service.setTitre(serviceUpdate.getTitre());
+		        service.setPrice(serviceUpdate.getPrice());
+		        service.setDescription(serviceUpdate.getDescription());
+		        service.setDetails(serviceUpdate.getDetails());
+		        service.setDate(new Date());
+		        service.setAdresse(serviceUpdate.getAdresse());
+	            saveCategories(service);
 
+	            
+					try {
+						ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, service);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				
+				
 		        final Service updatedService = serviceRepository.save(service);
-		        return ResponseEntity.ok(updatedService);
+		        return ResponseEntity.ok("serviceUpdatet successfully");
 		    }
 
 		    
