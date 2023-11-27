@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
@@ -34,7 +33,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-    @Autowired
     public SecurityConfiguration(UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
         this.userDetailsService = userDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -49,7 +47,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/registration","/registration/{userId}", "/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService","/services/UserServices").permitAll()
+                .antMatchers("/MyUser","/MyUser/{userId}", "/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService"
+                		,"/services/UserServices" ,"/MyUser/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(this.jwtTokenProvider))

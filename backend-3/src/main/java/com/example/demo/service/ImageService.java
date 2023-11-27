@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Image;
+import com.example.demo.model.MyUser;
 import com.example.demo.repository.StorageRepository;
 import com.example.demo.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class ImageService {
     
     
     
-    public ResponseEntity<String> uploadImage(MultipartFile[] files,com.example.demo.model.Service service) throws IOException {
+    public ResponseEntity<String> uploadImage(MultipartFile[] files,com.example.demo.model.Service service,MyUser user) throws IOException {
     	 String message="\"Images uploaded successfully: \"";
     	   for (MultipartFile file : files) {
     	        imageDataRepository.save(Image.builder()
@@ -32,6 +33,7 @@ public class ImageService {
     	                .type(file.getContentType())
     	                .imageData(ImageUtil.compressImage(file.getBytes()))
     	          .service(service)
+    	          .user(user)
                   .build());
 
     	       message =   file.getOriginalFilename();

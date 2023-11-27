@@ -17,6 +17,12 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+@Getter
+@Setter
+@NoArgsConstructor
 
 
 
@@ -54,12 +60,10 @@ public class MyUser  {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Service> services;
     
-    
-    
 
-    /*@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private Set<Image> images;
-    */
+    
     @ManyToMany
     @JoinTable(
         name = "my_user_categories",
@@ -69,9 +73,7 @@ public class MyUser  {
  
     
     
-    public MyUser() {
-
-    }
+    
 
     public MyUser(String firstName, String lastName, String email, String password, Role role) {
         super();
@@ -84,120 +86,6 @@ public class MyUser  {
   
     
     
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-    public String getTel() {
-	return tel;
-}
-
-public void setTel(String tel) {
-	this.tel = tel;
-}
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getDiplome() {
-    	return diplome;
-    }
-
-    public void setDiplome(String diplome) {
-    	this.diplome = diplome;
-    }
-
-    public String getAdresseDomicile() {
-    	return adresseDomicile;
-    }
-
-    public void setAdresseDomicile(String adresseDomicile) {
-    	this.adresseDomicile = adresseDomicile;
-    }
-
-    public String getAdresseTravail() {
-    	return adresseTravail;
-    }
-
-    public void setAdresseTravail(String adresseTravail) {
-    	this.adresseTravail = adresseTravail;
-    }
-    
-    
-    
-    
-    
-    
-    
- 
-    
-    
-    
-public Set<Category> getCategories() {
-    return categories;
-}
-
-public void setCategories(Set<Category> categories) {
-    this.categories = categories;
-}
-
- /*
-
-	public Set<Image> getImages() {
-		return images;
-	}
-
-	public void setImages(Set<Image> images) {
-		this.images = images;
-	}
-
-	*/
-    public Set<Service> getServices() {
-        return services;
-    }
-
-    public void setServices(Set<Service> services) {
-        this.services = services;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
+   
 
 }

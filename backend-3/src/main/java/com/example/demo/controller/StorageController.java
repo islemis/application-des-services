@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.Image;
+import com.example.demo.model.MyUser;
 import com.example.demo.model.Service;
 import com.example.demo.service.ImageService;
 
@@ -23,8 +24,8 @@ public class StorageController {
     private ImageService imageDataService;
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile[] files,@RequestParam("service")  Service service)throws IOException {
-        imageDataService.uploadImage(files,service);
+    public ResponseEntity<String> uploadImage(@RequestParam("image") MultipartFile[] files,@RequestParam("service")  Service service,@RequestParam("user")  MyUser user)throws IOException {
+        imageDataService.uploadImage(files,service,user);
        
         return ResponseEntity.status(HttpStatus.OK)
                 .body("ok");

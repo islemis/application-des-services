@@ -35,29 +35,27 @@ import java.util.List;
 import java.util.Set;
 
 
-
-
-
-
-
-
 	@RestController
 	@RequestMapping("/services")
 
 	public class ServiceController {
 
 		@Autowired
-		    private  ServiceRepository serviceRepository;
+	     private  ServiceRepository serviceRepository;
 		@Autowired
 		private  UserServiceImp userService;
 		@Autowired
 		private  CategoryRepository categoryRepository;
 		 @Autowired
+		private ObjectMapper objectMapper;
+	    @Autowired
+		 private ImageService imageDataService;
 
-		  private ObjectMapper objectMapper;
-		    @Autowired
-		    private ImageService imageDataService;
-
+		    
+		    
+		    
+		    
+		    
 		    
 			//getUserServices
 
@@ -142,7 +140,7 @@ import java.util.Set;
 		            Service savedService = serviceRepository.save(service);
 		           saveCategories(savedService);
 
-		            ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, savedService);
+		            ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, savedService,null);
 
 		            
 		            return ResponseEntity.ok("Service saved successfully");
@@ -208,7 +206,7 @@ import java.util.Set;
 
 	            
 					try {
-						ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, service);
+						ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, service,null);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

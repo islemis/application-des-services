@@ -1,4 +1,6 @@
 package com.example.demo.dto;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +19,8 @@ public class MyUserDto {
 	    private String password;
 	    private String email;
 	    private String lastName;
+		private List<CategoryDto>  category;
+	    private List<ImageDto> images ;
+
 
 }

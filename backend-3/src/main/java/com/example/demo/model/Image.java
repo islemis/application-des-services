@@ -33,5 +33,8 @@ public class Image {
 	    @ManyToOne
 	    @JoinColumn(name = "service_id")
 	    private Service service;
+	    @ManyToOne
+	    @JoinColumn(name = "user_id")
+	    private MyUser user;
 	
 }
