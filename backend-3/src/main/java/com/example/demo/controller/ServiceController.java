@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.example.demo.dto.ServiceDto;
 import com.example.demo.model.Category;
+import com.example.demo.model.Image;
 import com.example.demo.model.MyUser;
 import com.example.demo.model.Service;
 import com.example.demo.repository.CategoryRepository;
@@ -140,7 +141,7 @@ import java.util.Set;
 		            Service savedService = serviceRepository.save(service);
 		           saveCategories(savedService);
 
-		            ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, savedService,null);
+		           List<Image>   imageResponse = imageDataService.uploadImage(file, savedService,null);
 
 		            
 		            return ResponseEntity.ok("Service saved successfully");
@@ -206,7 +207,7 @@ import java.util.Set;
 
 	            
 					try {
-						ResponseEntity<String> imageResponse = imageDataService.uploadImage(file, service,null);
+						List<Image> imageResponse = imageDataService.uploadImage(file, service,null);
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -25,22 +26,24 @@ public class ImageService {
     
     
     
-    public ResponseEntity<String> uploadImage(MultipartFile[] files,com.example.demo.model.Service service,MyUser user) throws IOException {
+    public List<Image>  uploadImage(MultipartFile[] files,com.example.demo.model.Service service,MyUser user) throws IOException {
     	 String message="\"Images uploaded successfully: \"";
+    	 List<Image> imageList = new ArrayList<>();
+    	
     	   for (MultipartFile file : files) {
-    	        imageDataRepository.save(Image.builder()
+    		   Image savedImage =   imageDataRepository.save(Image.builder()
     	                .name(file.getOriginalFilename())
     	                .type(file.getContentType())
     	                .imageData(ImageUtil.compressImage(file.getBytes()))
     	          .service(service)
     	          .user(user)
                   .build());
+    	        imageList.add(savedImage);
 
-    	       message =   file.getOriginalFilename();
            }
     	  
 
-        return new ResponseEntity<>(message, HttpStatus.OK);
+        return imageList;
     }
 
     
