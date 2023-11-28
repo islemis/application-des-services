@@ -1,9 +1,10 @@
-import 'dart:html';
+
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled5/View/User/Login.dart';
-import 'package:untitled5/View/component/home/Home.dart';
+import 'package:untitled5/View/home/Home.dart';
+
 
 class SplashScreen extends StatefulWidget {
 
@@ -47,7 +48,7 @@ getToken()async {
         MaterialPageRoute(builder: (context) => LoginPage()),
       ):  Navigator.pushReplacement(
     context,
-    MaterialPageRoute(builder: (context) => HomePage()),
+    MaterialPageRoute(builder: (context) => LoginPage()),
   );
     });
   }

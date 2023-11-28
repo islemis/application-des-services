@@ -4,14 +4,14 @@ import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart' ;
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:untitled5/Services/env.dart';
 import '../../Model/user.dart';
 
-String VPNURL="http://192.168.1.15:8083/";
+
 //user registre
 Future <User> register (firstName,lastName,email,password) async{
-String   url ="registration";
 final response = await http.post(
-  Uri.parse(VPNURL + 'registration'),
+  Uri.parse(VPNURL + "MyUser/addUser"),
   headers: <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   },

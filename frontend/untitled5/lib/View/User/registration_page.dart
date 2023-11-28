@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:untitled5/Services/user/UserService.dart';
-
 import '../../Model/user.dart';
 import 'Login.dart';
 
@@ -15,6 +14,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -32,59 +32,100 @@ class _RegistrationPageState extends State<RegistrationPage> {
             borderRadius: BorderRadius.circular(10.0),
           ),
           child: Padding(
-            padding:  EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-           const     Text(
-              'Inscription',
-                    style: TextStyle(
-                      fontSize: 40.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.teal, // Change the text color to teal
+            padding: EdgeInsets.all(16.0),
+            child: Form(
+              key: _formKey,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Inscription',
+                      style: TextStyle(
+                        fontSize: 40.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.teal,
+                      ),
                     ),
-                  ),
-                  TextField(
-                    controller: _firstNameController,
-                    decoration:const  InputDecoration(labelText: 'Prénom'),
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: _lastNameController,
-                    decoration: InputDecoration(labelText: 'Nom'),
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: _emailController,
-                    decoration: InputDecoration(labelText: 'Email'),
-                  ),
-                  SizedBox(height: 16.0),
-                  TextField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(labelText: 'Mot de passe'),
-                  ),
-                  SizedBox(height: 32.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      String firstName = _firstNameController.text;
-                      String lastName = _lastNameController.text;
-                      String email = _emailController.text;
-                      String password = _passwordController.text;
-                      User u = await register(firstName,lastName,email,password);
-                      print(u );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => LoginPage()),
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.teal, // Utilisez la même couleur que la page de connexion
+                    TextFormField(
+                      controller: _firstNameController,
+                      decoration: InputDecoration(labelText: 'Nom'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Le nom est requis';
+                        } else if (value.length > 10) {
+                          return 'Le nom ne doit pas dépasser 10 caractères';
+                        }
+                        return null;
+                      },
                     ),
-                    child: Text('S\'inscrire'),
-                  ),
-                ],
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _lastNameController,
+                      decoration: InputDecoration(labelText: 'Prénom'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Le prénom est requis';
+                        } else if (value.length > 10) {
+                          return 'Le prénom ne doit pas dépasser 10 caractères';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _emailController,
+                      decoration: InputDecoration(labelText: 'Email'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'L\'email est requis';
+                        } else if (!RegExp(r"^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                            .hasMatch(value)) {
+                          return 'Veuillez saisir une adresse email valide';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 16.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: InputDecoration(labelText: 'Mot de passe'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Le mot de passe est requis';
+                        } else if (value.length < 8 || value.length > 14) {
+                          return 'Le mot de passe doit avoir entre 8 et 14 caractères';
+                        } else if (!RegExp(r"^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$")
+                            .hasMatch(value)) {
+                          return 'Le mot de passe doit contenir des chiffres et des lettres';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 32.0),
+                    ElevatedButton(
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          String firstName = _firstNameController.text;
+                          String lastName = _lastNameController.text;
+                          String email = _emailController.text;
+                          String password = _passwordController.text;
+                          User u = await register(firstName, lastName, email, password);
+                          print(u);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => LoginPage()),
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.teal,
+                      ),
+                      child: Text('S\'inscrire'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

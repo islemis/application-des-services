@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../component/home/Home.dart';
+import '../home/Home.dart';
 import 'registration_page.dart';
 import 'package:untitled5/Services/user/UserService.dart';
 
