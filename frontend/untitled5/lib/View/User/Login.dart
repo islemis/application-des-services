@@ -56,15 +56,15 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: 20.0),
                     ElevatedButton(
                       onPressed: () async {
-                        String email = emailController.text;
-                        String password = passwordController.text;
-
-                        // Call the method from your UserService
-                        var response = await authenticateUser(email, password);
-                        SharedPreferences.getInstance().then((prefs) {
-                          prefs.setString('accessToken', response.accessToken ?? '');
-
-                        });
+                        // String email = emailController.text;
+                        // String password = passwordController.text;
+                        //
+                        // // Call the method from your UserService
+                        // var response = await authenticateUser(email, password);
+                        // SharedPreferences.getInstance().then((prefs) {
+                        //   prefs.setString('accessToken', response.accessToken ?? '');
+                        //
+                        // });
 
                           Navigator.push(
                             context,

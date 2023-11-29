@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:untitled5/Model/offer/offer.dart';
+import 'package:untitled5/View/component/NavBar.dart';
+import 'package:untitled5/View/offer/CartOffre.dart';
 
+import '../../Services/Offer/OfferService.dart';
 import '../User/registration_page.dart';
-import '../component/offer/OfferDetailsPage.dart';
-
+import '../offer/OfferDetailsPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +17,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFF8F6E9), // Couleur beige plus claire
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal).copyWith(secondary: Colors.teal),
+        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal)
+            .copyWith(secondary: Colors.teal),
       ),
       home: HomePage(),
     );
@@ -23,12 +26,12 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+
         title: Text(
           'E-Service',
           style: TextStyle(
@@ -42,17 +45,19 @@ class HomePage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(0.0),
             child: Image.asset(
-              'assets/logo.png', // Remplacez par le chemin de votre image de logo
+              'assets/logo.png',
+              // Remplacez par le chemin de votre image de logo
               height: 30, // Ajustez la hauteur selon vos besoins
             ),
           ),
         ],
-        backgroundColor: Colors.white!, // Couleur bleue claire pour l'arrière-plan de l'appbar
+        backgroundColor: Colors
+            .white!, // Couleur bleue claire pour l'arrière-plan de l'appbar
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        /* Padding(
+          /* Padding(
             padding: const EdgeInsets.all(8.0),
             child: Container(
               decoration: BoxDecoration(
@@ -94,7 +99,8 @@ class HomePage extends StatelessWidget {
             child: Container(
               padding: EdgeInsets.all(6.0),
               decoration: BoxDecoration(
-                color: Colors.green[100], // Couleur de fond de la bande publicitaire
+                color: Colors.green[100],
+                // Couleur de fond de la bande publicitaire
                 borderRadius: BorderRadius.circular(6.0),
               ),
               child: Column(
@@ -151,88 +157,49 @@ class HomePage extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 8.0,
-                mainAxisSpacing: 8.0,
-              ),
-              itemCount: 2,
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) =>
-                            OfferDetailsPage(),
-                      ),
-                    );
-                  },
-                  child: Card(
-                    color: Colors.white,
-                    elevation: 2.0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Column(
-                      children: [
-                     /*   Image.asset(
-                          '${offers[index].imageUrl}',
-                          fit: BoxFit.cover,
-                          height: 120.0,
-                        ),*/
-                        SizedBox(height: 8.0),
-                        Text(
-                         "test ",
-                          style: TextStyle(
-                            fontSize: 16.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+              child: FutureBuilder(
+                  future: fetchOffers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child:
+                            CircularProgressIndicator(), // Show a loading indicator
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text(
+                            'Error: ${snapshot.error}'), // Show error if any
+                      );
+                    } else {
+                      List<Offer> offers = snapshot.data as List<Offer>;
+
+                      return GridView.builder(
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 8.0,
+                          mainAxisSpacing: 8.0,
                         ),
-                        SizedBox(height: 4.0),
-                        Text(
-                          "description",
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
+                        itemCount: offers.length,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      OfferDetailsPage(offer: offers[index]),
+                                ),
+                              );
+                            },
+                            child: CartOffre(offer: offers[index]),
+                          );
+                        },
+                      );
+                    }
+                  })),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Accueil',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle),
-            label: 'Ajouter',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profil',
-          ),
-        ],
-        selectedItemColor: Colors.green[700], // Couleur verte pour l'élément sélectionné dans la barre de navigation inférieure
-        unselectedItemColor: Colors.blue[500], // Couleur bleue pour les éléments non sélectionnés dans la barre de navigation inférieure
-        onTap: (int index) {
-          if (index == 1) {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => RegistrationPage()),
-            );
-          }
-        },
-      ),
+      bottomNavigationBar: NavBar()
     );
   }
 }

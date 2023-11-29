@@ -12,7 +12,7 @@ class OfferDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(offer!.titre!),
+        title: Text("offer!.titre!"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -33,7 +33,7 @@ class OfferDetailsPage extends StatelessWidget {
                 children: [
                   // Description
                   Text(
-                    offer!.description!,
+                    "offer!.description!",
                     style: TextStyle(fontSize: 15),
                   ),
                   SizedBox(height: 16.0), // Espacement entre la description et le bouton

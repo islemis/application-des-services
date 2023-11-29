@@ -3,9 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
+import 'package:untitled5/Services/env.dart';
+
+import '../../Model/offer/offer.dart';
 
 Future<void> addOffre( titre, categoriename, details, address, List images, prix, description,idcategorie) async {
-  var VPNURL = 'your_vpn_url'; // Replace with your VPN URL
+ // Replace with your VPN URL
 
   var request = http.MultipartRequest('POST', Uri.parse('$VPNURL/services/addService'));
   request.fields.addAll({
@@ -77,4 +80,27 @@ Future<void> addOffre( titre, categoriename, details, address, List images, prix
     );
     throw Exception('Failed to create annonce.');
   }
+}
+Future <dynamic> fetchOffers()async{
+
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // String? token = prefs.getString('token');
+
+  final response = await http.get(
+    Uri.parse('$VPNURL/services'),
+    headers: {
+     // 'Authorization': 'Bearer $token',
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = json.decode(utf8.decode(response.bodyBytes));
+    List<Offer> categories = jsonData.map((json) => Offer.fromJson(json)).toList();
+    return categories;
+  } else {
+    throw Exception("Can't get the value");
+  }
+
 }
