@@ -28,7 +28,7 @@ class _CartOffreState extends State<CartOffre> {
             Image.asset(
                           'assets/logo.png',
                           fit: BoxFit.cover,
-                          height: 120.0,
+                          height: 70.0,
                         ),
           SizedBox(height: 8.0),
           Text(
@@ -40,7 +40,7 @@ class _CartOffreState extends State<CartOffre> {
           ),
           SizedBox(height: 4.0),
           Text(
-            "description",
+            "à partir de"+ widget.offer!.price.toString()!??"",
             style: TextStyle(
               fontSize: 14.0,
               color: Colors.grey[600],

@@ -56,15 +56,15 @@ class LoginPage extends StatelessWidget {
                     SizedBox(height: 20.0),
                     ElevatedButton(
                       onPressed: () async {
-                        // String email = emailController.text;
-                        // String password = passwordController.text;
-                        //
+                       String email = emailController.text;
+                       String password = passwordController.text;
+
                         // // Call the method from your UserService
-                        // var response = await authenticateUser(email, password);
-                        // SharedPreferences.getInstance().then((prefs) {
-                        //   prefs.setString('accessToken', response.accessToken ?? '');
-                        //
-                        // });
+                         var response = await authenticateUser(email, password);
+                        SharedPreferences.getInstance().then((prefs) {
+                         prefs.setString('accessToken', response.accessToken ?? '');
+                         authenticateUser(email,password);
+                        });
 
                           Navigator.push(
                             context,
@@ -75,8 +75,15 @@ class LoginPage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         primary: Colors.teal, // Change the button color to teal
                         padding: EdgeInsets.symmetric(horizontal: 40.0),
+
                       ),
-                      child: Text('Se connecter'),
+                      child: Text(
+                        'Se connecter',
+                        style: TextStyle(
+                          color: Colors.white, // Change the text color to white or any color you prefer
+                        ),
+                      ),
+
                     ),
                     SizedBox(height: 10.0),
                     TextButton(

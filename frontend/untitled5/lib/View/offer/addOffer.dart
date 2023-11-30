@@ -1,15 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart'; // Import the image_picker package
+import 'dart:io'; // Import the dart:io package
+import 'package:fluttertoast/fluttertoast.dart'; // Import the fluttertoast package
+import 'package:http/http.dart' as http;
 import 'package:untitled5/Services/Offer/OfferService.dart';
 
+import '../../Model/offer/Category.dart';
 
 class AddOfferScreen extends StatelessWidget {
- AddOfferScreen ({super.key});
+  AddOfferScreen({super.key});
+
   final TextEditingController nomServiceController = TextEditingController();
   final TextEditingController adresseController = TextEditingController();
   final TextEditingController prixController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController detailsController = TextEditingController();
-List<dynamic> listimage=[];
+  List<File> listimage = []; // Use File type for the list of images
+
+
+  final List<Category> categories = [
+    Category(id: 1, name: 'Category 1'),
+    Category(id: 2, name: 'Category 2'),
+    // Add more categories as needed
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,10 +32,10 @@ List<dynamic> listimage=[];
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
-            color: Colors.green[400],
+            color: Colors.teal,
           ),
         ),
-        backgroundColor: Colors.blue[100],
+        backgroundColor: Colors.grey,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -55,41 +68,49 @@ List<dynamic> listimage=[];
                 labelText: 'Détails du Service',
               ),
               SizedBox(height: 16.0),
-              Container(
-                height: 200.0,
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Center(
-                  child: Text(
-                    'Espace pour l\'upload d\'image',
-                    style: TextStyle(color: Colors.grey),
+              GestureDetector(
+                onTap: () async {
+                  final pickedFile =
+                  await ImagePicker().pickImage(source: ImageSource.gallery)  ;
+                  if (pickedFile != null) {
+                    listimage.add(File(pickedFile.path));
+                  }
+                },
+                child: Container(
+                  height: 200.0,
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.grey),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: Center(
+                    child: Text(
+                      'Espace pour l\'upload d\'image',
+                      style: TextStyle(color: Colors.grey),
+                    ),
                   ),
                 ),
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
+                //  double prix = double.parse(prixController.text);
                   await addOffre(
-                    nomServiceController.text,
-                    adresseController.text,
-                    prixController.text,
-                    descriptionController.text,
+                   " nomServiceController.text",
+                 "   detailsController.text",
+                "    adresseController.text",
+                   33 ,
+                  "  descriptionController.text",
 
-                    listimage,
-                    detailsController.text,
-                      "",
-                      ""
                   );
                   // Add logic for submitting the service addition form
                 },
                 child: Text(
                   'Ajouter le Service',
-                  style: TextStyle(fontSize: 16.0),
+                  style: TextStyle(fontSize: 16.0,color: Colors.white),
+
                 ),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.green[400],
+                  primary: Colors.teal[400],
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
@@ -116,7 +137,7 @@ List<dynamic> listimage=[];
           borderRadius: BorderRadius.circular(10.0),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.green[400]!, width: 2.0),
+          borderSide: BorderSide(color: Colors.teal, width: 2.0),
           borderRadius: BorderRadius.circular(10.0),
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:untitled5/Model/offer/Category.dart';
 
 class Offer {
@@ -6,7 +8,7 @@ class Offer {
   Null? date;
   String? details;
   String? description;
-  int? price;
+  double? price;
   String? titre;
   List<Images>? images;
   User? user;

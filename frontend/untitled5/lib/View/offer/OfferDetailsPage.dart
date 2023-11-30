@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-
-
-import '../../../Model/offer/offer.dart';
+import '../../Model/offer/offer.dart';
 
 class OfferDetailsPage extends StatelessWidget {
-  final Offer? offer;
+  final Offer offer;
 
-  OfferDetailsPage({ this.offer});
+  OfferDetailsPage({required this.offer});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("offer!.titre!"),
+        title: Text(offer.titre.toString()),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -20,11 +18,11 @@ class OfferDetailsPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Image
-           /* Image.asset(
-              'assets/Image/${offer.}',
+            Image.asset(
+              'assets/Image/${offer.images}',
               width: 250,
               height: 150,
-            ),*/
+            ),
             SizedBox(width: 16.0), // Espace entre l'image et la description
             // Description et bouton "Postuler"
             Expanded(
@@ -33,7 +31,7 @@ class OfferDetailsPage extends StatelessWidget {
                 children: [
                   // Description
                   Text(
-                    "offer!.description!",
+                    offer.description.toString(),
                     style: TextStyle(fontSize: 15),
                   ),
                   SizedBox(height: 16.0), // Espacement entre la description et le bouton
