@@ -19,12 +19,21 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController detailsController = TextEditingController();
   List<File> listimage = [];
+  Category? selectedCategory;
 
-  final List<Category> categories = [
-    Category(id: 1, name: 'Category 1'),
-    Category(id: 2, name: 'Category 2'),
-    // Add more categories as needed
-  ];
+  List<Category> categories = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCategories().then((result) {
+      setState(() {
+        categories = result;
+      });
+    }).catchError((error) {
+      print('Error fetching categories: $error');
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +80,8 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                 labelText: 'Détails du Service',
               ),
               SizedBox(height: 16.0),
+              _buildCategoryDropdown(),
+              SizedBox(height: 16.0),
               Container(
                 height: 200.0,
                 decoration: BoxDecoration(
@@ -91,6 +102,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                     prixValue!,
                     descriptionController.text,
                     listimage,
+                    selectedCategory,
                   );
                   // Add logic for submitting the service addition form
                 },
@@ -131,6 +143,25 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
       ),
+    );
+  }
+
+  Widget _buildCategoryDropdown() {
+    return DropdownButton<Category>(
+      value: selectedCategory,
+      onChanged: (Category? value) {
+        setState(() {
+          selectedCategory = value;
+        });
+      },
+      items: categories.map<DropdownMenuItem<Category>>((Category category) {
+        return DropdownMenuItem<Category>(
+          value: category,
+          child: Text(category.name ?? ''),
+        );
+      }).toList(),
+      hint: Text('Select Category'),
+      isExpanded: true,
     );
   }
 

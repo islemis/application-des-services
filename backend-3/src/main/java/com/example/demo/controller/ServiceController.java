@@ -140,9 +140,13 @@ import javax.transaction.Transactional;
 		            //        @RequestHeader("Authorization") String authorizationHeader
 
 		    ) {
+	            System.out.println("hello");
+
 		        try {
 
 		            Service service = objectMapper.readValue(serviceJson, Service.class);
+		            System.out.println("hello2");
+
 		            service.setDate(new Date());
 		         //   UserDetails userDetails = jwtTokenProvider.getUserDetailsFromToken(token);
 		         /*   Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -155,19 +159,19 @@ import javax.transaction.Transactional;
 		            String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
 		            final String[] values = credentials.split(":", 2);
 		            String email = values[0];
-		            
-		            
-		            
-			        MyUser currentUser = userService.findByEmail(email);
+		              MyUser currentUser = userService.findByEmail(email);
 		            service.setUser(currentUser);*/
+		            
+			      
 		            Service savedService = serviceRepository.save(service);
+
 		           saveCategories(savedService);
 
 		           for (MultipartFile file : images) {
 		               String result = imageDataService.uploadImageToFileSystem(file, savedService);
 		               System.out.println(result);
 		           }
-		            
+
 		            return ResponseEntity.ok("Service saved successfully");
 		        } catch (IOException e) {
 		            // Handle exceptions appropriately (e.g., return an error response)

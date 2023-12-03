@@ -13,7 +13,7 @@ class Offer {
   String? titre;
   List<Images>? images;
   //User? user;
- // List<Category>? category;
+  List<Category>? category;
 
   Offer(
       {this.idService,
@@ -25,13 +25,13 @@ class Offer {
         this.titre,
         this.images,
         //this.user,
-       // this.category
+        this.category
   });
 
   Offer.fromJson(Map<String, dynamic> json) {
     idService = json['idService'];
     adresse = json['adresse'];
-    date = json['date'] != null ? DateTime.parse(json['date'].toString()) : null;
+    date = json['date'] != null ? DateTime.parse(json['date']) : null;
     details = json['details'];
     description = json['description'];
     price = json['price'] != null ? double.parse(json['price'].toString()) : null; // Parse as double
@@ -43,13 +43,13 @@ class Offer {
       });
     }
 
-  /*  user = json['user'] != null ? new User.fromJson(json['user']) : null;
+  /*  user = json['user'] != null ? new User.fromJson(json['user']) : null; */
     if (json['category'] != null) {
       category = <Category>[];
       json['category'].forEach((v) {
         category!.add(new Category.fromJson(v));
       });
-    }*/
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -67,10 +67,10 @@ class Offer {
     /*
     if (this.user != null) {
       data['user'] = this.user!.toJson();
-    }
+    }*/
     if (this.category != null) {
       data['category'] = this.category!.map((v) => v.toJson()).toList();
-    }*/
+    }
     return data;
   }
 }

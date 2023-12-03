@@ -45,9 +45,10 @@ public class Service {
 		    @Column(name = "details")
 		    private String details;
 
-		    @Temporal(TemporalType.TIMESTAMP)		    
+		    @Temporal(TemporalType.TIMESTAMP)
 		    @Column(name = "date")
 		    private Date date;
+
 
 		    @Column(name = "adresse")
 		    private String adresse;

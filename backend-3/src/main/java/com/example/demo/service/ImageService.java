@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Optional;
+import java.util.UUID;
 
 
 @Service
@@ -18,24 +19,62 @@ public class ImageService {
     private ImageRepository imageRepository ;
     
     private final String FOLDER_PATH="C:/isetrades/semestre5/projet_dintegration/servicesProject/backend-3/images/";
+ 
+    public String uploadImageToFileSystem(MultipartFile file, com.example.demo.model.Service service) throws IOException {
+        String originalFilename = file.getOriginalFilename();
+        String fileExtension = getFileExtension(originalFilename);
 
-    public String uploadImageToFileSystem(MultipartFile file,com.example.demo.model.Service service) throws IOException {
-    	String filePath = FOLDER_PATH  + file.getOriginalFilename();
+        // Générer un nom de fichier aléatoire avec UUID
+        String randomFileName = UUID.randomUUID().toString() + fileExtension;
 
-       ImageData fileData= imageRepository.save(ImageData.builder()
-               .name(file.getOriginalFilename())
-               .type(file.getContentType())
-               .imagePath(filePath)
-               .service(service)
-               .build());          
+        String filePath = FOLDER_PATH + randomFileName;
+
+        ImageData fileData = imageRepository.save(ImageData.builder()
+                .name(randomFileName)
+                .type(file.getContentType())
+                .imagePath(filePath)
+                .service(service)
+                .build());
 
         file.transferTo(new File(filePath));
 
         if (fileData != null) {
-            return "file uploaded successfully : " + filePath;
+            return "Fichier téléchargé avec succès : " + filePath;
         }
         return null;
     }
+
+    private String getFileExtension(String filename) {
+        int dotIndex = filename.lastIndexOf(".");
+        if (dotIndex > 0) {
+            return filename.substring(dotIndex);
+        }
+        return "";
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
     public byte[] downloadImageFromFileSystem(String fileName) throws IOException {
         Optional<ImageData> fileData =  imageRepository.findByName(fileName);     

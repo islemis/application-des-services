@@ -4,11 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Import the package
+import 'package:untitled5/Model/offer/Category.dart';
 import 'package:untitled5/Services/env.dart';
 
 import '../../Model/offer/offer.dart';
 
-Future<void> addOffre(String titre, String details, String address, double prix, String description  , List<File> files   ) async {
+Future<void> addOffre(String titre, String details, String address, double prix, String description  , List<File> files, Category   ) async {
   final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
 
   String? email = await secureStorage.read(key: 'email');

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import '../../Model/offer/offer.dart';
 
@@ -28,12 +30,22 @@ class OfferDetailsPage extends StatelessWidget {
                 if (offer.images != null && offer.images!.isNotEmpty)
                   Container(
                     height: 200,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/Image/${offer.images![0].name}'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(12),
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: offer.images!.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          width: 200,
+                          margin: EdgeInsets.only(right: 8.0),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: MemoryImage(offer.images![index].url ??Uint8List(0)),
+                              fit: BoxFit.cover,
+                            ),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        );
+                      },
                     ),
                   ),
                 SizedBox(height: 16.0),
@@ -56,21 +68,13 @@ class OfferDetailsPage extends StatelessWidget {
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 8.0),
+                // Additional Details
                 Text(
-                  'Details:',
+                  'Price:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  offer.details ?? 'No details available',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 8.0),
-                Text(
-                  'Address:',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  offer.adresse ?? 'No address available',
+                  '\$${offer.price ?? 0}',
                   style: TextStyle(fontSize: 16),
                 ),
                 SizedBox(height: 8.0),
@@ -84,15 +88,13 @@ class OfferDetailsPage extends StatelessWidget {
                 ),
                 SizedBox(height: 8.0),
                 Text(
-                  'Price:',
+                  'Address:',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '\$${offer.price ?? 0}',
+                  offer.adresse ?? 'No address available',
                   style: TextStyle(fontSize: 16),
                 ),
-                // Add more details as needed
-
                 SizedBox(height: 16.0),
                 // Apply Button or Action Button
                 ElevatedButton(

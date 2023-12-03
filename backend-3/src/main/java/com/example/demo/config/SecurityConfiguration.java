@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
             .authorizeRequests()
                 .antMatchers("/MyUser","/MyUser/{userId}", "/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService"
-                		,"/services/UserServices" ,"/MyUser/**","/image/**").permitAll()
+                		,"/services/UserServices" ,"/MyUser/**","/image/**","/api/categories").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(this.jwtTokenProvider))

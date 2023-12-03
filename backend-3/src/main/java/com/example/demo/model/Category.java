@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 
 @Entity
@@ -23,10 +25,12 @@ public class Category {
     @NotNull
     private String name;
 
-    
+    @JsonIgnore
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "categories")
     private Set<Service> services;
     
+    
+    @JsonIgnore
     @ManyToMany(mappedBy = "categories")
     private Set<MyUser> users;
     public Category() {

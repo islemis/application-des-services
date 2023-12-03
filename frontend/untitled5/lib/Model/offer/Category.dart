@@ -1,3 +1,8 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import '../../Services/env.dart';
+
 class Category {
   int? id;
   String? name;
@@ -21,3 +26,22 @@ class Category {
     return data;
   }
 }
+Future<List<Category>> fetchCategories() async {
+  final response = await http.get(Uri.parse(VPNURL+'api/categories'),
+      headers: {
+  'Content-Type': 'application/json; charset=utf-8'
+  },);
+
+  if (response.statusCode == 200) {
+    final List<dynamic> data = json.decode(response.body);
+
+    List<Category> categories = data.map((category) => Category.fromJson(category)).toList();
+ return categories;
+  } else {
+    throw Exception('Failed to load categories');
+  }
+}
+
+
+
+
