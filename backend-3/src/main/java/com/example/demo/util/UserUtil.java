@@ -7,7 +7,6 @@ import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.ImageDto;
 import com.example.demo.dto.MyUserDto;
 import com.example.demo.model.Category;
-import com.example.demo.model.Image;
 import com.example.demo.model.MyUser;
 
 public abstract class UserUtil {
@@ -23,7 +22,7 @@ public abstract class UserUtil {
 	    userDto.setAdresseDomicile(user.getAdresseDomicile());
 	    userDto.setAdresseTravail(user.getAdresseTravail());
 
-
+/*
 	    // set categories if needed
 	    List<ImageDto> imagedto=new ArrayList<>();
         for(Image  image :user.getImages()  )
@@ -31,7 +30,7 @@ public abstract class UserUtil {
         	imagedto.add(new ImageDto(image.getId(), image.getName(),image.getType())) ;      
         	
         }
-        userDto.setImages(imagedto);
+        userDto.setImages(imagedto);*/
 	        
 
 	    // set categories if needed

@@ -1,4 +1,5 @@
 //
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart' ;
@@ -54,6 +55,7 @@ if (response.statusCode == 201 || response.statusCode == 200) {
 }
 //login
 Future<User> authenticateUser(String email, String password) async {
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage();
 
   final response = await http.post(
     Uri.parse(VPNURL + 'api/auth'), // Remplacez par l'URL réelle de votre API
@@ -72,7 +74,9 @@ Future<User> authenticateUser(String email, String password) async {
 
     User u = User.fromJson(jsonDecode(response.body));
     print(jsonDecode(response.body));
-
+    //secureStorage stocké l'email et password
+    await secureStorage.write(key: 'email', value: email);
+    await secureStorage.write(key: 'password', value: password);
     print(u);
     return u;
   } else {

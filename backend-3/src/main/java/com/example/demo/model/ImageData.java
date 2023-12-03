@@ -6,15 +6,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Entity
-@Table(name = "images")
+@Table(name = "imageData")
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Image {
+public class ImageData {
 	
 
 	    @Id
@@ -25,16 +24,18 @@ public class Image {
 
 	    private String type;
 	   
-
 	    @Lob
 	    @Column(name = "imagedata", length = 1000)
-	    private byte[] imageData;
+	    private String imagePath ;
 	    
+		   private byte[] url ;
+
 	    @ManyToOne
 	    @JoinColumn(name = "service_id")
 	    private Service service;
+	   /*
 	    @ManyToOne
 	    @JoinColumn(name = "user_id")
-	    private MyUser user;
+	    private MyUser user;*/
 	
 }

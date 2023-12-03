@@ -1,28 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart'; // Import the image_picker package
-import 'dart:io'; // Import the dart:io package
-import 'package:fluttertoast/fluttertoast.dart'; // Import the fluttertoast package
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:untitled5/Services/Offer/OfferService.dart';
 
 import '../../Model/offer/Category.dart';
 
-class AddOfferScreen extends StatelessWidget {
-  AddOfferScreen({super.key});
+class AddOfferScreen extends StatefulWidget {
+  @override
+  _AddOfferScreenState createState() => _AddOfferScreenState();
+}
 
+class _AddOfferScreenState extends State<AddOfferScreen> {
   final TextEditingController nomServiceController = TextEditingController();
   final TextEditingController adresseController = TextEditingController();
   final TextEditingController prixController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController detailsController = TextEditingController();
-  List<File> listimage = []; // Use File type for the list of images
-
+  List<File> listimage = [];
 
   final List<Category> categories = [
     Category(id: 1, name: 'Category 1'),
     Category(id: 2, name: 'Category 2'),
     // Add more categories as needed
   ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -68,46 +71,32 @@ class AddOfferScreen extends StatelessWidget {
                 labelText: 'Détails du Service',
               ),
               SizedBox(height: 16.0),
-              GestureDetector(
-                onTap: () async {
-                  final pickedFile =
-                  await ImagePicker().pickImage(source: ImageSource.gallery)  ;
-                  if (pickedFile != null) {
-                    listimage.add(File(pickedFile.path));
-                  }
-                },
-                child: Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'Espace pour l\'upload d\'image',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
+              Container(
+                height: 200.0,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
                 ),
+                child: _buildImageList(),
               ),
               SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () async {
-                //  double prix = double.parse(prixController.text);
-                  await addOffre(
-                   " nomServiceController.text",
-                 "   detailsController.text",
-                "    adresseController.text",
-                   33 ,
-                  "  descriptionController.text",
+                  double? prixValue = double.tryParse(prixController.text);
 
+                  await addOffre(
+                    nomServiceController.text,
+                    detailsController.text,
+                    adresseController.text,
+                    prixValue!,
+                    descriptionController.text,
+                    listimage,
                   );
                   // Add logic for submitting the service addition form
                 },
                 child: Text(
                   'Ajouter le Service',
-                  style: TextStyle(fontSize: 16.0,color: Colors.white),
-
+                  style: TextStyle(fontSize: 16.0, color: Colors.white),
                 ),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.teal[400],
@@ -142,6 +131,79 @@ class AddOfferScreen extends StatelessWidget {
         ),
         contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
       ),
+    );
+  }
+
+  Widget _buildImageList() {
+    return ListView.builder(
+      scrollDirection: Axis.horizontal,
+      itemCount: listimage.length + 1,
+      itemBuilder: (context, index) {
+        if (index == listimage.length) {
+          return GestureDetector(
+            onTap: () async {
+              if (listimage.length < 4) {
+                final pickedFiles = await ImagePicker().pickMultiImage(
+                  imageQuality: 70,
+                  maxWidth: 1440,
+                );
+
+                if (pickedFiles != null) {
+                  setState(() {
+                    listimage.addAll(
+                      pickedFiles.map((pickedFile) => File(pickedFile.path)),
+                    );
+                  });
+                }
+              }
+            },
+            child: Container(
+              width: 150.0,
+              height: 150.0,
+              margin: EdgeInsets.all(8.0),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(8.0),
+              ),
+              child: Icon(Icons.add, size: 50.0, color: Colors.grey),
+            ),
+          );
+        } else {
+          return Stack(
+            children: [
+              Container(
+                width: 150.0,
+                height: 150.0,
+                margin: EdgeInsets.all(8.0),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: DecorationImage(
+                    image: FileImage(listimage[index]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      listimage.removeAt(index);
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4.0),
+                    color: Colors.grey,
+                    child: Icon(Icons.close, color: Colors.white,size: 20.0,),
+                  ),
+                ),
+              ),
+            ],
+          );
+        }
+      },
     );
   }
 }

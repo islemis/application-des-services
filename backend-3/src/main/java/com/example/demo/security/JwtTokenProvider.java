@@ -3,6 +3,7 @@ package com.example.demo.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.InvalidKeyException;
 import io.jsonwebtoken.security.Keys;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,19 +29,19 @@ import java.util.stream.Collectors;
 @PropertySource("classpath:application.properties")
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
-    private String secret;
+    private  String secret="yourBase64EncodedSecretKey";
     @Autowired
     private UserServiceImp userService;
-    @Value("${jwt.expiration}")
-    private Long expiration;
+    private  Long expiration=230000L;
 
     private final Key key;
+ 
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret) {
-        this.secret = secret;
+    public JwtTokenProvider( ) {
+        this.secret = secret.trim();
         this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     }
+   
     public String generateToken(Authentication authentication) {
         UserDetails userDetails =  (UserDetails) authentication.getPrincipal();
         String email = userDetails.getUsername();
@@ -53,13 +54,17 @@ public class JwtTokenProvider {
             Map<String, Object> claims = new HashMap<>();
             claims.put("userId", userId);
 
-            return createToken(claims, email);
+            return createToken( claims,email);
     }
 
 
     private String createToken(Map<String, Object> claims, String subject) {
-        Date now = new Date();
-        Date expirationDate = new Date(now.getTime() + expiration);
+
+    	
+    	Date now = new Date();
+        
+        Date expirationDate = new Date(now.getTime() + (1000 * 60 * 60 * 24));
+
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -70,6 +75,23 @@ public class JwtTokenProvider {
                 .compact();
     }
 
+    /*
+    public String generateToken1(Map<String, Object> claims, String email) {
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(SignatureAlgorithm.HS512, secret)
+                .compact();
+    }*/
+
+  /*  public static String extractUsername(String token) {
+        return Jwts.parser()
+            .setSigningKey(secret)
+            .parseClaimsJws(token)
+            .getBody()
+            .getSubject();
+    }*/
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
     }
@@ -82,14 +104,24 @@ public class JwtTokenProvider {
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        	
+        	System.out.println("brear" + bearerToken);
+        
+
+        	String token = bearerToken.substring("Bearer ".length()).trim();
+        	
+            System.out.println(token);
+                    	
+        	
+            return token;
+
         }
         return null;
     }
 
     public UserDetails getUserDetailsFromToken(String token) {
         Claims claims = getAllClaimsFromToken(token);
-        String username = claims.getSubject();
+        String email = claims.getSubject();
 
         // Retrieve the userId claim
         Long userId = claims.get("userId", Long.class);
@@ -97,11 +129,13 @@ public class JwtTokenProvider {
         // Create authorities as needed
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        return new User(username, "", authorities);
+        return new User(email, "", authorities);
     }
 
 
     private Claims getAllClaimsFromToken(String token) {
+    	 
+    	
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 

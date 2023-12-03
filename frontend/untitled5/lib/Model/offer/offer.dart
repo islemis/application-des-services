@@ -1,18 +1,19 @@
+import 'dart:convert';
 import 'dart:ffi';
+import 'dart:typed_data';
 
 import 'package:untitled5/Model/offer/Category.dart';
-
 class Offer {
   int? idService;
   String? adresse;
-  Null? date;
+  DateTime? date;
   String? details;
   String? description;
   double? price;
   String? titre;
   List<Images>? images;
-  User? user;
-  List<Category>? category;
+  //User? user;
+ // List<Category>? category;
 
   Offer(
       {this.idService,
@@ -23,16 +24,17 @@ class Offer {
         this.price,
         this.titre,
         this.images,
-        this.user,
-        this.category});
+        //this.user,
+       // this.category
+  });
 
   Offer.fromJson(Map<String, dynamic> json) {
     idService = json['idService'];
     adresse = json['adresse'];
-    date = json['date'];
+    date = json['date'] != null ? DateTime.parse(json['date'].toString()) : null;
     details = json['details'];
     description = json['description'];
-    price = json['price'];
+    price = json['price'] != null ? double.parse(json['price'].toString()) : null; // Parse as double
     titre = json['titre'];
     if (json['images'] != null) {
       images = <Images>[];
@@ -40,13 +42,14 @@ class Offer {
         images!.add(new Images.fromJson(v));
       });
     }
-    user = json['user'] != null ? new User.fromJson(json['user']) : null;
+
+  /*  user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['category'] != null) {
       category = <Category>[];
       json['category'].forEach((v) {
         category!.add(new Category.fromJson(v));
       });
-    }
+    }*/
   }
 
   Map<String, dynamic> toJson() {
@@ -61,12 +64,13 @@ class Offer {
     if (this.images != null) {
       data['images'] = this.images!.map((v) => v.toJson()).toList();
     }
+    /*
     if (this.user != null) {
       data['user'] = this.user!.toJson();
     }
     if (this.category != null) {
       data['category'] = this.category!.map((v) => v.toJson()).toList();
-    }
+    }*/
     return data;
   }
 }
@@ -75,82 +79,29 @@ class Images {
   int? id;
   String? name;
   String? type;
+  String? imagePath; // Change this field to match Spring class
+  Uint8List? url; // Change this field to match Spring class
 
-  Images({this.id, this.name, this.type});
+  Images({this.id, this.name, this.type, this.imagePath, this.url});
 
   Images.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     type = json['type'];
+    imagePath = json['imagePath'];
+    if (json['url'] != null) {
+      url = Uint8List.fromList(base64.decode(json['url']));
+    }
   }
-
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
     data['type'] = this.type;
+    data['imagePath'] = this.imagePath;
+    data['url'] =
+        base64.encode(this.url!); // Encode the Uint8List as a base64 string
+
     return data;
   }
 }
-
-class User {
-  int? id;
-  String? firstName;
-  Null? adresseTravail;
-  Null? adresseDomicile;
-  Null? diplome;
-  Null? tel;
-  Null? password;
-  String? email;
-  String? lastName;
-  Null? category;
-  Null? images;
-  Null? profileImage;
-
-  User(
-      {this.id,
-        this.firstName,
-        this.adresseTravail,
-        this.adresseDomicile,
-        this.diplome,
-        this.tel,
-        this.password,
-        this.email,
-        this.lastName,
-        this.category,
-        this.images,
-        this.profileImage});
-
-  User.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    firstName = json['firstName'];
-    adresseTravail = json['adresseTravail'];
-    adresseDomicile = json['adresseDomicile'];
-    diplome = json['diplome'];
-    tel = json['tel'];
-    password = json['password'];
-    email = json['email'];
-    lastName = json['lastName'];
-    category = json['category'];
-    images = json['images'];
-    profileImage = json['profileImage'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['firstName'] = this.firstName;
-    data['adresseTravail'] = this.adresseTravail;
-    data['adresseDomicile'] = this.adresseDomicile;
-    data['diplome'] = this.diplome;
-    data['tel'] = this.tel;
-    data['password'] = this.password;
-    data['email'] = this.email;
-    data['lastName'] = this.lastName;
-    data['category'] = this.category;
-    data['images'] = this.images;
-    data['profileImage'] = this.profileImage;
-    return data;
-  }
-}
-

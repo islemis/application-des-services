@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @SpringBootApplication
-@ComponentScan(basePackages = {"com.example.demo", "com.example.demo.config"})
+@ComponentScan(basePackages = {"com.example.demo", "com.example.demo.config", "com.example.demo.util"})
 
 public class Backend3Application {
 

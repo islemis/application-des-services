@@ -21,7 +21,6 @@ class _SplashScreenState extends State<SplashScreen>
 getToken()async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   Token = prefs.getString('accessToken');
-
 }
   @override
   void initState() {

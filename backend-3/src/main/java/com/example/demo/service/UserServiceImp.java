@@ -112,7 +112,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
 	
 	//updateUser
-	public ResponseEntity<?> updateUser(Long id, String userJson, MultipartFile[] file) {
+	public ResponseEntity<?> updateUser(Long id, String userJson, MultipartFile[] file, MultipartFile[] profileImageFile) {
         MyUser userUpdate = new MyUser();
 
         MyUser user = userRepository.findById(id)
@@ -136,15 +136,25 @@ public class UserServiceImp implements UserService, UserDetailsService {
         user.setAdresseDomicile(userUpdate.getAdresseDomicile());
         user.setAdresseTravail(userUpdate.getAdresseTravail());
         user.setTel(userUpdate.getTel());
-
+        /* Update profile image
+        try {
+        	List<Image> listeImages = imageDataService.uploadImage(profileImageFile,null, user);
+        	Image profileImage= listeImages.get(0);
+        	user.setProfileImage(profileImage);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // Update images if needed...
         try {
-            ResponseEntity<String> imageResponse = imageDataService. uploadImage(file, null,user);
+        	 List<Image> imageResponse = imageDataService. uploadImage(file, null,user);
+        
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+*/
         final MyUser updatedUser = userRepository.save(user);
         saveCategories(updatedUser);
         return ResponseEntity.ok("User updated successfully");

@@ -1,11 +1,18 @@
 package com.example.demo.util;
 import java.io.ByteArrayOutputStream;
+import java.util.Base64;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 
 public class ImageUtil {
 
-	
+	public class Base64Encoder {
+	    public static void main(String[] args) {
+	        String secret = "islem1234560OLKnvbvufjeeeeeeeee";
+	        String base64Secret = Base64.getEncoder().encodeToString(secret.getBytes());
+
+	        System.out.println("Base64-encoded secret: " + base64Secret);
+	    }}
 	
 	    public static byte[] compressImage(byte[] data) {
 

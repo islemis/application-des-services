@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,11 +16,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import com.example.demo.dto.ServiceDto;
 import com.example.demo.model.Category;
-import com.example.demo.model.Image;
+import com.example.demo.model.ImageData;
 import com.example.demo.model.MyUser;
 import com.example.demo.model.Service;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ServiceRepository;
+import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.UserServiceImp;
 import com.example.demo.util.ServiceUtil;
@@ -29,11 +31,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.transaction.Transactional;
 
 
 	@RestController
@@ -52,21 +58,23 @@ import java.util.Set;
 	    @Autowired
 		 private ImageService imageDataService;
 
+	    @Autowired  
+	   private  JwtTokenProvider jwtTokenProvider;
 		    
-		    
-		    
-		    
+	    @Autowired  
+
+	     private  ServiceUtil serviceUtil; 
 		    
 		    
 			//getUserServices
 
-		    
+		    /*
 		    @GetMapping("/UserServices")
-		    public List<ServiceDto> getAllUserServices() {
+		    public List<ServiceDto> getAllUserServices(  @RequestHeader("Authorization") String token) {
 		        List<Service> liste= serviceRepository.findAll();
 		        List<ServiceDto> listeDto =new ArrayList<>();
-		        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+	            UserDetails userDetails = jwtTokenProvider.getUserDetailsFromToken(token);
+
 		        String email = userDetails.getUsername();
 		        MyUser currentUser = userService.findByEmail(email);
 
@@ -82,7 +90,7 @@ import java.util.Set;
 		        }
 		        return listeDto ;
 		    }
-
+*/
 		    
 		    
 		    
@@ -100,7 +108,7 @@ import java.util.Set;
 		       
 		        for(Service service:liste)
 		        {
-			         ServiceDto   servicedto =ServiceUtil.Convert(service);
+			         ServiceDto   servicedto =serviceUtil.Convert(service);
 
 		        	listeDto.add(servicedto);
 		        }
@@ -116,33 +124,49 @@ import java.util.Set;
 		            Service service = serviceRepository.findById(id)
 		                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found with id " + id));
 		            System.out.println(service.toString());
-		         ServiceDto   servicedto =ServiceUtil.Convert(service);
+		         ServiceDto   servicedto =serviceUtil.Convert(service);
 		            return servicedto;
 		      
 		    }
 
 //addService
-		    
+		    @Transactional
+
 		    @PostMapping("/addService")
 		    public ResponseEntity<?> saveService(
 		            @RequestParam("service") String serviceJson,
-		            @RequestParam("file") MultipartFile[] file
+		          @RequestParam("images") MultipartFile[] images
+		            //@RequestHeader("Authorization") String token
+		            //        @RequestHeader("Authorization") String authorizationHeader
+
 		    ) {
 		        try {
 
 		            Service service = objectMapper.readValue(serviceJson, Service.class);
 		            service.setDate(new Date());
-
-		            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-			        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		         //   UserDetails userDetails = jwtTokenProvider.getUserDetailsFromToken(token);
+		         /*   Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		      	  UserDetails userDetails =   (UserDetails) authentication.getPrincipal();
 			        String email = userDetails.getUsername();
+			        System.out.println("email"+email);*/
+		            
+		            /*
+		            String base64Credentials = authorizationHeader.substring("Basic".length()).trim();
+		            String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
+		            final String[] values = credentials.split(":", 2);
+		            String email = values[0];
+		            
+		            
+		            
 			        MyUser currentUser = userService.findByEmail(email);
-		            service.setUser(currentUser);
+		            service.setUser(currentUser);*/
 		            Service savedService = serviceRepository.save(service);
 		           saveCategories(savedService);
 
-		           List<Image>   imageResponse = imageDataService.uploadImage(file, savedService,null);
-
+		           for (MultipartFile file : images) {
+		               String result = imageDataService.uploadImageToFileSystem(file, savedService);
+		               System.out.println(result);
+		           }
 		            
 		            return ResponseEntity.ok("Service saved successfully");
 		        } catch (IOException e) {
@@ -179,6 +203,7 @@ import java.util.Set;
 		       return  ResponseEntity.ok("deleted successfully")	;	    }
 
 //UpdateService
+		    /*
 		    @PutMapping("/{id}")
 		    public ResponseEntity<?> updateService(@PathVariable Long id, @RequestParam("service") String serviceJson,
 		    		@RequestParam("file") MultipartFile[] file)
@@ -217,7 +242,7 @@ import java.util.Set;
 		        final Service updatedService = serviceRepository.save(service);
 		        return ResponseEntity.ok("serviceUpdatet successfully");
 		    }
-
+*/
 		    
 		    
 		    

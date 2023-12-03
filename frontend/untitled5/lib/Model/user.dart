@@ -1,54 +1,66 @@
+
 class User {
-  int? id; // Use int or String based on your requirements
+  int? id;
   String? firstName;
-  String? lastName;
+  Null? adresseTravail;
+  Null? adresseDomicile;
+  Null? diplome;
+  Null? tel;
+  Null? password;
   String? email;
-  String? password;
-  List<Role>? roles;
-  String? accessToken ;
+  String? lastName;
+  Null? category;
+  Null? images;
+  Null? profileImage;
+Null?accessToken ;
+  User(
+      {this.id,
+        this.firstName,
+        this.adresseTravail,
+        this.adresseDomicile,
+        this.diplome,
+        this.tel,
+        this.password,
+        this.email,
+        this.lastName,
+        this.category,
+        this.images,
+        this.profileImage});
 
-  User({
-    this.id,
-    this.firstName,
-    this.lastName,
-    this.email,
-    this.password,
-    this.roles,
-    this.accessToken
-  });
-
-  factory User.fromJson(Map<String, dynamic> json) {
-    return User(
-      id: json['id'],
-      firstName: json['first_name'],
-      lastName: json['last_name'],
-      email: json['email'],
-      password: json['password'],
-      accessToken: json['accessToken'],
-      roles: json['roles'] != null
-          ? List<Role>.from(json['roles'].map((role) => Role.fromJson(role)))
-          : null,
-    );
-  }
-
-
-  @override
-  String toString() {
-    return 'User{id: $id, firstName: $firstName, lastName: $lastName, email: $email, password: $password,accessToken: $accessToken, roles: $roles}';
+  User.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    firstName = json['firstName'];
+    adresseTravail = json['adresseTravail'];
+    adresseDomicile = json['adresseDomicile'];
+    diplome = json['diplome'];
+    tel = json['tel'];
+    password = json['password'];
+    email = json['email'];
+    lastName = json['lastName'];
+    category = json['category'];
+    images = json['images'];
+    profileImage = json['profileImage'];
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'first_name': firstName,
-      'last_name': lastName,
-      'email': email,
-      'password': password,
-      'accesToken': accessToken,
-      'roles': roles?.map((role) => role.toJson()).toList(),
-    };
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['firstName'] = this.firstName;
+    data['adresseTravail'] = this.adresseTravail;
+    data['adresseDomicile'] = this.adresseDomicile;
+    data['diplome'] = this.diplome;
+    data['tel'] = this.tel;
+    data['password'] = this.password;
+    data['email'] = this.email;
+    data['lastName'] = this.lastName;
+    data['category'] = this.category;
+    data['images'] = this.images;
+    data['profileImage'] = this.profileImage;
+    return data;
   }
 }
+
+
 
 class Role {
   int? id;

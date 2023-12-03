@@ -14,18 +14,18 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-@Getter
-@Setter
+
 @NoArgsConstructor
 
-
-
+@Setter
+@Getter
 @Entity
 @Table(name = "my_user", uniqueConstraints = @UniqueConstraint(columnNames = "email"))
 public class MyUser  {
@@ -60,9 +60,9 @@ public class MyUser  {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Service> services;
     
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Image> images;
+/*
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
+    private Set<ImageData> images;*/
     
     @ManyToMany
     @JoinTable(
@@ -71,7 +71,9 @@ public class MyUser  {
         inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
  
-    
+   /* @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
+    @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
+    private ImageD profileImage;*/
     
     
 
@@ -81,7 +83,6 @@ public class MyUser  {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.role = role != null ? role : new Role(Role.DEFAULT_ROLE);
     }
   
     

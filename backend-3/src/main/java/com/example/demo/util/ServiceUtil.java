@@ -1,23 +1,33 @@
 package com.example.demo.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.ImageDto;
 import com.example.demo.dto.MyUserDto;
 import com.example.demo.dto.ServiceDto;
 import com.example.demo.model.Category;
-import com.example.demo.model.Image;
+import com.example.demo.model.ImageData;
 import com.example.demo.model.Service;
+import com.example.demo.service.ImageService;
+@Component
 
-public abstract class ServiceUtil {
+public  class ServiceUtil {
+	 private final ImageService imageService;
 
+	    @Autowired
+	    public ServiceUtil(ImageService imageService) {
+	        this.imageService = imageService;
+	    }
 	
-	
-	
-	public static ServiceDto Convert (Service service)
+ 	public  ServiceDto Convert (Service service)
 	{
+		
 		Long id=service.getIdService();
         ServiceDto servicedto=new ServiceDto();
           List  <ImageDto> imagedto= new ArrayList <>();
@@ -30,13 +40,28 @@ public abstract class ServiceUtil {
             servicedto.setAdresse(service.getAdresse());
             servicedto.setDescription(service.getDescription());
             servicedto.setDetails(service.getDetails());
-            for(Image  image :service.getImages()  )
-            {
-            	imagedto.add(new ImageDto(image.getId(),image.getName(),image.getType()));
-            	
-            }
-            servicedto.setImages(imagedto);
+            
 
+for (ImageData image : service.getImages()) {
+
+    try {                                           
+    	ImageDto	imageDto=new ImageDto();    
+    	
+    	// Download the image data
+        byte[] imageData =imageService.downloadImageFromFileSystem(image.getName());
+System.out.println(imageData);
+        
+   imageDto.setUrl(imageData);
+        imageDto.setImagePath(image.getImagePath());
+        imageDto.setName(image.getName());
+        imageDto.setType(image.getType());
+        imagedto.add(imageDto);
+    } catch (IOException e) {
+        // Handle the exception if there's an issue reading the image data
+        e.printStackTrace();
+    }
+            servicedto.setImages(imagedto);
+/*
             userdto.setId(id);
             userdto.setFirstName(service.getUser().getFirstName());
             userdto.setLastName(service.getUser().getLastName());
@@ -45,7 +70,7 @@ public abstract class ServiceUtil {
             userdto.setAdresseDomicile(service.getUser().getAdresseDomicile());
             userdto.setAdresseTravail(service.getUser().getAdresseTravail());
             
-           servicedto.setUser(userdto);
+           servicedto.setUser(userdto);*/
            
            for(Category  category :service.getCategories()  )
            {
@@ -54,7 +79,6 @@ public abstract class ServiceUtil {
            }
            servicedto.setCategory(categorydto);
 
-            return servicedto;
 		
 	}
 	
@@ -62,7 +86,9 @@ public abstract class ServiceUtil {
 	
 	
 	
+return servicedto;
+
 	
 	
-	
+}
 }

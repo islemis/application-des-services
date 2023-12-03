@@ -25,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import com.example.demo.dto.MyUserDto;
 import com.example.demo.model.Category;
-import com.example.demo.model.Image;
 import com.example.demo.model.MyUser;
 import com.example.demo.model.Service;
 import com.example.demo.service.UserServiceImp;
@@ -67,13 +66,12 @@ public class UserController {
 	   
 	   
 	   
-	   
 	 //UpdateUser
 	   @PutMapping("/{userId}")
 
 	   public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("user") String userJson,
-	            @RequestParam("file") MultipartFile[] file) {
-	        return userService.updateUser(userId, userJson, file);
+	            @RequestParam("file") MultipartFile[] file,    @RequestParam("profileImageFile") MultipartFile[] profileImageFile) {
+	        return userService.updateUser(userId, userJson, file,profileImageFile);
 	    }
 	   
 	   
@@ -125,7 +123,7 @@ public class UserController {
 	   
 	   
 	   
-	   
+
 	   
 	   
 
