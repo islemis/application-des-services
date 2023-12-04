@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,14 +37,10 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 @RequestMapping("/MyUser")
 
 public class UserController {
-
+@Autowired
 	private UserServiceImp userService;
 	
 
-	public UserController(UserServiceImp userService) {
-		super();
-		this.userService = userService;
-	}
 	
 	@ModelAttribute("user")
     public MyUser user() {
@@ -57,11 +54,11 @@ public class UserController {
 	    }
 	
 	   @PostMapping("addUser")
-	   public ResponseEntity<MyUser> registerUserAccount(@RequestBody MyUser user) {
+	   public ResponseEntity<?> registerUserAccount(@RequestBody MyUser user) {
 		   MyUser registeredUser = userService.save(user);
 	       System.out.println("User registered: " + registeredUser.toString());
 	       // Return the registered user as JSON
-	       return new ResponseEntity<>(registeredUser, HttpStatus.CREATED);
+	       return new ResponseEntity<>("the user "+registeredUser.getId()+" is registred successfully", HttpStatus.CREATED);
 	   }
 	   
 	   
@@ -70,8 +67,8 @@ public class UserController {
 	   @PutMapping("/{userId}")
 
 	   public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("user") String userJson,
-	            @RequestParam("file") MultipartFile[] file,    @RequestParam("profileImageFile") MultipartFile[] profileImageFile) {
-	        return userService.updateUser(userId, userJson, file,profileImageFile);
+	            @RequestParam("file") MultipartFile[] file) {
+	        return userService.updateUser(userId, userJson, file);
 	    }
 	   
 	   

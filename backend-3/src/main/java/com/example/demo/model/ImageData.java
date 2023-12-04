@@ -15,7 +15,6 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class ImageData {
 	
-
 	    @Id
 	    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	    private Long id;
@@ -33,9 +32,9 @@ public class ImageData {
 	    @ManyToOne
 	    @JoinColumn(name = "service_id")
 	    private Service service;
-	   /*
+	 
 	    @ManyToOne
 	    @JoinColumn(name = "user_id")
-	    private MyUser user;*/
+	    private MyUser user;
 	
 }

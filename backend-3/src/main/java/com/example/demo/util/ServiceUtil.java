@@ -64,6 +64,7 @@ System.out.println(imageData);
         // Handle the exception if there's an issue reading the image data
         e.printStackTrace();
     }
+}
             servicedto.setImages(imagedto);
 
             //user
@@ -86,7 +87,7 @@ System.out.println(imageData);
            servicedto.setCategory(categorydto);
 
 		
-	}
+	
 	
 	
 	

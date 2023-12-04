@@ -68,15 +68,16 @@ import javax.transaction.Transactional;
 		    
 			//getUserServices
 
-		    /*
 		    @GetMapping("/UserServices")
-		    public List<ServiceDto> getAllUserServices(  @RequestHeader("Authorization") String token) {
+		    public List<ServiceDto> getAllUserServices(   @RequestHeader("Authorization") String authorizationHeader) {
 		        List<Service> liste= serviceRepository.findAll();
 		        List<ServiceDto> listeDto =new ArrayList<>();
-	            UserDetails userDetails = jwtTokenProvider.getUserDetailsFromToken(token);
+	            String base64Credentials = authorizationHeader.substring("Basic".length()).trim();
+	            String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
+	            final String[] values = credentials.split(":", 2);
+	            String email = values[0];
+	              MyUser currentUser = userService.findByEmail(email);
 
-		        String email = userDetails.getUsername();
-		        MyUser currentUser = userService.findByEmail(email);
 
 	        Long    userId=currentUser.getId();
 		       
@@ -84,13 +85,14 @@ import javax.transaction.Transactional;
 		        {
 		            if (service.getUser().getId().equals(userId)) {
 
-			         ServiceDto   servicedto =ServiceUtil.Convert(service);
+			         ServiceDto   servicedto =serviceUtil.Convert(service);
 
-		        	listeDto.add(servicedto);}
+		        	listeDto.add(servicedto); 
+		        	}
 		        }
 		        return listeDto ;
 		    }
-*/
+
 		    
 		    
 		    
@@ -140,12 +142,10 @@ import javax.transaction.Transactional;
 		                   @RequestHeader("Authorization") String authorizationHeader
 
 		    ) {
-	            System.out.println("hello");
 
 		        try {
 
 		            Service service = objectMapper.readValue(serviceJson, Service.class);
-		            System.out.println("hello2");
 
 		            service.setDate(new Date());
 		         //   UserDetails userDetails = jwtTokenProvider.getUserDetailsFromToken(token);
@@ -164,11 +164,11 @@ import javax.transaction.Transactional;
 		            
 			      
 		            Service savedService = serviceRepository.save(service);
-
-		           saveCategories(savedService);
+		            
+		            savedService.setCategories(service.getCategories());
 
 		           for (MultipartFile file : images) {
-		               String result = imageDataService.uploadImageToFileSystem(file, savedService);
+		               String result = imageDataService.uploadImageToFileSystem(file, savedService,null);
 		               System.out.println(result);
 		           }
 
@@ -179,26 +179,12 @@ import javax.transaction.Transactional;
 		        }
 		    }
 
-		    
-	    //methode savecategories
-		    public   void saveCategories(Service service) {
-		        Set<Category> categories = service.getCategories();
-		        Set<Service> services = new HashSet<>();
-		        services.add(service);
 
-		        categories.forEach(category -> {
-		            category.setServices(services);
-		            categoryRepository.save(category);
-		        });
-		    }
 		    
 		    
 		    
 		    
-		    
-		    
-		    
-		    
+				    
 		    
 //deleteService
 		    @DeleteMapping("/{id}")
@@ -207,10 +193,10 @@ import javax.transaction.Transactional;
 		       return  ResponseEntity.ok("deleted successfully")	;	    }
 
 //UpdateService
-		    /*
+		    
 		    @PutMapping("/{id}")
 		    public ResponseEntity<?> updateService(@PathVariable Long id, @RequestParam("service") String serviceJson,
-		    		@RequestParam("file") MultipartFile[] file)
+		    		@RequestParam("images") MultipartFile[] files)
  {
 	            Service serviceUpdate = new Service();
 
@@ -225,6 +211,10 @@ import javax.transaction.Transactional;
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				//service.getCategories().clear();
+
+	            service.setCategories(serviceUpdate.getCategories());
+
 
 		        service.setTitre(serviceUpdate.getTitre());
 		        service.setPrice(serviceUpdate.getPrice());
@@ -232,11 +222,12 @@ import javax.transaction.Transactional;
 		        service.setDetails(serviceUpdate.getDetails());
 		        service.setDate(new Date());
 		        service.setAdresse(serviceUpdate.getAdresse());
-	            saveCategories(service);
 
 	            
 					try {
-						List<Image> imageResponse = imageDataService.uploadImage(file, service,null);
+						for (MultipartFile file : files) {
+						String imageResponse = imageDataService.uploadImageToFileSystem(file, service,null)   ;
+						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -246,7 +237,7 @@ import javax.transaction.Transactional;
 		        final Service updatedService = serviceRepository.save(service);
 		        return ResponseEntity.ok("serviceUpdatet successfully");
 		    }
-*/
+
 		    
 		    
 		    

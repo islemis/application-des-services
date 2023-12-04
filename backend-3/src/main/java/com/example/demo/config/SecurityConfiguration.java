@@ -18,7 +18,7 @@ import com.example.demo.service.UserService;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Autowired
+	@Autowired
     private UserService userService;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
@@ -47,7 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/MyUser","/MyUser/{userId}", "/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService"
+                .antMatchers("/MyUser","/MyUser/{userId}","/api/auth","/services","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService"
                 		,"/services/UserServices" ,"/MyUser/**","/image/**","/api/categories").permitAll()
                 .anyRequest().authenticated()
                 .and()
@@ -65,8 +65,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
 
-
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
@@ -74,5 +72,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }
+
 
 }

@@ -1,18 +1,28 @@
 package com.example.demo.util;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.ImageDto;
 import com.example.demo.dto.MyUserDto;
 import com.example.demo.model.Category;
+import com.example.demo.model.ImageData;
 import com.example.demo.model.MyUser;
-
-public abstract class UserUtil {
-
+import com.example.demo.service.ImageService;
+@Component
+public  class UserUtil {
+	 private final ImageService imageService;
+	    @Autowired
+	    public UserUtil(ImageService imageService) {
+	        this.imageService = imageService;
+	    }
 	
-	public static MyUserDto convert(MyUser user) {
+	public  MyUserDto convert(MyUser user) {
 	    MyUserDto userDto = new MyUserDto();
 	    userDto.setId(user.getId());
 	    userDto.setFirstName(user.getFirstName());
@@ -22,15 +32,29 @@ public abstract class UserUtil {
 	    userDto.setAdresseDomicile(user.getAdresseDomicile());
 	    userDto.setAdresseTravail(user.getAdresseTravail());
 
-/*
-	    // set categories if needed
-	    List<ImageDto> imagedto=new ArrayList<>();
-        for(Image  image :user.getImages()  )
-        {
-        	imagedto.add(new ImageDto(image.getId(), image.getName(),image.getType())) ;      
-        	
-        }
-        userDto.setImages(imagedto);*/
+
+        
+//image
+        List  <ImageDto> imagedto= new ArrayList <>();
+
+for (ImageData image : user.getImages()) {
+
+try {                                           
+	ImageDto	imageDto=new ImageDto();    
+	
+	// Download the image data
+    byte[] imageData =imageService.downloadImageFromFileSystem(image.getName());
+System.out.println(imageData);
+    
+imageDto.setUrl(imageData);
+    imageDto.setName(image.getName());
+    imagedto.add(imageDto);
+} catch (IOException e) {
+    // Handle the exception if there's an issue reading the image data
+    e.printStackTrace();
+}
+}
+        userDto.setImages(imagedto);
 	        
 
 	    // set categories if needed
@@ -41,10 +65,6 @@ public abstract class UserUtil {
         	
         }
         userDto.setCategory(categorydto);      
-	    
-	    
-	    
-	  
 
 	    return userDto;
 	}

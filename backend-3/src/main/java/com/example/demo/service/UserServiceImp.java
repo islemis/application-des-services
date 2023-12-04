@@ -20,13 +20,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.config.SecurityConfiguration;
 import com.example.demo.dto.MyUserDto;
 import com.example.demo.model.Category;
+import com.example.demo.model.ImageData;
 import com.example.demo.model.MyUser;
 import com.example.demo.model.Role;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.util.ServiceUtil;
 import com.example.demo.util.UserUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -35,24 +38,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @Service
 public class UserServiceImp implements UserService, UserDetailsService {
 
-	  private final UserRepository userRepository;
-	    private final BCryptPasswordEncoder passwordEncoder;
-		  private final RoleRepository RoleRepository;
-			 @Autowired
-				private ObjectMapper objectMapper;
-			 @Autowired
-				private ImageService imageDataService;
-			 
-			 @Autowired
-				private CategoryRepository categoryRepository;
-			 
-			 
-			 
-	    public UserServiceImp( UserRepository userRepository, @Lazy BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
-	        this.userRepository = userRepository;
-	        this.passwordEncoder = passwordEncoder;
-			this.RoleRepository = roleRepository;
-	    }
+	   @Autowired  
+	     private  UserUtil userUtil ; 
+	
+			  
+			  private final UserRepository userRepository;
+			    private final BCryptPasswordEncoder passwordEncoder;
+				  private final RoleRepository RoleRepository;
+					 @Autowired
+						private ObjectMapper objectMapper;
+					 @Autowired
+						private ImageService imageDataService;
+					 
+					 @Autowired
+						private CategoryRepository categoryRepository;
+					 
+					 
+					 
+			    public UserServiceImp( UserRepository userRepository, @Lazy BCryptPasswordEncoder passwordEncoder, RoleRepository roleRepository) {
+			        this.userRepository = userRepository;
+			        this.passwordEncoder = passwordEncoder;
+					this.RoleRepository = roleRepository;
+					
+			    }
 	    //findUserByEmail
 	    public MyUser findByEmail(String email) {
 	        return userRepository.findByEmail(email);
@@ -112,7 +120,7 @@ public class UserServiceImp implements UserService, UserDetailsService {
 
 	
 	//updateUser
-	public ResponseEntity<?> updateUser(Long id, String userJson, MultipartFile[] file, MultipartFile[] profileImageFile) {
+	public ResponseEntity<?> updateUser(Long id, String userJson, MultipartFile[] images) {
         MyUser userUpdate = new MyUser();
 
         MyUser user = userRepository.findById(id)
@@ -121,60 +129,40 @@ public class UserServiceImp implements UserService, UserDetailsService {
             try {
 				userUpdate = objectMapper.readValue(userJson, MyUser.class);
 			} catch (JsonMappingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (JsonProcessingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
         
 
         user.setFirstName(userUpdate.getFirstName());
         user.setLastName(userUpdate.getLastName());
-        user.setEmail(userUpdate.getEmail());
         user.setDiplome(userUpdate.getDiplome());
         user.setAdresseDomicile(userUpdate.getAdresseDomicile());
         user.setAdresseTravail(userUpdate.getAdresseTravail());
         user.setTel(userUpdate.getTel());
-        /* Update profile image
-        try {
-        	List<Image> listeImages = imageDataService.uploadImage(profileImageFile,null, user);
-        	Image profileImage= listeImages.get(0);
-        	user.setProfileImage(profileImage);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+     
 
         // Update images if needed...
         try {
-        	 List<Image> imageResponse = imageDataService. uploadImage(file, null,user);
-        
+        	for (MultipartFile file : images) {
+        	 String imageResponse = imageDataService.uploadImageToFileSystem(file,null,user);       
+        	}
 
         } catch (IOException e) {
             e.printStackTrace();
         }
-*/
-        final MyUser updatedUser = userRepository.save(user);
-        saveCategories(updatedUser);
+        user.setCategories(userUpdate.getCategories());
+
+         MyUser updatedUser = userRepository.save(user);
+
+
         return ResponseEntity.ok("User updated successfully");
     }
 	
 	
 	
 	
-	  //methode savecategories
-    public   void saveCategories(MyUser user) {
-        Set<Category> categories = user.getCategories();
-        Set<MyUser> users = new HashSet<>();
-        users.add(user);
-
-        categories.forEach(category -> {
-            category.setUsers(users)  ;  
-            categoryRepository.save(category);
-        });
-    }
-    
 	
 	
 	
@@ -185,28 +173,31 @@ public class UserServiceImp implements UserService, UserDetailsService {
 	
 	
 	
-
+	
+//deleteUser
     
     public String deleteUserById(Long userId) {
         userRepository.deleteById(userId);
-        return "product removed !! " + userId;
+        return "user removed !! " + userId;
 
     }
-
+  //getUser
     public MyUserDto getUserById(Long userId) {
     	MyUser user=userRepository.findById(userId).orElse(null);
     	
-          return  UserUtil.convert(user);
+          return  userUtil.convert(user);
 
     }
-
+    
+    
+//getUsers
     public List<MyUserDto> getUsers() {
     	List<MyUser> list=userRepository.findAll();
     	List<MyUserDto> listeDto=new ArrayList<>();
         for(MyUser user:list)
         {
 
-	         MyUserDto   userdto =UserUtil.convert(user);
+	         MyUserDto   userdto =userUtil.convert(user);
 
         	listeDto.add(userdto);
         }

@@ -60,9 +60,9 @@ public class MyUser  {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Service> services;
     
-/*
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
-    private Set<ImageData> images;*/
+    private Set<ImageData> images;
     
     @ManyToMany
     @JoinTable(
@@ -71,22 +71,6 @@ public class MyUser  {
         inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories;
  
-   /* @OneToOne(cascade = CascadeType.ALL , orphanRemoval = true)
-    @JoinColumn(name = "profile_image_id", referencedColumnName = "id")
-    private ImageD profileImage;*/
-    
-    
 
-    public MyUser(String firstName, String lastName, String email, String password, Role role) {
-        super();
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-    }
-  
-    
-    
-   
 
 }
