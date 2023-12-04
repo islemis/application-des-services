@@ -32,8 +32,12 @@ public  class ServiceUtil {
         ServiceDto servicedto=new ServiceDto();
           List  <ImageDto> imagedto= new ArrayList <>();
           List  <CategoryDto> categorydto= new ArrayList <>();
-
             MyUserDto userdto=new MyUserDto();
+            
+            
+            
+            
+            //service
             servicedto.setIdService(id);
             servicedto.setTitre(service.getTitre());
             servicedto.setPrice(service.getPrice());
@@ -41,7 +45,7 @@ public  class ServiceUtil {
             servicedto.setDescription(service.getDescription());
             servicedto.setDetails(service.getDetails());
             
-
+//image
 for (ImageData image : service.getImages()) {
 
     try {                                           
@@ -61,7 +65,8 @@ System.out.println(imageData);
         e.printStackTrace();
     }
             servicedto.setImages(imagedto);
-/*
+
+            //user
             userdto.setId(id);
             userdto.setFirstName(service.getUser().getFirstName());
             userdto.setLastName(service.getUser().getLastName());
@@ -69,9 +74,10 @@ System.out.println(imageData);
             userdto.setDiplome(service.getUser().getDiplome());
             userdto.setAdresseDomicile(service.getUser().getAdresseDomicile());
             userdto.setAdresseTravail(service.getUser().getAdresseTravail());
+            userdto.setTel(service.getUser().getTel());
             
-           servicedto.setUser(userdto);*/
-           
+           servicedto.setUser(userdto);
+           //categories
            for(Category  category :service.getCategories()  )
            {
         	   categorydto.add(new CategoryDto(category.getId(), category.getName())) ;      

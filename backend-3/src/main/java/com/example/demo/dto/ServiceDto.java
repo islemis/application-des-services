@@ -21,7 +21,7 @@ public class ServiceDto {
     private Float price;
     private String titre;
     private List<ImageDto> images ;
-	//private MyUserDto user ;
+	private MyUserDto user ;
 	private List<CategoryDto>  category;
 	
 	

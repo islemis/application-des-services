@@ -135,9 +135,9 @@ import javax.transaction.Transactional;
 		    @PostMapping("/addService")
 		    public ResponseEntity<?> saveService(
 		            @RequestParam("service") String serviceJson,
-		          @RequestParam("images") MultipartFile[] images
+		          @RequestParam("images") MultipartFile[] images,
 		            //@RequestHeader("Authorization") String token
-		            //        @RequestHeader("Authorization") String authorizationHeader
+		                   @RequestHeader("Authorization") String authorizationHeader
 
 		    ) {
 	            System.out.println("hello");
@@ -154,13 +154,13 @@ import javax.transaction.Transactional;
 			        String email = userDetails.getUsername();
 			        System.out.println("email"+email);*/
 		            
-		            /*
+		            
 		            String base64Credentials = authorizationHeader.substring("Basic".length()).trim();
 		            String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
 		            final String[] values = credentials.split(":", 2);
 		            String email = values[0];
 		              MyUser currentUser = userService.findByEmail(email);
-		            service.setUser(currentUser);*/
+		            service.setUser(currentUser);
 		            
 			      
 		            Service savedService = serviceRepository.save(service);

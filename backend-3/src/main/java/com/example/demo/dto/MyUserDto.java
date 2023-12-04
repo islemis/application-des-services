@@ -21,6 +21,8 @@ public class MyUserDto {
 	    private String email;
 	    private String lastName;
 		private List<CategoryDto>  category;
+		private List<ServiceDto>  services;
+
 	  //  private List<ImageDto> images ;
 	   // private ImageDto profileImage;
 	    
