@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:untitled5/Services/Offer/OfferService.dart';
 
 import '../../Model/offer/Category.dart';
+import '../home/Home.dart';
 
 class AddOfferScreen extends StatefulWidget {
   @override
@@ -104,8 +105,10 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                     listimage,
                     selectedCategory,
                   );
-                  // Add logic for submitting the service addition form
-                },
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => HomePage()),
+                  );                },
                 child: Text(
                   'Ajouter le Service',
                   style: TextStyle(fontSize: 16.0, color: Colors.white),

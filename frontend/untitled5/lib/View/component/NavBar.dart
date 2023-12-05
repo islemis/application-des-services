@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:untitled5/View/User/Login.dart';
+import '../../Model/user.dart';
 import '../../Services/user/UserService.dart';
+import '../User/ProfilePage.dart';
 import '../offer/addOffer.dart';
 
 class NavBar extends StatefulWidget {
@@ -12,14 +14,31 @@ class NavBar extends StatefulWidget {
 
 class _NavBarState extends State<NavBar> {
 
+  Future<void> _onItemTapped(int index, BuildContext context) async {
+try{
+  print('Tapped index: $index');
 
-  void _onItemTapped(int index) {
+
     if (index == 1) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => AddOfferScreen()),
       );
-    } else if (index ==3)   {
+    }
+    else if (index ==2)   {
+      print('Fetching user data...');
+      User user = await getUserByEmail();
+      print('Retrieved user: $user');
+      print('Navigating to ProfilePage');
+
+      Navigator.push(
+
+        context,
+
+      MaterialPageRoute(builder: (context) => ProfilePage(user: user)),
+      );
+    }
+    else if (index ==3)   {
       logout();
       Navigator.push(
 
@@ -27,6 +46,10 @@ class _NavBarState extends State<NavBar> {
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     }
+} catch (e) {
+  print('Error: $e');
+  // Handle the error, e.g., show a toast or navigate to an error page.
+}
   }
 
   @override
@@ -52,7 +75,7 @@ class _NavBarState extends State<NavBar> {
       ],
       selectedItemColor: Colors.teal,
       unselectedItemColor: Colors.teal,
-      onTap: _onItemTapped,
+      onTap: (index) => _onItemTapped(index, context),
     );
   }
 }

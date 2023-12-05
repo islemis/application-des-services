@@ -99,18 +99,111 @@ Future<User> authenticateUser(String email, String password) async {
   }
 
 }
+//getUserFromToken
+/*Future<User> getUserFromToken() async {
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String token = prefs.getString('accessToken') ?? '';
+  return decodeToken(token);
+}*/
 
+
+//getUserByEmail
+Future<User> getUserByEmail() async {
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
+
+  String? email = await secureStorage.read(key: 'email');
+  print('Fetching user data for email: $email');
+
+  final response = await http.get(Uri.parse("${VPNURL}MyUser/email/$email"));
+  print('API URL: ${VPNURL}email/$email');
+  print('Response Status Code: ${response.statusCode}');
+  print('Response Body: ${response.body}');
+
+  if (response.statusCode == 200) {
+    return User.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load user');
+  }
+}
+
+//getUserById
+Future<User> getUserById(int userId) async {
+  final response = await http.get(Uri.parse('$VPNURL/$userId'));
+
+  if (response.statusCode == 200) {
+    return User.fromJson(jsonDecode(response.body));
+  } else {
+    throw Exception('Failed to load user');
+  }
+}
+
+//getAllUsers
+Future<List<User>> getUsers() async {
+  final response = await http.get(Uri.parse('$VPNURL/getUsers'));
+
+  if (response.statusCode == 200) {
+    Iterable users = jsonDecode(response.body);
+    return List<User>.from(users.map((user) => User.fromJson(user)));
+  } else {
+    throw Exception('Failed to load users');
+  }
+}
+//UpdateUser
+Future<void> updateUser(int userId, String userJson, List files) async {
+  final response = await http.put(
+    Uri.parse('$VPNURL/$userId'),
+    body: {
+      'user': userJson,
+      // Add other parameters for file uploads if needed
+    },
+  );
+
+  if (response.statusCode == 200) {
+    print('User updated successfully');
+  } else {
+    throw Exception('Failed to update user');
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//logout
 void logout() {
   // 1. Clear the stored token
   clearAuthToken();
 
 }
-
 void clearAuthToken() {
   // Clear the authentication token from local storage or cookies
   // For example, in Flutter/Dart using shared_preferences package:
   SharedPreferences.getInstance().then((prefs) {
-    prefs.remove('accesToken');
+    prefs.remove('accessToken');
   });
 }
 

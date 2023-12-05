@@ -42,12 +42,13 @@ getToken()async {
 
     // Navigate to the login page after a delay
     Future.delayed(Duration(seconds: 4), () {
-  Token!=null ?     Navigator.pushReplacement(
+      print(Token);
+  Token==null ?     Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => LoginPage()),
       ):  Navigator.pushReplacement(
     context,
-    MaterialPageRoute(builder: (context) => LoginPage()),
+    MaterialPageRoute(builder: (context) => HomePage()),
   );
     });
   }

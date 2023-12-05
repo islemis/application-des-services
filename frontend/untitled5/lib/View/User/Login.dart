@@ -63,6 +63,8 @@ class LoginPage extends StatelessWidget {
                          var response = await authenticateUser(email, password);
                         SharedPreferences.getInstance().then((prefs) {
                          prefs.setString('accessToken', response.accessToken ?? '');
+                         print("here");
+
                          authenticateUser(email,password);
                         });
 

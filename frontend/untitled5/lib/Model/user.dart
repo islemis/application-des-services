@@ -1,18 +1,21 @@
 
+import 'images.dart';
+import 'offer/Category.dart';
+
 class User {
   int? id;
   String? firstName;
-  Null? adresseTravail;
-  Null? adresseDomicile;
-  Null? diplome;
-  Null? tel;
-  Null? password;
+  String? adresseTravail;
+  String? adresseDomicile;
+  String? diplome;
+  String? tel;
+  String? password;
   String? email;
   String? lastName;
-  Null? category;
-  Null? images;
-  Null? profileImage;
-Null?accessToken ;
+  List<Category>? category;
+  List<Images>? images;
+  String?accessToken ;
+  Role? role ;
   User(
       {this.id,
         this.firstName,
@@ -25,7 +28,9 @@ Null?accessToken ;
         this.lastName,
         this.category,
         this.images,
-        this.profileImage});
+        this.role,
+        this.accessToken,
+        });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -37,9 +42,17 @@ Null?accessToken ;
     password = json['password'];
     email = json['email'];
     lastName = json['lastName'];
-    category = json['category'];
-    images = json['images'];
-    profileImage = json['profileImage'];
+    if (json['category'] != null) {
+      category = (json['category'] as List<dynamic>)
+          .map((category) => Category.fromJson(category))
+          .toList();
+    }
+    if (json['images'] != null) {
+      images = (json['images'] as List<dynamic>)
+          .map((images) => Images.fromJson(images))
+          .toList();
+    }
+    role=json['role'];
   }
 
   Map<String, dynamic> toJson() {
@@ -55,7 +68,7 @@ Null?accessToken ;
     data['lastName'] = this.lastName;
     data['category'] = this.category;
     data['images'] = this.images;
-    data['profileImage'] = this.profileImage;
+    data['role']=this.role;
     return data;
   }
 }
