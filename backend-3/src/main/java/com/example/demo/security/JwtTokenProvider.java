@@ -75,23 +75,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    /*
-    public String generateToken1(Map<String, Object> claims, String email) {
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(SignatureAlgorithm.HS512, secret)
-                .compact();
-    }*/
-
-  /*  public static String extractUsername(String token) {
-        return Jwts.parser()
-            .setSigningKey(secret)
-            .parseClaimsJws(token)
-            .getBody()
-            .getSubject();
-    }*/
+   
     public Boolean validateToken(String token) {
         return !isTokenExpired(token);
     }

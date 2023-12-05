@@ -16,13 +16,13 @@ Future<void> addOffre(String titre, String details, String address, double prix,
   String? password = await secureStorage.read(key: 'password');
 
   try {
-    //String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
+    String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
 
     var request = http.MultipartRequest('POST', Uri.parse(VPNURL + 'services/addService'));
     request.headers['Content-Type'] = 'multipart/form-data';
 
-    /* ..headers['Authorization'] = basicAuth  // Fix headers assignment
-      ..headers['Accept'] = 'application/json';*/
+    request.headers['Authorization'] = basicAuth ;  // Fix headers assignment
+    request.headers['Accept'] = 'application/json';
 
     // Add form fields
     request.fields.addAll({
@@ -94,7 +94,7 @@ Future<void> addOffre(String titre, String details, String address, double prix,
 //getalloffers
 Future <List<Offer>> fetchOffers()async{
 
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
+//  SharedPreferences prefs = await SharedPreferences.getInstance();
   // String? token = prefs.getString('token');
 
   final response = await http.get(

@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.dto.MyUserDto;
 import com.example.demo.model.JwtAuthenticationResponse;
 import com.example.demo.model.LoginRequest;
 import com.example.demo.model.MyUser;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserServiceImp;
+import com.example.demo.util.UserUtil;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,6 +28,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserServiceImp userService;
+	   @Autowired  
+	     private  UserUtil userUtil ; 
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserServiceImp userService) {
@@ -49,8 +53,8 @@ public class AuthController {
             String jwt = jwtTokenProvider.generateToken(authentication);
 
             // Fetch additional user data
-            MyUser user = userService.findByEmail(loginRequest.getEmail());
-
+            MyUserDto userDto = userService.findByEmail(loginRequest.getEmail());
+MyUser user=userUtil.convertToUser(userDto);
             // Create the response with token and user details
             JwtAuthenticationResponse response = new JwtAuthenticationResponse();
             response.setAccessToken(jwt);

@@ -104,6 +104,25 @@ public class UserController {
 	        return 	   userService.getUserById(userId);
 
 	    }
+	    
+	  //getUserbyEmail
+	    @GetMapping("email/{email}")
+	    @ResponseBody
+
+	    public MyUserDto findByEmail(@PathVariable String email) {
+	        return userService.findByEmail(email);
+
+	    }   
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
 //getALLusers
 	    @GetMapping("/getUsers")
 	    @ResponseBody

@@ -14,6 +14,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import com.example.demo.dto.MyUserDto;
 import com.example.demo.dto.ServiceDto;
 import com.example.demo.model.Category;
 import com.example.demo.model.ImageData;
@@ -25,6 +27,7 @@ import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.ImageService;
 import com.example.demo.service.UserServiceImp;
 import com.example.demo.util.ServiceUtil;
+import com.example.demo.util.UserUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -64,7 +67,9 @@ import javax.transaction.Transactional;
 	    @Autowired  
 
 	     private  ServiceUtil serviceUtil; 
-		    
+		   @Autowired  
+		     private  UserUtil userUtil ; 
+
 		    
 			//getUserServices
 
@@ -76,7 +81,7 @@ import javax.transaction.Transactional;
 	            String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
 	            final String[] values = credentials.split(":", 2);
 	            String email = values[0];
-	              MyUser currentUser = userService.findByEmail(email);
+	              MyUserDto currentUser = userService.findByEmail(email);
 
 
 	        Long    userId=currentUser.getId();
@@ -159,7 +164,8 @@ import javax.transaction.Transactional;
 		            String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
 		            final String[] values = credentials.split(":", 2);
 		            String email = values[0];
-		              MyUser currentUser = userService.findByEmail(email);
+		              MyUserDto userDto = userService.findByEmail(email);
+		              MyUser currentUser=userUtil.convertToUser(userDto);
 		            service.setUser(currentUser);
 		            
 			      

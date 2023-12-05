@@ -2,7 +2,9 @@ package com.example.demo.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -72,8 +74,50 @@ imageDto.setUrl(imageData);
 	
 	
 	
-	
-	
+	//from userDTo to user
+	 public MyUser convertToUser(MyUserDto userDto) {
+	        MyUser user = new MyUser();
+	        user.setId(userDto.getId());
+	        user.setFirstName(userDto.getFirstName());
+	        user.setLastName(userDto.getLastName());
+	        user.setEmail(userDto.getEmail());
+	        user.setDiplome(userDto.getDiplome());
+	        user.setAdresseDomicile(userDto.getAdresseDomicile());
+	        user.setAdresseTravail(userDto.getAdresseTravail());
+
+	        // Images
+	        Set<ImageData> imageList = new HashSet<>();
+	        for (ImageDto imageDto : userDto.getImages()) {
+	            ImageData imageData = new ImageData();
+	            imageData.setName(imageDto.getName());
+	           
+				try {
+					 byte[] 	url = imageService.downloadImageFromFileSystem(imageDto.getName());
+			            imageData.setUrl(url);
+
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+	            // You may need to handle the conversion of image data to a byte array here
+	            // imageData.setData(imageDto.getUrl());
+	            imageList.add(imageData);
+	        }
+	        user.setImages(imageList);        
+
+	        // Categories
+	        Set<Category> categoryList = new HashSet<>();
+	        for (CategoryDto categoryDto : userDto.getCategory()) {
+	            Category category = new Category();
+	            category.setId(categoryDto.getId());
+	            category.setName(categoryDto.getName());
+	            categoryList.add(category);
+	        }
+	        user.setCategories(categoryList);
+
+	        return user;
+	    }
 	
 	
 	

@@ -62,10 +62,17 @@ public class UserServiceImp implements UserService, UserDetailsService {
 					
 			    }
 	    //findUserByEmail
-	    public MyUser findByEmail(String email) {
-	        return userRepository.findByEmail(email);
+	    public MyUserDto findByEmail(String email) {
+	       MyUser user= userRepository.findByEmail(email);
+	       return userUtil.convert(user);
 	                
 	    }  
+	    
+
+	    
+	
+	    
+	    
 	    
 	 //loadUserByUsername
 	    @Override
