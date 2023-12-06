@@ -1,12 +1,15 @@
-//
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'dart:convert';
-import 'package:fluttertoast/fluttertoast.dart' ;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
-import 'package:untitled5/Services/env.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
 import '../../Model/user.dart';
+import '../env.dart';
+import 'dart:io';
 
 
 //user registre
@@ -99,12 +102,6 @@ Future<User> authenticateUser(String email, String password) async {
   }
 
 }
-//getUserFromToken
-/*Future<User> getUserFromToken() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String token = prefs.getString('accessToken') ?? '';
-  return decodeToken(token);
-}*/
 
 
 //getUserByEmail
@@ -128,8 +125,8 @@ Future<User> getUserByEmail() async {
 
 //getUserById
 Future<User> getUserById(int userId) async {
-  final response = await http.get(Uri.parse('$VPNURL/$userId'));
-
+  final response = await http.get(Uri.parse("${VPNURL}MyUser/$userId"));
+  print('Response Body: ${response.body}');
   if (response.statusCode == 200) {
     return User.fromJson(jsonDecode(response.body));
   } else {
@@ -149,37 +146,53 @@ Future<List<User>> getUsers() async {
   }
 }
 //UpdateUser
-Future<void> updateUser(int userId, String userJson, List files) async {
-  final response = await http.put(
-    Uri.parse('$VPNURL/$userId'),
-    body: {
-      'user': userJson,
-      // Add other parameters for file uploads if needed
-    },
+Future<void> updateUserProfile(
+    int userId,
+    Map<String, dynamic> userData,
+    List<File> images,
+    File profileImage,
+    ) async {
+  // Construct the request
+  var request = http.MultipartRequest(
+    'PUT',
+    Uri.parse('$VPNURL/MyUser/$userId'),
   );
 
-  if (response.statusCode == 200) {
-    print('User updated successfully');
-  } else {
-    throw Exception('Failed to update user');
+  // Add user data as fields
+  request.fields['userJson'] = jsonEncode(userData);
+
+  // Add images as files
+  for (var i = 0; i < images.length; i++) {
+    request.files.add(
+      await http.MultipartFile.fromPath(
+        'file',
+        images[i].path,
+      ),
+    );
+  }
+
+  // Add profile image as a file
+  request.files.add(
+    await http.MultipartFile.fromPath(
+      'profil',
+      profileImage.path,
+    ),
+  );
+
+  try {
+    // Send the request
+    var response = await request.send();
+
+    if (response.statusCode == 200) {
+      print('User updated successfully');
+    } else {
+      print('Failed to update user. Status code: ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Error: $error');
+    // Handle errors, e.g., show a toast or navigate to an error page.
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
