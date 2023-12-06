@@ -9,7 +9,7 @@ import 'package:untitled5/Services/env.dart';
 
 import '../../Model/offer/offer.dart';
 
-Future<void> addOffre(String titre, String details, String address, double prix, String description  , List<File> files, Category   ) async {
+Future<void> addOffre(String titre, String address, double prix, String description  , List<File> files, Category   ) async {
   final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
 
   String? email = await secureStorage.read(key: 'email');
@@ -30,7 +30,6 @@ Future<void> addOffre(String titre, String details, String address, double prix,
         "titre": titre,
         "price": prix,
         "description": description,
-        "details": details,
         "adresse": address,
         // Add other fields if needed
       }),
@@ -109,6 +108,8 @@ Future <List<Offer>> fetchOffers()async{
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(utf8.decode(response.bodyBytes));
     List<Offer> categories = jsonData.map((json) => Offer.fromJson(json)).toList();
+    print(jsonData);
+
     return categories;
   } else {
     throw Exception("Can't get the value");
@@ -123,7 +124,7 @@ Future <List<Offer>> fetchOffers()async{
 
 
 
-
+//getOfferById
 Future<Offer?> getOfferById(int offerId) async {
   try {
     final response = await http.get(
@@ -146,3 +147,52 @@ Future<Offer?> getOfferById(int offerId) async {
     throw Exception("Can't get the offer");
   }
 }
+
+
+//getalloffersofuser
+Future <List<Offer>> fetchOffersUser()async{
+
+  final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
+
+  String? email = await secureStorage.read(key: 'email');
+  String? password = await secureStorage.read(key: 'password');
+  String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
+
+
+  final response = await http.get(
+    Uri.parse(VPNURL+'services/UserServices'),
+    headers: {
+      'Authorization': basicAuth,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final List<dynamic> jsonData = json.decode(utf8.decode(response.bodyBytes));
+    List<Offer> offers = jsonData.map((json) => Offer.fromJson(json)).toList();
+    // Print the JSON data for debugging
+
+    return offers;
+  } else {
+    throw Exception("Can't get the value");
+  }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
