@@ -42,18 +42,25 @@ class User {
     password = json['password'];
     email = json['email'];
     lastName = json['lastName'];
+
+    // Check if 'role' is not null before assigning it
+    if (json['role'] != null) {
+      role = Role.fromJson(json['role']);
+    }
+
     if (json['category'] != null) {
       category = (json['category'] as List<dynamic>)
           .map((category) => Category.fromJson(category))
           .toList();
     }
+
     if (json['images'] != null) {
       images = (json['images'] as List<dynamic>)
           .map((images) => Images.fromJson(images))
           .toList();
     }
-    role=json['role'];
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();

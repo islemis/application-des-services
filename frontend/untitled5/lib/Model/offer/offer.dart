@@ -3,6 +3,7 @@
 import 'package:untitled5/Model/offer/Category.dart';
 
 import '../images.dart';
+import '../user.dart';
 class Offer {
   int? idService;
   String? adresse;
@@ -12,7 +13,7 @@ class Offer {
   double? price;
   String? titre;
   List<Images>? images;
-  //User? user;
+  User? user;
   List<Category>? category;
 
   Offer(
@@ -24,7 +25,7 @@ class Offer {
         this.price,
         this.titre,
         this.images,
-        //this.user,
+        this.user,
         this.category
   });
 
@@ -43,7 +44,7 @@ class Offer {
       });
     }
 
-  /*  user = json['user'] != null ? new User.fromJson(json['user']) : null; */
+  user = json['user'] != null ? new User.fromJson(json['user']) : null;
     if (json['category'] != null) {
       category = <Category>[];
       json['category'].forEach((v) {
@@ -64,10 +65,10 @@ class Offer {
     if (this.images != null) {
       data['images'] = this.images!.map((v) => v.toJson()).toList();
     }
-    /*
+
     if (this.user != null) {
       data['user'] = this.user!.toJson();
-    }*/
+    }
     if (this.category != null) {
       data['category'] = this.category!.map((v) => v.toJson()).toList();
     }
