@@ -26,8 +26,8 @@ public class StorageController {
     private ImageService imageService ;
 
 	@PostMapping("/fileSystem")
-	public ResponseEntity<?> uploadImageToFIleSystem(@RequestParam("image")MultipartFile file,@RequestParam("Service") Service service,@RequestParam("user") MyUser user) throws IOException {
-		String uploadImage = imageService.uploadImageToFileSystem(file,service,user);
+	public ResponseEntity<?> uploadImageToFIleSystem(@RequestParam("image")MultipartFile file,@RequestParam("Service") Service service,@RequestParam("user") MyUser user,@RequestParam("isProfil")Boolean b ) throws IOException {
+		String uploadImage = imageService.uploadImageToFileSystem(file,service,user,b);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(uploadImage);
 	}

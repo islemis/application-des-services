@@ -52,7 +52,6 @@ public class MyUser  {
     
     private String adresseTravail ;
     
-    
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

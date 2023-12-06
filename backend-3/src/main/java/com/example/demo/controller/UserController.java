@@ -67,8 +67,8 @@ public class UserController {
 	   @PutMapping("/{userId}")
 
 	   public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("user") String userJson,
-	            @RequestParam("file") MultipartFile[] file) {
-	        return userService.updateUser(userId, userJson, file);
+	            @RequestParam("file") MultipartFile[] file,@RequestParam("profil") MultipartFile profil) {
+	        return userService.updateUser(userId, userJson, file,profil);
 	    }
 	   
 	   

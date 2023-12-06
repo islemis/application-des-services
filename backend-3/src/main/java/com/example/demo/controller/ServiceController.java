@@ -174,7 +174,7 @@ import javax.transaction.Transactional;
 		            savedService.setCategories(service.getCategories());
 
 		           for (MultipartFile file : images) {
-		               String result = imageDataService.uploadImageToFileSystem(file, savedService,null);
+		               String result = imageDataService.uploadImageToFileSystem(file, savedService,null,false);
 		               System.out.println(result);
 		           }
 
@@ -232,7 +232,7 @@ import javax.transaction.Transactional;
 	            
 					try {
 						for (MultipartFile file : files) {
-						String imageResponse = imageDataService.uploadImageToFileSystem(file, service,null)   ;
+						String imageResponse = imageDataService.uploadImageToFileSystem(file, service,null,false)   ;
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block

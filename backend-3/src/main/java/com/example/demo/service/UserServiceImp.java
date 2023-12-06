@@ -124,62 +124,43 @@ public class UserServiceImp implements UserService, UserDetailsService {
 	
 	
 	
+//updateUser
+	public ResponseEntity<?> updateUser(Long id, String userJson, MultipartFile[] images, MultipartFile profilImage) {
+	    MyUser userUpdate = new MyUser();
+	    MyUser user = userRepository.findById(id).orElseThrow();
+	    try {
+	        userUpdate = objectMapper.readValue(userJson, MyUser.class);
+	    } catch (JsonMappingException e) {
+	        e.printStackTrace();
+	    } catch (JsonProcessingException e) {
+	        e.printStackTrace();
+	    }
+	    user.setFirstName(userUpdate.getFirstName());
+	    user.setLastName(userUpdate.getLastName());
+	    user.setDiplome(userUpdate.getDiplome());
+	    user.setAdresseDomicile(userUpdate.getAdresseDomicile());
+	    user.setAdresseTravail(userUpdate.getAdresseTravail());
+	    user.setTel(userUpdate.getTel());
 
-	
-	//updateUser
-	public ResponseEntity<?> updateUser(Long id, String userJson, MultipartFile[] images) {
-        MyUser userUpdate = new MyUser();
+	        try {
+	            for (MultipartFile file : images) {
+	                String imageResponse = imageDataService.uploadImageToFileSystem(file, null, user, false);
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
 
-        MyUser user = userRepository.findById(id)
-                .orElseThrow();
+	    try {
+	        String imageResponseProfil = imageDataService.uploadImageToFileSystem(profilImage, null, user, true);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    user.setCategories(userUpdate.getCategories());
+	    MyUser updatedUser = userRepository.save(user);
+	
+	    return ResponseEntity.ok("User updated successfully");
 
-            try {
-				userUpdate = objectMapper.readValue(userJson, MyUser.class);
-			} catch (JsonMappingException e) {
-				e.printStackTrace();
-			} catch (JsonProcessingException e) {
-				e.printStackTrace();
-			}
-        
-
-        user.setFirstName(userUpdate.getFirstName());
-        user.setLastName(userUpdate.getLastName());
-        user.setDiplome(userUpdate.getDiplome());
-        user.setAdresseDomicile(userUpdate.getAdresseDomicile());
-        user.setAdresseTravail(userUpdate.getAdresseTravail());
-        user.setTel(userUpdate.getTel());
-     
-
-        // Update images if needed...
-        try {
-        	for (MultipartFile file : images) {
-        	 String imageResponse = imageDataService.uploadImageToFileSystem(file,null,user);       
-        	}
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        user.setCategories(userUpdate.getCategories());
-
-         MyUser updatedUser = userRepository.save(user);
-
-
-        return ResponseEntity.ok("User updated successfully");
-    }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	}
 	
 //deleteUser
     

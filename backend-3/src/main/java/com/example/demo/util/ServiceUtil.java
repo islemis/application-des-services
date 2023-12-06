@@ -68,7 +68,7 @@ System.out.println(imageData);
             servicedto.setImages(imagedto);
 
             //user
-            userdto.setId(id);
+            userdto.setId(service.getUser().getId());
             userdto.setFirstName(service.getUser().getFirstName());
             userdto.setLastName(service.getUser().getLastName());
             userdto.setEmail(service.getUser().getEmail());

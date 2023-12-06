@@ -23,6 +23,6 @@ public class MyUserDto {
 		private List<CategoryDto>  category;
 		private List<ServiceDto>  services;
 	  private List<ImageDto> images ;
-	    
+
 
 }
