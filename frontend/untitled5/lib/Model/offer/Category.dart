@@ -13,6 +13,15 @@ class Category {
   }
 
   Category({this.id, this.name});
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Category && id == other.id && name == other.name;
+  }
+
+  // Add this hashcode override
+  @override
+  int get hashCode => id.hashCode ^ name.hashCode;
 
   Category.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -33,7 +42,7 @@ Future<List<Category>> fetchCategories() async {
   },);
 
   if (response.statusCode == 200) {
-    final List<dynamic> data = json.decode(response.body);
+    final List<dynamic> data = json.decode(utf8.decode(response.bodyBytes));
 
     List<Category> categories = data.map((category) => Category.fromJson(category)).toList();
  return categories;

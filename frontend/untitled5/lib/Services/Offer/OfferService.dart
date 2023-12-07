@@ -10,7 +10,8 @@ import 'package:untitled5/Services/env.dart';
 
 import '../../Model/offer/offer.dart';
 
-Future<void> addOffre(String titre, String address, double prix, String description  , List<File> files, Category   ) async {
+//addOFfer
+Future<void> addOffre(String titre, String address, double prix, String description, List<File> files, List<Category> categories) async {
   final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
 
   String? email = await secureStorage.read(key: 'email');
@@ -21,8 +22,7 @@ Future<void> addOffre(String titre, String address, double prix, String descript
 
     var request = http.MultipartRequest('POST', Uri.parse(VPNURL + 'services/addService'));
     request.headers['Content-Type'] = 'multipart/form-data';
-
-    request.headers['Authorization'] = basicAuth ;  // Fix headers assignment
+    request.headers['Authorization'] = basicAuth;
     request.headers['Accept'] = 'application/json';
 
     // Add form fields
@@ -32,12 +32,12 @@ Future<void> addOffre(String titre, String address, double prix, String descript
         "price": prix,
         "description": description,
         "adresse": address,
+        "categories": categories.map((category) => category.toJson()).toList(),
         // Add other fields if needed
       }),
     });
 
     // Add images
-
     for (var i = 0; i < files.length; i++) {
       request.files.add(await http.MultipartFile.fromPath(
         'images',
@@ -49,7 +49,6 @@ Future<void> addOffre(String titre, String address, double prix, String descript
     http.StreamedResponse response = await request.send();
     print('Number of images: ${files.length}');
 
-    print(request);
     if (response.statusCode == 201 || response.statusCode == 200) {
       // If the server returns a 201 CREATED or 200 OK response, handle the success here.
       // You might want to parse the response if the server sends any meaningful data.
@@ -77,15 +76,13 @@ Future<void> addOffre(String titre, String address, double prix, String descript
         textColor: Colors.white,
         fontSize: 16.0,
       );
-
     }
   } catch (error) {
     // Handle any exceptions that might occur during the HTTP request.
-    print('ErroriSLEM: $error');
+    print('Error: $error');
     if (error is http.Response) {
-      print('Response body BERICHE: ${error.body}');
+      print('Response body: ${error.body}');
     }
-
 
     throw Exception('Failed to create annonce.');
   }
@@ -194,7 +191,41 @@ Future<void> deleteOffer(int id) async {
   }
 }
 
+//updateOffer
 
+Future<void> updateOffer(Offer offer, List<File> imageFiles) async {
+  int? id = offer.idService;
+
+  final url = Uri.parse(VPNURL + 'services/$id'); // Replace with your actual endpoint
+  try {
+    final http.MultipartRequest request = http.MultipartRequest('PUT', url);
+
+    // Convert Offer object to JSON and attach it as a field
+    request.fields['service'] = json.encode(offer.toJson());
+    print("update fi service");
+    print('Offer JSON: ${json.encode(offer.toJson())}');
+
+    // Attach the images as parts
+    for (int i = 0; i < imageFiles.length; i++) {
+      final imageFile = imageFiles[i];
+      request.files.add(
+        await http.MultipartFile.fromPath('images', imageFile.path),
+      );
+    }
+
+    // Send the request
+    final http.Response response = await http.Response.fromStream(await request.send());
+
+    if (response.statusCode == 200) {
+      print('Offer updated successfully');
+    } else {
+      print('Failed to update offer. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
+    }
+  } catch (error) {
+    print('Error updating offer: $error');
+  }
+}
 
 
 

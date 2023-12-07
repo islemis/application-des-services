@@ -71,7 +71,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
   }
 
   Widget _buildCategoryDropdown() {
-    return DropdownButton<Category>(
+    return DropdownButtonFormField<Category>(
       value: selectedCategory,
       onChanged: (Category? value) {
         setState(() {
@@ -84,11 +84,19 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
           child: Text(category.name ?? ''),
         );
       }).toList(),
-      hint: Text('Select Category'),
-      isExpanded: true,
+      decoration: InputDecoration(
+        labelText: 'Category',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.teal, width: 2.0),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        contentPadding: EdgeInsets.symmetric(vertical: 16.0, horizontal: 12.0),
+      ),
     );
   }
-
   Widget _buildImageList() {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -252,14 +260,15 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       double? prixValue = double.tryParse(prixController.text);
-
+List<Category>?c=[];
+c.add(selectedCategory!);
                       await addOffre(
                         nomServiceController.text,
                         adresseController.text,
                         prixValue!,
                         descriptionController.text,
                         listimage,
-                        selectedCategory,
+                        c,
                       );
 
                       Navigator.push(

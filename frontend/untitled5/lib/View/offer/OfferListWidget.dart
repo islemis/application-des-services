@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../Model/offer/offer.dart';
 import '../../Services/Offer/OfferService.dart';
-import '../offer/OfferDetailsPage.dart';
+import 'UpdateOfferScreen.dart';
 class OfferListWidget extends StatefulWidget {
   @override
   _OfferListWidgetState createState() => _OfferListWidgetState();
@@ -51,7 +51,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  OfferDetailsPage(offer: offers[index]),
+                                  UpdateOfferScreen(offer: offers[index]),
                             ),
                           );
                         },
