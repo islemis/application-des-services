@@ -190,10 +190,10 @@ Future<void> deleteOffer(int id) async {
     print('Erreur lors de la suppression: $error');
   }
 }
+//update
 
-//updateOffer
 
-Future<void> updateOffer(Offer offer, List<File> imageFiles) async {
+Future<void> updateOffer(Offer offer ,List<File> imageFiles) async {
   int? id = offer.idService;
 
   final url = Uri.parse(VPNURL + 'services/$id'); // Replace with your actual endpoint
@@ -226,7 +226,6 @@ Future<void> updateOffer(Offer offer, List<File> imageFiles) async {
     print('Error updating offer: $error');
   }
 }
-
 
 
 

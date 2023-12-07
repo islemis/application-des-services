@@ -130,7 +130,6 @@ import javax.transaction.Transactional;
 		        
 		            Service service = serviceRepository.findById(id)
 		                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Service not found with id " + id));
-		            System.out.println(service.toString());
 		         ServiceDto   servicedto =serviceUtil.Convert(service);
 		            return servicedto;
 		      
@@ -239,7 +238,8 @@ import javax.transaction.Transactional;
 						e.printStackTrace();
 					}
 				
-				
+					System.out.println("Received images: " + files.length);
+
 		        final Service updatedService = serviceRepository.save(service);
 		        return ResponseEntity.ok("serviceUpdatet successfully");
 		    }

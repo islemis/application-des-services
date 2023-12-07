@@ -18,7 +18,6 @@ public class CategoryController {
 
     @GetMapping
     public List<Category> getAllCategories() {
-    	System.out.println(categoryRepository.findAll());
         return categoryRepository.findAll();
     }
 }

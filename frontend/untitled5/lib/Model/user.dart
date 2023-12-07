@@ -73,8 +73,9 @@ class User {
     data['password'] = this.password;
     data['email'] = this.email;
     data['lastName'] = this.lastName;
-    data['category'] = this.category;
-    data['images'] = this.images;
+    if (this.category != null) {
+      data['categories'] = this.category!.map((v) => v.toJson()).toList();
+    }    data['images'] = this.images;
     data['role']=this.role;
     return data;
   }

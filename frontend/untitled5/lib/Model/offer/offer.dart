@@ -71,7 +71,7 @@ class Offer {
       data['user'] = this.user!.toJson();
     }
     if (this.category != null) {
-      data['category'] = this.category!.map((v) => v.toJson()).toList();
+      data['categories'] = this.category!.map((v) => v.toJson()).toList();
     }
     return data;
   }
