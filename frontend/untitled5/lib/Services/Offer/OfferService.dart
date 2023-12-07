@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -177,7 +178,21 @@ Future <List<Offer>> fetchOffersUser()async{
 
 }
 
+//deleteOffer
+Future<void> deleteOffer(int id) async {
 
+  try {
+    final response = await http.delete(Uri.parse(VPNURL + 'services/$id'));
+
+    if (response.statusCode == 200) {
+      print('Suppression réussie');
+    } else {
+      print('Échec de la suppression. Statut ${response.statusCode}');
+    }
+  } catch (error) {
+    print('Erreur lors de la suppression: $error');
+  }
+}
 
 
 
