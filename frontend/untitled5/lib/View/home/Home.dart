@@ -28,6 +28,17 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
+  List<String> urls = [
+    'https://brico-direct.tn/',
+    'https://www.astral.tn/fr',
+    'https://www.boutique.bencheikhgarden.tn/'
+  ];
+  List<String> images = [
+    'assets/brico1.jpeg',
+    'assets/astral.jpeg',
+    'assets/garden.png',
+
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -117,51 +128,37 @@ class HomePage extends StatelessWidget {
                     ),
                     SizedBox(height: 8.0),
                     Container(
-                      height: 190.0,
+                      height: 158.0,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: 3,
+                        itemCount: urls.length, // Use the length of the URLs list
                         itemBuilder: (context, index) {
                           return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  List<String> urls = [
-                                    'https://www.gat.com.tn/particulier/assurances-habitation',
-                                    'https://www.immobiliere.tn/',
-                                  ];
-                                  List<String> images = [
-                                    'assets/img_3.png',
-                                    'assets/img_2.png',
-                                  ];
-                                  if (index < urls.length) {
-
-                                    launch(urls[index]);
-                                  }
-                                },
-                                child: Card(
-                                  elevation: 2.0,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8.0),
-                                  ),
-
-
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-
-                                    children: [
-                                      Image.asset(              'assets/img_3.png',
-                                        height: 150.0,
-                                        width: 150.0,
-
-                                        // fit: BoxFit.cover,
-                                      ),
-                                      SizedBox(height: 4.0),
-
-                                    ],
-                                  ),
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () {
+                                if (index < urls.length) {
+                                  launch(urls[index]);
+                                }
+                              },
+                              child: Card(
+                                elevation: 2.0,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0),
                                 ),
-                              )
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      images[index], // Use the correct index for images
+                                      height: 130.0,
+                                      width: 150.0,
+                                    ),
+                                    SizedBox(height: 4.0),
+                                  ],
+                                ),
+                              ),
+                            ),
                           );
                         },
                       ),
@@ -197,14 +194,19 @@ class HomePage extends StatelessWidget {
                           itemCount: offers.length,
                           itemBuilder: (context, index) {
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        OfferDetailsPage(offer: offers[index]),
-                                  ),
-                                );
+                              onTap: () async {
+                            Offer? offer= await getOfferById(offers[index].idService!.toInt());
+                                print("helloo");
+                                print(offers[index].images?[0].name);
+                            if (offer != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OfferDetailsPage(offer: offer),
+                                ),
+                              );
+                            }
+
                               },
                               child: CartOffre(offer: offers[index]),
                             );

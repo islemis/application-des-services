@@ -1,6 +1,9 @@
-import 'dart:typed_data';
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:untitled5/Model/offer/offer.dart';
 import '../../Model/user.dart';
+import '../../Services/Offer/OfferService.dart';
 
 class ProfilePage extends StatefulWidget {
   final User user;
@@ -17,8 +20,9 @@ class _ProfilePageState extends State<ProfilePage> {
   late TextEditingController _adresseDomicileController;
   late TextEditingController _adresseTravailController;
   late TextEditingController _telController;
-
   bool _isEditing = false;
+  File? _profileImage;
+  List<File?> _workImages = [];
 
   @override
   void initState() {
@@ -30,12 +34,29 @@ class _ProfilePageState extends State<ProfilePage> {
     _adresseTravailController =
         TextEditingController(text: widget.user.adresseTravail ?? '');
     _telController = TextEditingController(text: widget.user.tel ?? '');
+
+    // Initialize work-related images
+    for (var image in widget.user.images!.skip(1)) {
+      _workImages.add(null);
+    }
+  }
+
+  Future<void> _pickImage(bool isProfileImage, int index) async {
+    final pickedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedImage != null) {
+      setState(() {
+        if (isProfileImage) {
+          _profileImage = File(pickedImage.path);
+        } else {
+          _workImages[index] = File(pickedImage.path);
+        }
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    Uint8List? firstImageBytes = widget.user!.images?[0].url;
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Profile'),
@@ -48,7 +69,9 @@ class _ProfilePageState extends State<ProfilePage> {
               });
             },
           ),
+
         ],
+
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -56,19 +79,10 @@ class _ProfilePageState extends State<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Display profile image
-            _isEditing
-                ? TextFormField(
-              // Assuming user.images is a list of Uint8List
-              initialValue:
-              widget.user.images?.isNotEmpty == true ? '' : '',
-              onChanged: (value) {
-                // Handle image upload or modification logic
-              },
-            )
-                : Image.memory(
-              firstImageBytes!,
-              fit: BoxFit.cover,
-              height: 70.0,
+            CircleAvatar(
+              radius: 70.0,
+              backgroundImage:
+                   MemoryImage(widget.user.images![0].url!),
             ),
             SizedBox(height: 16.0),
             // Other user details
@@ -106,20 +120,54 @@ class _ProfilePageState extends State<ProfilePage> {
               controller: _telController,
             )
                 : Text(widget.user.tel.toString()),
+            SizedBox(height: 16.0),
+            // Display work-related images
+            if (widget.user.images!.length > 1)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Photos de travail:'),
+                  SizedBox(height: 8.0),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: List.generate(
+                        _workImages.length,
+                            (index) => Padding(
+                          padding: const EdgeInsets.only(right: 8.0),
+                          child: GestureDetector(
+                            onTap: () => _pickImage(false, index),
+                            child: _workImages[index] != null
+                                ? Image.file(
+                              _workImages[index]!,
+                              fit: BoxFit.cover,
+                              height: 70.0,
+                            )
+                                : Image.memory(
+                              widget.user.images![index + 1].url!,
+                              fit: BoxFit.cover,
+                              height: 70.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
           ],
         ),
       ),
       floatingActionButton: _isEditing
           ? FloatingActionButton(
         onPressed: () {
-          // Save changes
+          // Save changes logic here, including updating profile image and work-related images
           setState(() {
             widget.user.firstName = _firstNameController.text;
             widget.user.lastName = _lastNameController.text;
             widget.user.adresseDomicile = _adresseDomicileController.text;
             widget.user.adresseTravail = _adresseTravailController.text;
             widget.user.tel = _telController.text;
-            _isEditing = false;
           });
         },
         child: Icon(Icons.save),

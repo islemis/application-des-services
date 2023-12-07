@@ -93,10 +93,7 @@ Future<void> addOffre(String titre, String address, double prix, String descript
 //getalloffers
 Future <List<Offer>> fetchOffers()async{
 
-//  SharedPreferences prefs = await SharedPreferences.getInstance();
-  // String? token = prefs.getString('token');
-
-  final response = await http.get(
+ final response = await http.get(
     Uri.parse(VPNURL+'services'),
     headers: {
      // 'Authorization': 'Bearer $token',
@@ -108,7 +105,7 @@ Future <List<Offer>> fetchOffers()async{
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(utf8.decode(response.bodyBytes));
     List<Offer> categories = jsonData.map((json) => Offer.fromJson(json)).toList();
-    print(jsonData);
+    print(jsonData.length);
 
     return categories;
   } else {

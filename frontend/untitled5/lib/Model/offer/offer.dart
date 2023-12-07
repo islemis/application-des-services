@@ -28,30 +28,31 @@ class Offer {
         this.user,
         this.category
   });
-
   Offer.fromJson(Map<String, dynamic> json) {
     idService = json['idService'];
     adresse = json['adresse'];
     date = json['date'] != null ? DateTime.parse(json['date']) : null;
     details = json['details'];
     description = json['description'];
-    price = json['price'] != null ? double.parse(json['price'].toString()) : null; // Parse as double
+    price = json['price'] != null ? double.parse(json['price'].toString()) : null;
     titre = json['titre'];
+
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
-        images!.add(new Images.fromJson(v));
+        images!.add(Images.fromJson(v));
       });
     }
 
-  user = json['user'] != null ? new User.fromJson(json['user']) : null;
+    user = json['user'] != null ? User.fromJson(json['user']) : null;
     if (json['category'] != null) {
       category = <Category>[];
       json['category'].forEach((v) {
-        category!.add(new Category.fromJson(v));
+        category!.add(Category.fromJson(v));
       });
     }
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
