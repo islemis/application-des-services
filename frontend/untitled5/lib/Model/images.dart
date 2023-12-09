@@ -10,8 +10,8 @@ class Images {
   String? type;
   String? imagePath; // Change this field to match Spring class
   Uint8List? url; // Change this field to match Spring class
+  Images({this.url, this.imagePath});
 
-  Images({this.id, this.name, this.type, this.imagePath, this.url});
 
   Images.fromJson(Map<String, dynamic> json) {
     id = json['id'];

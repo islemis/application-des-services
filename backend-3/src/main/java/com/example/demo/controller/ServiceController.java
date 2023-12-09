@@ -220,7 +220,6 @@ import javax.transaction.Transactional;
 
 	            service.setCategories(serviceUpdate.getCategories());
 
-
 		        service.setTitre(serviceUpdate.getTitre());
 		        service.setPrice(serviceUpdate.getPrice());
 		        service.setDescription(serviceUpdate.getDescription());
@@ -237,6 +236,7 @@ import javax.transaction.Transactional;
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+
 				
 					System.out.println("Received images: " + files.length);
 

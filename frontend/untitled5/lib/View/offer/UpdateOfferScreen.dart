@@ -74,7 +74,6 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
       validator: validator,
     );
   }
-
   Widget _buildImageList() {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -82,9 +81,9 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
         crossAxisSpacing: 8.0,
         mainAxisSpacing: 8.0,
       ),
-      itemCount: listFile.length + 1,
+      itemCount: widget.offer.images!.length + listFile.length + 1,
       itemBuilder: (context, index) {
-        if (index == listFile.length) {
+        if (index == widget.offer.images!.length + listFile.length) {
           return GestureDetector(
             onTap: () async {
               if (listFile.length < 4) {
@@ -110,7 +109,7 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
               child: Icon(Icons.add, size: 50.0, color: Colors.grey),
             ),
           );
-        } else {
+        } else if (index < widget.offer.images!.length) {
           return Stack(
             children: [
               Container(
@@ -118,7 +117,7 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(8.0),
                   image: DecorationImage(
-                    image: FileImage(listFile[index]),
+                    image: MemoryImage(widget.offer.images![index].url!),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -129,7 +128,38 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      listFile.removeAt(index);
+                      widget.offer.images!.removeAt(index);
+                    });
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(4.0),
+                    color: Colors.grey,
+                    child: Icon(Icons.close, color: Colors.white, size: 20.0),
+                  ),
+                ),
+              ),
+            ],
+          );
+        } else {
+          return Stack(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8.0),
+                  image: DecorationImage(
+                    image: FileImage(listFile[index - widget.offer.images!.length]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      listFile.removeAt(index - widget.offer.images!.length);
                     });
                   },
                   child: Container(
@@ -145,6 +175,9 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
       },
     );
   }
+
+
+
 
   Widget _buildCategoryDropdown() {
     return DropdownButton<Category>(
@@ -164,13 +197,20 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
       isExpanded: true,
     );
   }
-
   void updateOfferAndNavigate() async {
     if (_formKey.currentState!.validate()) {
       double? prixValue = double.tryParse(prixController.text);
 
       // Wait for the updateOffer function to complete
       await updateOffer(widget.offer, listFile);
+
+      // Remove deleted images from the offer's images list
+      List<File> remainingImages = [];
+      for (File file in listFile) {
+        if (!widget.offer.images!.any((image) => image.url == file.path)) {
+          remainingImages.add(file);
+        }
+      }
 
       // Update the state with the modified values
       setState(() {
