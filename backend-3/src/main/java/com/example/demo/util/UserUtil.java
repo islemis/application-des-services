@@ -34,6 +34,7 @@ public  class UserUtil {
 	    userDto.setAdresseDomicile(user.getAdresseDomicile());
 	    userDto.setAdresseTravail(user.getAdresseTravail());
 
+	    userDto.setTel(user.getTel());
 
         
 //image
@@ -84,6 +85,7 @@ imageDto.setUrl(imageData);
 	        user.setDiplome(userDto.getDiplome());
 	        user.setAdresseDomicile(userDto.getAdresseDomicile());
 	        user.setAdresseTravail(userDto.getAdresseTravail());
+	        user.setTel(userDto.getTel());
 
 	        // Images
 	        Set<ImageData> imageList = new HashSet<>();

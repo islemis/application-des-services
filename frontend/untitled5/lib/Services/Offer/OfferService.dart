@@ -118,7 +118,6 @@ Future <List<Offer>> fetchOffers()async{
 
 
 
-
 //getOfferById
 Future<Offer?> getOfferById(int offerId) async {
   try {
@@ -129,6 +128,10 @@ Future<Offer?> getOfferById(int offerId) async {
         'Accept': 'application/json',
       },
     );
+
+    print('Response Status Code: ${response.statusCode}');
+    print('Response Headers: ${response.headers}');
+    print('Response Body: ${response.body}');
 
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(utf8.decode(response.bodyBytes));

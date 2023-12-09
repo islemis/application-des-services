@@ -125,11 +125,19 @@ Future<User> getUserByEmail() async {
 
 //getUserById
 Future<User> getUserById(int userId) async {
-  final response = await http.get(Uri.parse("${VPNURL}MyUser/$userId"));
-  print('Response Body: ${response.body}');
-  if (response.statusCode == 200) {
-    return User.fromJson(jsonDecode(response.body));
-  } else {
+  try {
+    final response = await http.get(Uri.parse("${VPNURL}MyUser/$userId"));
+
+
+
+    if (response.statusCode == 200) {
+      // Specify the encoding when decoding the response body
+      return User.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+    } else {
+      throw Exception('Failed to load user');
+    }
+  } catch (error) {
+    print('Error: $error');
     throw Exception('Failed to load user');
   }
 }
