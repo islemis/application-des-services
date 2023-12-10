@@ -13,7 +13,6 @@ import '../../Model/offer/offer.dart';
 //addOFfer
 Future<void> addOffre(String titre, String address, double prix, String description, List<File> files, List<Category> categories) async {
   final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
-
   String? email = await secureStorage.read(key: 'email');
   String? password = await secureStorage.read(key: 'password');
 
@@ -232,6 +231,23 @@ Future<void> updateOffer(Offer offer ,List<File> imageFiles) async {
 
 
 
+//getOffersBycategory
+Future<List<Offer>> getOffersByCategory(String categoryName) async {
+  try {
+    // Récupérer toutes les offres
+    List<Offer> allOffers = await fetchOffers();
+
+    // Filtrer les offres par catégorie
+    List<Offer> filteredOffers = allOffers
+        .where((offer) => offer.category?.any((cat) => cat.name == categoryName) ?? false)
+        .toList();
+
+    return filteredOffers;
+  } catch (error) {
+    print('Error: $error');
+    throw Exception("Can't get offers for the category");
+  }
+}
 
 
 

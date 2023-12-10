@@ -5,6 +5,8 @@ import 'package:untitled5/View/offer/CartOffre.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Services/Offer/OfferService.dart';
+import '../component/SearchBar.dart';
+import '../component/SearchResultPage.dart';
 import '../offer/OfferDetailsPage.dart';
 
 
@@ -43,7 +45,9 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+
           automaticallyImplyLeading: false,
+
           title: Text(
             'ServiceConnect',
             style: TextStyle(
@@ -69,47 +73,23 @@ class HomePage extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white, // Couleur de fond de la barre de recherche
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      icon: Icon(Icons.search),
-                      color: Colors.grey, // Couleur de l'icône de recherche
-                      onPressed: () {
-                        /* showSearch(
-                        context: context,
-                       delegate: OfferSearch(offers),
-                      );*/
-                      },
-                    ),
-                    Expanded(
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black, // Couleur du texte dans le champ de recherche
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Rechercher...',
-                          border: InputBorder.none,
-                          hintStyle: TextStyle(
-                            color: Colors.grey, // Couleur du texte d'indice dans le champ de recherche
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            /*   Search(
+              onSearch (query, category)
+             {
+                // Navigate to SearchResultPage with the search results
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => SearchResultPage(searchResults: searchResults),
+                  ),
+                );
+              },
+            ),*/
+
             Padding(
               padding: const EdgeInsets.all(6.0),
               child: Container(
-                height: 250.0,
+                height: 210.0,
                 padding: EdgeInsets.all(6.0),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -128,7 +108,7 @@ class HomePage extends StatelessWidget {
                     ),
                     SizedBox(height: 8.0),
                     Container(
-                      height: 158.0,
+                      height: 160.0,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: urls.length, // Use the length of the URLs list
@@ -143,6 +123,7 @@ class HomePage extends StatelessWidget {
                               },
                               child: Card(
                                 elevation: 2.0,
+                                color:Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8.0),
                                 ),
@@ -195,17 +176,17 @@ class HomePage extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () async {
-                            Offer? offer= await getOfferById(offers[index].idService!.toInt());
+                                Offer? offer= await getOfferById(offers[index].idService!.toInt());
                                 print("helloo");
                                 print(offers[index].images?[0].name);
-                            if (offer != null) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => OfferDetailsPage(offer: offer),
-                                ),
-                              );
-                            }
+                                if (offer != null) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => OfferDetailsPage(offer: offer),
+                                    ),
+                                  );
+                                }
 
                               },
                               child: CartOffre(offer: offers[index]),
@@ -216,6 +197,7 @@ class HomePage extends StatelessWidget {
                     })),
           ],
         ),
+
         bottomNavigationBar: NavBar()
     );
   }

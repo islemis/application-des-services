@@ -13,7 +13,7 @@ import 'dart:io';
 
 
 //user registre
-Future <User> register (firstName,lastName,email,password) async{
+Future <String> register (firstName,lastName,email,password) async{
 final response = await http.post(
   Uri.parse(VPNURL + "MyUser/addUser"),
   headers: <String, String>{
@@ -30,13 +30,23 @@ final response = await http.post(
 if (response.statusCode == 201 || response.statusCode == 200) {
   // If the server did return a 201 CREATED response,
   // then parse the JSON.
+print(response.body);
 
-  User u = User.fromJson(jsonDecode(response.body));
-  print(jsonDecode(response.body));
+  return "success";
+} else if(response.statusCode == 500){
+  Fluttertoast.showToast(
+      msg: "email existe déja ",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0);
 
-  print(u);
-  return u;
-} else {
+  throw Exception('Failed to create account .');
+
+}
+else {
  // var mess = jsonDecode(response.body)['message'];
  // print(mess.runtimeType);
   // If the server did not return a 201 CREATED response,
@@ -94,7 +104,7 @@ Future<User> authenticateUser(String email, String password) async {
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0);
 
@@ -104,24 +114,35 @@ Future<User> authenticateUser(String email, String password) async {
 }
 
 
-//getUserByEmail
+//getuserbyemail
 Future<User> getUserByEmail() async {
-  final FlutterSecureStorage secureStorage = FlutterSecureStorage(); // Initialize the instance
+  try {
+    final FlutterSecureStorage secureStorage = FlutterSecureStorage();
+    String? email = await secureStorage.read(key: 'email');
 
-  String? email = await secureStorage.read(key: 'email');
-  print('Fetching user data for email: $email');
+    final response = await http.get(
+      Uri.parse("${VPNURL}MyUser/email/$email"),
+      headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    );
 
-  final response = await http.get(Uri.parse("${VPNURL}MyUser/email/$email"));
-  print('API URL: ${VPNURL}email/$email');
-  print('Response Status Code: ${response.statusCode}');
-  print('Response Body: ${response.body}');
+    print('Response Status Code: ${response.statusCode}');
+    print('Response Headers: ${response.headers}');
+    print('Response Body: ${response.body}');
 
-  if (response.statusCode == 200) {
-    return User.fromJson(jsonDecode(response.body));
-  } else {
-    throw Exception('Failed to load user');
+    if (response.statusCode == 200) {
+      dynamic jsonData = json.decode(utf8.decode(response.bodyBytes));
+      User user = User.fromJson(jsonData);
+      return user;
+    } else {
+      throw Exception("Failed to load user. Status Code: ${response.statusCode}");
+    }
+  } catch (error) {
+    print('Error: $error');
+    throw Exception("Failed to load user");
   }
 }
+
+
 
 //getUserById
 Future<User> getUserById(int userId) async {
@@ -154,54 +175,47 @@ Future<List<User>> getUsers() async {
   }
 }
 //UpdateUser
-Future<void> updateUserProfile(
-    int userId,
-    Map<String, dynamic> userData,
-    List<File> images,
-    File profileImage,
-    ) async {
-  // Construct the request
-  var request = http.MultipartRequest(
-    'PUT',
-    Uri.parse('$VPNURL/MyUser/$userId'),
-  );
+Future<void> updateUser(User user ,List<File> imageFiles, File profileImage) async {
+  int? id = user.id;
 
-  // Add user data as fields
-  request.fields['userJson'] = jsonEncode(userData);
+  final url = Uri.parse(VPNURL + 'MyUser/$id'); // Replace with your actual endpoint
+  try {
+    final http.MultipartRequest request = http.MultipartRequest('PUT', url);
 
-  // Add images as files
-  for (var i = 0; i < images.length; i++) {
+    // Convert user object to JSON and attach it as a field
+    request.fields['user'] = json.encode(user.toJson());
+    print("update user ");
+    print('Offer JSON: ${json.encode(user.toJson())}');
+
+    // Attach the images as parts
+    for (int i = 0; i < imageFiles.length; i++) {
+      final imageFile = imageFiles[i];
+      request.files.add(
+        await http.MultipartFile.fromPath('file', imageFile.path),
+      );
+    }
+    // Add profile image as a file
     request.files.add(
       await http.MultipartFile.fromPath(
-        'file',
-        images[i].path,
+        'profil',
+        profileImage.path,
       ),
     );
-  }
 
-  // Add profile image as a file
-  request.files.add(
-    await http.MultipartFile.fromPath(
-      'profil',
-      profileImage.path,
-    ),
-  );
 
-  try {
     // Send the request
-    var response = await request.send();
+    final http.Response response = await http.Response.fromStream(await request.send());
 
     if (response.statusCode == 200) {
-      print('User updated successfully');
+      print('user updated successfully');
     } else {
       print('Failed to update user. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
     }
   } catch (error) {
-    print('Error: $error');
-    // Handle errors, e.g., show a toast or navigate to an error page.
+    print('Error updating user: $error');
   }
 }
-
 
 
 

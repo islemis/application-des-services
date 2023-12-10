@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:untitled5/View/User/Login.dart';
 import '../../Model/user.dart';
 import '../../Services/user/UserService.dart';
-import '../User/ProfilePage.dart';
+import '../User/UpdateUserScreen.dart';
 import '../offer/OfferListWidget.dart';
 import '../offer/addOffer.dart';
 
@@ -60,13 +60,13 @@ class _NavBarState extends State<NavBar> {
 
               onTap: () async {
                 User user = await getUserByEmail();
-
+print(user.diplome);
                 Navigator.pop(context); // Close the menu
 
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ProfilePage(user:user),
+                    builder: (context) => UpdateUserScreen(user:user),
                   ),
                 );
               },

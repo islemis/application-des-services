@@ -260,8 +260,8 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       double? prixValue = double.tryParse(prixController.text);
-List<Category>?c=[];
-c.add(selectedCategory!);
+                 List<Category>?c=[];
+                  c.add(selectedCategory!);
                       await addOffre(
                         nomServiceController.text,
                         adresseController.text,

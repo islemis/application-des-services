@@ -200,10 +200,6 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
   void updateOfferAndNavigate() async {
     if (_formKey.currentState!.validate()) {
       double? prixValue = double.tryParse(prixController.text);
-
-      // Wait for the updateOffer function to complete
-      await updateOffer(widget.offer, listFile);
-
       // Remove deleted images from the offer's images list
       List<File> remainingImages = [];
       for (File file in listFile) {
@@ -211,7 +207,6 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
           remainingImages.add(file);
         }
       }
-
       // Update the state with the modified values
       setState(() {
         widget.offer.titre = nomServiceController.text;
@@ -219,8 +214,13 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
         widget.offer.price = prixValue;
         widget.offer.description = descriptionController.text;
         widget.offer.category = [selectedCategory!];
-        widget.offer.images = listFile.cast<Images>();
       });
+      // Wait for the updateOffer function to complete
+      await updateOffer(widget.offer,listFile);
+
+
+
+
 
       // Navigate to the next screen
       Navigator.push(
@@ -323,4 +323,5 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
       ),
     );
   }
+
 }

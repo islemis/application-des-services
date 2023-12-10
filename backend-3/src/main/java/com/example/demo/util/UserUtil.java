@@ -51,6 +51,7 @@ System.out.println(imageData);
     
 imageDto.setUrl(imageData);
     imageDto.setName(image.getName());
+    imageDto.setImagePath(image.getImagePath());
     imagedto.add(imageDto);
 } catch (IOException e) {
     // Handle the exception if there's an issue reading the image data
@@ -92,7 +93,8 @@ imageDto.setUrl(imageData);
 	        for (ImageDto imageDto : userDto.getImages()) {
 	            ImageData imageData = new ImageData();
 	            imageData.setName(imageDto.getName());
-	           
+	            imageData.setImagePath(imageDto.getImagePath());
+
 				try {
 					 byte[] 	url = imageService.downloadImageFromFileSystem(imageDto.getName());
 			            imageData.setUrl(url);
