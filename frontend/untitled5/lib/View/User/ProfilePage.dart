@@ -60,7 +60,8 @@ class ProfilePage extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(width: 2, color: Colors.teal),
                       image: DecorationImage(
-                        image: MemoryImage(profileImage!),
+                        image:
+                            MemoryImage(profileImage!),
                         fit: BoxFit.cover,
                       ),
                     ),

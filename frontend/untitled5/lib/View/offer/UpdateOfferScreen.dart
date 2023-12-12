@@ -236,14 +236,14 @@ class _UpdateOfferScreenState extends State<UpdateOfferScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Modifier le Service',
+          'Modifier le service',
           style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
             color: Colors.teal,
           ),
         ),
-        backgroundColor: Colors.grey,
+        backgroundColor: Colors.white60,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

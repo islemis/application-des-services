@@ -5,10 +5,8 @@ import 'package:untitled5/View/offer/CartOffre.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Services/Offer/OfferService.dart';
-import '../component/SearchBar.dart';
-import '../component/SearchResultPage.dart';
+import '../component/SearchBarApp.dart';
 import '../offer/OfferDetailsPage.dart';
-
 
 void main() {
   runApp(MyApp());
@@ -19,8 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        scaffoldBackgroundColor: Color(0xFFF8F6E9), // Couleur beige plus claire
-
+        scaffoldBackgroundColor: Color(0xFFF8F6E9),
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal)
             .copyWith(secondary: Colors.teal),
       ),
@@ -29,7 +26,14 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  const HomePage();
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   List<String> urls = [
     'https://brico-direct.tn/',
     'https://www.astral.tn/fr',
@@ -39,166 +43,164 @@ class HomePage extends StatelessWidget {
     'assets/brico1.jpeg',
     'assets/astral.jpeg',
     'assets/garden.png',
-
   ];
+  String category = "Plomberie";
+  bool isFilteredByCategories = false;
+
+  void setCategory(String ca) => setState(() {
+    category = ca;
+    isFilteredByCategories = true;
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-
-          automaticallyImplyLeading: false,
-
-          title: Text(
-            'ServiceConnect',
-            style: TextStyle(
-              fontFamily: 'Times New Roman',
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.teal, // Couleur verte pour le texte de l'appbar
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        title: Text(
+          'ServiceConnect',
+          style: TextStyle(
+            fontFamily: 'Times New Roman',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.teal,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(0.0),
+            child: Image.asset(
+              'assets/logo.png',
+              height: 70,
             ),
           ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.all(0.0),
-              child: Image.asset(
-                'assets/logo.png',
-                // Remplacez par le chemin de votre image de logo
-                height: 70, // Ajustez la hauteur selon vos besoins
+        ],
+        backgroundColor: Colors.white,
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 50,
+            child: SearchBarApp(setCategoryCallBack: setCategory),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Container(
+              height: 210.0,
+              padding: EdgeInsets.all(6.0),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(6.0),
               ),
-            ),
-          ],
-          backgroundColor: Colors
-              .white!, // Couleur bleue claire pour l'arrière-plan de l'appbar
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /*   Search(
-              onSearch (query, category)
-             {
-                // Navigate to SearchResultPage with the search results
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => SearchResultPage(searchResults: searchResults),
-                  ),
-                );
-              },
-            ),*/
-
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Container(
-                height: 210.0,
-                padding: EdgeInsets.all(6.0),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  // Couleur de fond de la bande publicitaire
-                  borderRadius: BorderRadius.circular(6.0),
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Annonces',
-                      style: TextStyle(
-                        fontSize: 15.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                      ),
+              child: Column(
+                children: [
+                  Text(
+                    'Annonces',
+                    style: TextStyle(
+                      fontSize: 15.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
-                    SizedBox(height: 8.0),
-                    Container(
-                      height: 160.0,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: urls.length, // Use the length of the URLs list
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: GestureDetector(
-                              onTap: () {
-                                if (index < urls.length) {
-                                  launch(urls[index]);
-                                }
-                              },
-                              child: Card(
-                                elevation: 2.0,
-                                color:Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      images[index], // Use the correct index for images
-                                      height: 130.0,
-                                      width: 150.0,
-                                    ),
-                                    SizedBox(height: 4.0),
-                                  ],
-                                ),
+                  ),
+                  SizedBox(height: 8.0),
+                  Container(
+                    height: 160.0,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: urls.length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              if (index < urls.length) {
+                                launch(urls[index]);
+                              }
+                            },
+                            child: Card(
+                              elevation: 2.0,
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Image.asset(
+                                    images[index],
+                                    height: 130.0,
+                                    width: 150.0,
+                                  ),
+                                  SizedBox(height: 4.0),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
+          ),
+          Expanded(
+            child: FutureBuilder(
+              future: fetchOffers(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                } else if (snapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${snapshot.error}'),
+                  );
+                } else {
+                  List<Offer> offers = snapshot.data as List<Offer>;
 
-            Expanded(
-                child: FutureBuilder(
-                    future: fetchOffers(),
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Center(
-                          child:
-                          CircularProgressIndicator(), // Show a loading indicator
-                        );
-                      } else if (snapshot.hasError) {
-                        return Center(
-                          child: Text(
-                              'Error: ${snapshot.error}'), // Show error if any
-                        );
-                      } else {
-                        List<Offer> offers = snapshot.data as List<Offer>;
+                  List<Offer> filteredOffers = offers;
 
-                        return GridView.builder(
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 8.0,
-                            mainAxisSpacing: 8.0,
-                          ),
-                          itemCount: offers.length,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () async {
-                                Offer? offer= await getOfferById(offers[index].idService!.toInt());
-                                print("helloo");
-                                print(offers[index].images?[0].name);
-                                if (offer != null) {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => OfferDetailsPage(offer: offer),
-                                    ),
-                                  );
-                                }
+                  if (isFilteredByCategories) {
+                    filteredOffers = offers
+                        .where((offer) =>
+                        offer.category![0].name!.toLowerCase().startsWith(category.toLowerCase()))
+                        .toList();
+                  }
 
-                              },
-                              child: CartOffre(offer: offers[index]),
+                  return GridView.builder(
+                    shrinkWrap: true,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 8.0,
+                      mainAxisSpacing: 8.0,
+                    ),
+                    itemCount: filteredOffers.length,
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () async {
+                          Offer? offer = await getOfferById(filteredOffers[index].idService!.toInt());
+                          if (offer != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => OfferDetailsPage(offer: offer),
+                              ),
                             );
-                          },
-                        );
-                      }
-                    })),
-          ],
-        ),
-
-        bottomNavigationBar: NavBar()
+                          }
+                        },
+                        child: CartOffre(offer: filteredOffers[index]),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: NavBar(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../Model/offer/offer.dart';
 import '../../Services/Offer/OfferService.dart';
 import 'UpdateOfferScreen.dart';
+
 class OfferListWidget extends StatefulWidget {
   @override
   _OfferListWidgetState createState() => _OfferListWidgetState();
@@ -18,8 +19,19 @@ class _OfferListWidgetState extends State<OfferListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Container(
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Mes services',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.teal,
+          ),
+        ),
+        backgroundColor: Colors.white60,
+      ),
+      body: Container(
         color: Colors.white,
         padding: EdgeInsets.all(8.0),
         child: FutureBuilder(
@@ -111,4 +123,3 @@ class _OfferListWidgetState extends State<OfferListWidget> {
     );
   }
 }
-

@@ -4,7 +4,11 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:untitled5/Services/Offer/OfferService.dart';
+import 'package:untitled5/View/User/ProfilePage.dart';
+import 'package:untitled5/View/User/UpdateUserScreen.dart';
 import '../../Model/offer/Category.dart';
+import '../../Model/user.dart';
+import '../../Services/user/UserService.dart';
 import '../home/Home.dart';
 
 class AddOfferScreen extends StatefulWidget {
@@ -34,6 +38,8 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
     }).catchError((error) {
       print('Error fetching categories: $error');
     });
+
+
   }
 
   Widget _buildTextField({
@@ -41,20 +47,15 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
     required String labelText,
     int? maxLength,
     int? maxLines,
-    bool isNumeric = false, // Ajoute un paramètre pour indiquer si c'est un champ numérique
-
-
+    bool isNumeric = false,
     required String? Function(String?)? validator,
-
-
   }) {
     return TextFormField(
       controller: controller,
       maxLength: maxLength,
       maxLines: maxLines,
-      keyboardType: isNumeric ? TextInputType.number : null, // Définit le type de clavier
-      inputFormatters: isNumeric ? [FilteringTextInputFormatter.digitsOnly] : null, // Permet uniquement les chiffres
-
+      keyboardType: isNumeric ? TextInputType.number : null,
+      inputFormatters: isNumeric ? [FilteringTextInputFormatter.digitsOnly] : null,
       decoration: InputDecoration(
         labelText: labelText,
         border: OutlineInputBorder(
@@ -97,6 +98,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
       ),
     );
   }
+
   Widget _buildImageList() {
     return GridView.builder(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -170,133 +172,134 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Ajout De Service',
-          style: TextStyle(
-            fontSize: 20.0,
-            fontWeight: FontWeight.bold,
-            color: Colors.teal,
+      return Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Ajouter un service',
+            style: TextStyle(
+              fontSize: 20.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.teal,
+            ),
           ),
+          backgroundColor: Colors.white60,
         ),
-        backgroundColor: Colors.grey,
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Form(
-            key: _formKey, // Add this line to connect the form key
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                _buildTextField(
-                  controller: nomServiceController,
-                  labelText: 'Nom Service',
-                  maxLength: 25,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Le nom du service est requis';
-                    } else if (value.length > 25) {
-                      return 'Le nom ne doit pas dépasser 25 caractères';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16.0),
-                _buildTextField(
-                  controller: adresseController,
-                  labelText: 'Adresse',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'L\'adresse est requise';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16.0),
-                _buildTextField(
-                  controller: prixController,
-                  labelText: 'Prix',
-                  maxLines: 1,
-                  isNumeric: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Le prix est requis';
-                    } else if (double.tryParse(value) == null) {
-                      return 'Veuillez entrer un nombre valide pour le prix';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16.0),
-                _buildTextField(
-                  controller: descriptionController,
-                  labelText: 'Description du Service',
-                  maxLines: 5,
-                  maxLength: 500,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'La description du service est requise';
-                    } else if (value.length > 500) {
-                      return 'La description ne doit pas dépasser 500 caractères';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 16.0),
-                _buildCategoryDropdown(),
-                SizedBox(height: 16.0),
-                Container(
-                  height: 200.0,
-                  decoration: BoxDecoration(
-                    border: Border.all(color: Colors.grey),
-                    borderRadius: BorderRadius.circular(8.0),
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: SingleChildScrollView(
+            child: Form(
+              key: _formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _buildTextField(
+                    controller: nomServiceController,
+                    labelText: 'Nom Service',
+                    maxLength: 25,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Le nom du service est requis';
+                      } else if (value.length > 25) {
+                        return 'Le nom ne doit pas dépasser 25 caractères';
+                      }
+                      return null;
+                    },
                   ),
-                  child: _buildImageList(),
-                ),
-                SizedBox(height: 16.0),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (_formKey.currentState!.validate()) {
-                      double? prixValue = double.tryParse(prixController.text);
-                 List<Category>?c=[];
-                  c.add(selectedCategory!);
-                      await addOffre(
-                        nomServiceController.text,
-                        adresseController.text,
-                        prixValue!,
-                        descriptionController.text,
-                        listimage,
-                        c,
-                      );
-
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => HomePage()),
-                      );
-                    }
-                  },
-                  child: Text(
-                    'Ajouter le Service',
-                    style: TextStyle(fontSize: 16.0, color: Colors.white),
+                  SizedBox(height: 16.0),
+                  _buildTextField(
+                    controller: adresseController,
+                    labelText: 'Adresse',
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'L\'adresse est requise';
+                      }
+                      return null;
+                    },
                   ),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.teal[400],
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
+                  SizedBox(height: 16.0),
+                  _buildTextField(
+                    controller: prixController,
+                    labelText: 'Prix',
+                    maxLines: 1,
+                    isNumeric: true,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Le prix est requis';
+                      } else if (double.tryParse(value) == null) {
+                        return 'Veuillez entrer un nombre valide pour le prix';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  _buildTextField(
+                    controller: descriptionController,
+                    labelText: 'Description du Service',
+                    maxLines: 5,
+                    maxLength: 500,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'La description du service est requise';
+                      } else if (value.length > 500) {
+                        return 'La description ne doit pas dépasser 500 caractères';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 16.0),
+                  _buildCategoryDropdown(),
+                  SizedBox(height: 16.0),
+                  Container(
+                    height: 200.0,
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
+                    child: _buildImageList(),
                   ),
-                ),
+                  SizedBox(height: 16.0),
+                  ElevatedButton(
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        double? prixValue = double.tryParse(
+                            prixController.text);
+                        List<Category>? c = [];
+                        c.add(selectedCategory!);
+                        await addOffre(
+                          nomServiceController.text,
+                          adresseController.text,
+                          prixValue!,
+                          descriptionController.text,
+                          listimage,
+                          c,
+                        );
 
-                SizedBox(height: 16.0),
-              ],
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      }
+                    },
+                    child: Text(
+                      'Ajouter le Service',
+                      style: TextStyle(fontSize: 16.0, color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.teal[400],
+                      elevation: 3,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16.0),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    }
+
   }
 
-}

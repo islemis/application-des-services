@@ -67,7 +67,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Modifier le Profil'),
+        title: Text('Éditer mon profil'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -88,10 +88,13 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(width: 2, color: Colors.teal),
-                      image: DecorationImage(
-                        image: MemoryImage(profileImage ?? Uint8List(0)),
-                        fit: BoxFit.cover,
-                      ),
+
+                        image:  DecorationImage(
+                      image: profileImage != null
+                      ? MemoryImage(profileImage ?? Uint8List(0))
+                            : AssetImage('assets/inconnu.png') as ImageProvider, // Provide a placeholder image path
+                    fit: BoxFit.cover,
+                  ),
                     ),
                   ),
                 ),

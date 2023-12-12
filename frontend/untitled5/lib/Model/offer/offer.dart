@@ -1,9 +1,9 @@
 
 
-import 'package:untitled5/Model/offer/Category.dart';
 
 import '../images.dart';
 import '../user.dart';
+import 'Category.dart';
 class Offer {
   int? idService;
   String? adresse;

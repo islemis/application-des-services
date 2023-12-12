@@ -124,7 +124,6 @@ Future<User> getUserByEmail() async {
       Uri.parse("${VPNURL}MyUser/email/$email"),
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
     );
-
     print('Response Status Code: ${response.statusCode}');
     print('Response Headers: ${response.headers}');
     print('Response Body: ${response.body}');
@@ -132,6 +131,9 @@ Future<User> getUserByEmail() async {
     if (response.statusCode == 200) {
       dynamic jsonData = json.decode(utf8.decode(response.bodyBytes));
       User user = User.fromJson(jsonData);
+      print("byemail");
+      print(user.role?.roleName);
+
       return user;
     } else {
       throw Exception("Failed to load user. Status Code: ${response.statusCode}");

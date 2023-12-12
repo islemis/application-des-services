@@ -18,6 +18,7 @@ import com.example.demo.service.ImageService;
 
 @RestController
 @RequestMapping("/image")
+@CrossOrigin(origins = "http://localhost:53942") 
 
 public class StorageController {
 
