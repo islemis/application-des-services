@@ -37,9 +37,12 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 import javax.transaction.Transactional;
@@ -238,7 +241,6 @@ import javax.transaction.Transactional;
 					}
 
 				
-					System.out.println("Received images: " + files.length);
 
 		        final Service updatedService = serviceRepository.save(service);
 		        return ResponseEntity.ok("serviceUpdatet successfully");
@@ -250,40 +252,40 @@ import javax.transaction.Transactional;
 		    
 		    
 		    
+		    //getServicesByCatgeory
 
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
+		    @GetMapping("Category/{nom}")
+		    public    List<ServiceDto> getServicesByCategory(@PathVariable String nom) {
+		        
+		            List<Service> services = serviceRepository.findAll();
 
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
-		    
+	            	Set<Category> c = new  HashSet<>();
+		            List<ServiceDto> servicesCat =new  ArrayList<>();
+		            for(Service service:services)
+		            {
+							c=service.getCategories();
+							for(Category cat:c)
+							{
+								if(cat.getName().equals(nom))
+								{
+							         ServiceDto   servicedto =serviceUtil.Convert(service);
+										System.out.println("here");
+							         servicesCat.add(servicedto);
+									
+								}
+									
+							}
+							
+		            }
+		            return servicesCat;
 
+		            	
+		            }
+		      
+		    
+		    
+		    
+	
 	}
 
 

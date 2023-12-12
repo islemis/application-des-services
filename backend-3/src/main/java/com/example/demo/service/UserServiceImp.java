@@ -194,7 +194,28 @@ public class UserServiceImp implements UserService, UserDetailsService {
     	
     	
     }
-	
+    
+    public void changeUserRole(Long userId) {
+        // Find the user by ID
+        MyUser user = userRepository.findById(userId).orElse(null);
+
+        if (user != null) {
+            // Find the role by name
+            Role newRole = RoleRepository.findByName("prestataire");
+
+            if (newRole != null) {
+                // Set the new role for the user
+                user.setRole(newRole);
+
+                // Save the updated user
+                userRepository.save(user);
+            } else {
+                throw new IllegalArgumentException("Role not found: " );
+            }
+        } else {
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
+    }
 	
 	
 	

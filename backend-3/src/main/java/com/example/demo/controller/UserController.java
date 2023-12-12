@@ -73,7 +73,15 @@ public class UserController {
 	   
 	   
 	   
-	   
+	   @PutMapping("/changeRole/{userId}")
+	    public ResponseEntity<String> changeUserRole(@PathVariable Long userId) {
+	        try {
+	            userService.changeUserRole(userId);
+	            return ResponseEntity.ok("User role changed successfully");
+	        } catch (IllegalArgumentException e) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+	        }
+	    }
 	   
 	   
 	   

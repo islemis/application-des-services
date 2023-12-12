@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.ImageDto;
 import com.example.demo.dto.MyUserDto;
+import com.example.demo.dto.RoleDto;
 import com.example.demo.model.Category;
 import com.example.demo.model.ImageData;
 import com.example.demo.model.MyUser;
+import com.example.demo.model.Role;
 import com.example.demo.service.ImageService;
 @Component
 public  class UserUtil {
@@ -35,7 +37,8 @@ public  class UserUtil {
 	    userDto.setAdresseTravail(user.getAdresseTravail());
 
 	    userDto.setTel(user.getTel());
-
+	    RoleDto r=new RoleDto(user.getRole().getId(), user.getRole().getName());
+	    userDto.setRole(r);
         
 //image
         List  <ImageDto> imagedto= new ArrayList <>();
@@ -60,7 +63,6 @@ imageDto.setUrl(imageData);
 }
         userDto.setImages(imagedto);
 	        
-
 	    // set categories if needed
 	    List<CategoryDto> categorydto=new ArrayList<>();
         for(Category  category :user.getCategories()  )
@@ -87,7 +89,10 @@ imageDto.setUrl(imageData);
 	        user.setAdresseDomicile(userDto.getAdresseDomicile());
 	        user.setAdresseTravail(userDto.getAdresseTravail());
 	        user.setTel(userDto.getTel());
-
+		    Role r=new Role(userDto.getRole().getId(), userDto.getRole().getName());
+		    
+		    	    user.setRole(r);
+		            
 	        // Images
 	        Set<ImageData> imageList = new HashSet<>();
 	        for (ImageDto imageDto : userDto.getImages()) {
