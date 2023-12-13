@@ -12,7 +12,6 @@ import '../home/Home.dart';
 
 class UpdateUserScreen extends StatefulWidget {
   final User user;
-
   UpdateUserScreen({required this.user});
 
   @override
@@ -38,6 +37,14 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
 
   @override
   void initState() {
+    fetchCategories().then((result) {
+      setState(() {
+        categories = result;
+      });
+    }).catchError((error) {
+      print('Error fetching categories: $error');
+    });
+
     super.initState();
     listImages = widget.user.images;
     for (Images image in listImages!) {
@@ -47,20 +54,26 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
         list.add(image);
       }
     }
+
     firstNameController.text = widget.user.firstName ?? '';
     lastNameController.text = widget.user.lastName ?? '';
     addressController.text = widget.user.adresseTravail ?? '';
     diplomaController.text = widget.user.diplome ?? '';
     telephoneController.text = widget.user.tel?.toString() ?? '';
-    selectedCategory = widget.user.category?[0];
+    print("categoryyy");
+    print(categories.length);
+    if(widget.user.category!.isNotEmpty)
+      {
+        selectedCategory = widget.user.category?[0];
+
+      }
+    else
+      {
+        selectedCategory=null;
+      }
+
     adreeseDomicileController.text = widget.user.adresseDomicile ?? '';
-    fetchCategories().then((result) {
-      setState(() {
-        categories = result;
-      });
-    }).catchError((error) {
-      print('Error fetching categories: $error');
-    });
+
   }
 
   @override
@@ -89,12 +102,12 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                       shape: BoxShape.circle,
                       border: Border.all(width: 2, color: Colors.teal),
 
-                        image:  DecorationImage(
-                      image: profileImage != null
-                      ? MemoryImage(profileImage ?? Uint8List(0))
+                      image:  DecorationImage(
+                        image: profileImage != null
+                            ? MemoryImage(profileImage ?? Uint8List(0))
                             : AssetImage('assets/inconnu.png') as ImageProvider, // Provide a placeholder image path
-                    fit: BoxFit.cover,
-                  ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
                 ),
@@ -136,7 +149,7 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 ),
                 TextFormField(
                   controller: addressController,
-                  decoration: InputDecoration(labelText: 'Adresse du travail'),
+                  decoration: InputDecoration(labelText: 'Adresse de travail'),
                   validator: (value) {
                     if (value != null && value.length > 20) {
                       return 'L\'adresse ne peut pas dépasser 20 caractères';

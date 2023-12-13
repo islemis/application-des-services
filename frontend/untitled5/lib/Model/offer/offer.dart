@@ -31,8 +31,9 @@ class Offer {
   Offer.fromJson(Map<String, dynamic> json) {
     idService = json['idService'];
     adresse = json['adresse'];
-    date = json['date'] != null ? DateTime.parse(json['date']) : null;
-    details = json['details'];
+    if (json['date'] != null) {
+      date = DateTime.fromMillisecondsSinceEpoch(json['date']);
+    }
     description = json['description'];
     price = json['price'] != null ? double.parse(json['price'].toString()) : null;
     titre = json['titre'];
@@ -45,12 +46,12 @@ class Offer {
     }
 
     user = json['user'] != null ? User.fromJson(json['user']) : null;
-    if (json['category'] != null) {
+
       category = <Category>[];
       json['category'].forEach((v) {
         category!.add(Category.fromJson(v));
       });
-    }
+
   }
 
 
@@ -58,7 +59,9 @@ class Offer {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['idService'] = this.idService;
     data['adresse'] = this.adresse;
-    data['date'] = this.date;
+    if (this.date != null) {
+      data['date'] = this.date!.millisecondsSinceEpoch;
+    }   
     data['details'] = this.details;
     data['description'] = this.description;
     data['price'] = this.price;

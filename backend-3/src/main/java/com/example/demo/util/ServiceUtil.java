@@ -44,6 +44,7 @@ public  class ServiceUtil {
             servicedto.setAdresse(service.getAdresse());
             servicedto.setDescription(service.getDescription());
             servicedto.setDetails(service.getDetails());
+            servicedto.setDate(service.getDate());
             
 //image
 for (ImageData image : service.getImages()) {

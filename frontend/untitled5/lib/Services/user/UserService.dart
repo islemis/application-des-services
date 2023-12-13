@@ -113,7 +113,6 @@ Future<User> authenticateUser(String email, String password) async {
 
 }
 
-
 //getuserbyemail
 Future<User> getUserByEmail() async {
   try {

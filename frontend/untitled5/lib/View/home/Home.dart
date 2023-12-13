@@ -82,6 +82,7 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             height: 50,
+          color: Colors.white    ,
             child: SearchBarApp(setCategoryCallBack: setCategory),
           ),
           Padding(
@@ -106,6 +107,7 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(height: 8.0),
                   Container(
                     height: 160.0,
+                    color: Colors.white,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: urls.length,

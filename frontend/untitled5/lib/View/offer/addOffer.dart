@@ -86,7 +86,7 @@ class _AddOfferScreenState extends State<AddOfferScreen> {
         );
       }).toList(),
       decoration: InputDecoration(
-        labelText: 'Category',
+        labelText: 'Categorie',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

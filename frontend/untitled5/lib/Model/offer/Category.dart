@@ -12,7 +12,7 @@ class Category {
     return 'Category{id: $id, name: $name}';
   }
 
-  Category({this.id, this.name});
+  Category( {this.id, this.name});
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

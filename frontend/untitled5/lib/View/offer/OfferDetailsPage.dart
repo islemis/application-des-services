@@ -4,6 +4,7 @@ import '../../Model/offer/offer.dart';
 import '../../Model/user.dart';
 import '../../Services/user/UserService.dart';
 import '../User/ProfilePage.dart';
+import 'package:intl/intl.dart';
 
 class OfferDetailsPage extends StatelessWidget {
   final Offer offer;
@@ -59,7 +60,8 @@ class OfferDetailsPage extends StatelessWidget {
                 Row(
                   children: [
                     Icon(Icons.date_range), // Icône de date
-                    Text(' ${offer.date?.toString() ?? 'No date available'}', style: TextStyle(fontSize: 18)),
+
+                    Text(' ${DateFormat('yyyy-MM-dd HH:mm').format(offer.date!) ?? 'No date available'}', style: TextStyle(fontSize: 18)),
                   ],
                 ),
               ],
