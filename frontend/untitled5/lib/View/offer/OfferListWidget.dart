@@ -72,7 +72,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         trailing: IconButton(
-                          icon: Icon(Icons.delete),
+                          icon: Icon(Icons.delete,color:Colors.teal),
                           onPressed: () {
                             showDeleteConfirmationDialog(context, offers[index]);
                           },
@@ -107,7 +107,13 @@ class _OfferListWidgetState extends State<OfferListWidget> {
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: Text('Annuler'),
+              child: Text('Annuler', style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.teal,
+                fontWeight: FontWeight.bold,
+
+              ),),
+
             ),
             TextButton(
               onPressed: () async {
@@ -115,7 +121,12 @@ class _OfferListWidgetState extends State<OfferListWidget> {
                 await deleteOffer(offer.idService!.toInt());
                 await _refreshOffers(); // Refresh the offers after deletion
               },
-              child: Text('Supprimer'),
+              child: Text('Supprimer', style: TextStyle(
+                fontSize: 14.0,
+                color: Colors.teal,
+                fontWeight: FontWeight.bold,
+
+              ),),
             ),
           ],
         );

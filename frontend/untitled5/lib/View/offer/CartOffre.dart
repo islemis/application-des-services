@@ -43,13 +43,34 @@ class _CartOffreState extends State<CartOffre> {
                   ),
                 ),
                 SizedBox(height: 4.0),
-                Text(
-                  "à partir de" + (widget.offer?.price?.toString() ?? ""),
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.grey[600],
-                  ),
+                Row(
+                  children: [
+                    Text(
+                      "à partir de ",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Text(
+                      (widget.offer?.price?.toInt().toString() ?? "") ,
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+
+                      ),
+                    ),
+                    Text(
+                      "TND",
+                      style: TextStyle(
+                        fontSize: 14.0,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ],
                 ),
+
               ],
             ),
           ),

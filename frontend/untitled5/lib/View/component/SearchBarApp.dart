@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import '../../Model/offer/Category.dart';
-
+import '../home/Home.dart';
 
 class SearchBarApp extends StatefulWidget {
   void Function(String) setCategoryCallBack;
-  SearchBarApp({required this.setCategoryCallBack});
+  VoidCallback clearSearchCallBack;
+
+  SearchBarApp({required this.setCategoryCallBack, required this.clearSearchCallBack});
 
   @override
   State<SearchBarApp> createState() => _SearchBarAppState();
@@ -12,7 +14,6 @@ class SearchBarApp extends StatefulWidget {
 
 class _SearchBarAppState extends State<SearchBarApp> {
   bool _isLoading = true;
-  bool isDark = false;
   List<Category> categories = [];
   String selectedCategory = '';
 
@@ -29,60 +30,96 @@ class _SearchBarAppState extends State<SearchBarApp> {
     });
   }
 
+  void clearSearch() {
+    setState(() {
+      selectedCategory = '';
+    });
+    widget.clearSearchCallBack();
+  }
+
   @override
   Widget build(BuildContext context) {
     return _isLoading
         ? const CircularProgressIndicator()
-        : Container(
-      padding: const EdgeInsets.all(8.0),
+        : Scaffold(
+      backgroundColor: Colors.white, // Set the background color of the entire page
+
+      body: Container(
+
+          padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.0),
+
       ),
       child: SearchAnchor(
         builder: (BuildContext context, SearchController controller) {
-          return SearchBar(
+          return TextField(
             controller: controller,
-            padding: const MaterialStatePropertyAll<EdgeInsets>(
-              EdgeInsets.symmetric(horizontal: 16.0),
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Search...',
+              hintStyle: TextStyle(color: Colors.black),
+              prefixIcon: const Icon(Icons.search, color: Colors.black),
+              suffixIcon: IconButton(
+                icon: Icon(Icons.clear, color: Colors.black),
+                onPressed: clearSearch,
+              ),
             ),
-            onTap: () {
-              controller.openView();
-            },
             onChanged: (_) {
               controller.openView();
             },
-            leading: const Icon(
-              Icons.search,
-              color: Colors.grey,
-            ),
-            trailing: <Widget>[
-
-            ],
           );
         },
         suggestionsBuilder: (BuildContext context, SearchController controller) {
-          return categories.map((Category item) {
-            return ListTile(
-              title: Text(
-                item.name!,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+          List<Widget> suggestionList = [];
+          for (int i = 1; i < categories.length; i++) {
+            Category item = categories[i];
+            IconData iconData;
+            switch (item.name) {
+              case 'ménage':
+                iconData = Icons.home;
+                break;
+              case 'Plomberie':
+                iconData = Icons.build;
+                break;
+              case 'Jardinage':
+                iconData = Icons.eco;
+                break;
+              case 'électricité':
+                iconData = Icons.flash_on;
+                break;
+              default:
+                iconData = Icons.category;
+            }
+
+            suggestionList.add(
+              Container(
+                child: ListTile(
+                  leading: Icon(iconData, color: Colors.teal), // Set the icon color to gray
+                  title: Text(
+                    item.name!,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  onTap: () {
+                    setState(() {
+                      selectedCategory = item.name!;
+                      controller.closeView(item.name!);
+                      widget.setCategoryCallBack(item.name!);
+                    });
+                  },
                 ),
               ),
-              onTap: () {
-                setState(() {
-                  selectedCategory = item.name!;
-                  controller.closeView(item.name!);
-                  widget.setCategoryCallBack(item.name!);
-                });
-              },
             );
-          }).toList();
+          }
+          return suggestionList;
         },
+
       ),
+    ),
     );
   }
-
 }

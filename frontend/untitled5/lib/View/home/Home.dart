@@ -24,18 +24,26 @@ class MyApp extends StatelessWidget {
       home: HomePage(),
     );
   }
+
 }
 
 class HomePage extends StatefulWidget {
   const HomePage();
 
+
   @override
   _HomePageState createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<List<Offer>>? _offersFuture;
 
+  Future<List<Offer>>? _offersFuture;
+  void clearSearch() => setState(() {
+    category = "";
+    isFilteredByCategories = false;
+    _refreshOffers();
+  });
   List<String> urls = [
     'https://brico-direct.tn/',
     'https://www.astral.tn/fr',
@@ -50,9 +58,11 @@ class _HomePageState extends State<HomePage> {
   bool isFilteredByCategories = false;
   Future<void> _refreshOffers() async {
     setState(() {
-      _offersFuture = fetchOffersUser();
+      _offersFuture = fetchOffers();
     });
   }
+
+
   void setCategory(String ca) => setState(() {
     category = ca;
     isFilteredByCategories = true;
@@ -89,7 +99,9 @@ class _HomePageState extends State<HomePage> {
           Container(
             height: 50,
           color: Colors.white    ,
-            child: SearchBarApp(setCategoryCallBack: setCategory),
+            child: SearchBarApp(              setCategoryCallBack: setCategory,
+              clearSearchCallBack: clearSearch, // Pass the clear search callback
+            ),
           ),
           Padding(
             padding: const EdgeInsets.all(6.0),

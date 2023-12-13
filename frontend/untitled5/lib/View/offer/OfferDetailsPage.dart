@@ -54,7 +54,7 @@ class OfferDetailsPage extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(' ${offer.price ?? 0} Dt', style: TextStyle(fontSize: 18)),
+                    Text(' ${offer.price?.toInt() ?? 0} TND', style: TextStyle(fontSize: 18)),
                   ],
                 ),
                 Row(
