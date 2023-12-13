@@ -34,6 +34,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<List<Offer>>? _offersFuture;
+
   List<String> urls = [
     'https://brico-direct.tn/',
     'https://www.astral.tn/fr',
@@ -46,7 +48,11 @@ class _HomePageState extends State<HomePage> {
   ];
   String category = "Plomberie";
   bool isFilteredByCategories = false;
-
+  Future<void> _refreshOffers() async {
+    setState(() {
+      _offersFuture = fetchOffersUser();
+    });
+  }
   void setCategory(String ca) => setState(() {
     category = ca;
     isFilteredByCategories = true;
@@ -147,57 +153,61 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+
           Expanded(
-            child: FutureBuilder(
-              future: fetchOffers(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text('Error: ${snapshot.error}'),
-                  );
-                } else {
-                  List<Offer> offers = snapshot.data as List<Offer>;
+            child: RefreshIndicator(
+              onRefresh: _refreshOffers,
+              child: FutureBuilder(
+                future: fetchOffers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    List<Offer> offers = snapshot.data as List<Offer>;
 
-                  List<Offer> filteredOffers = offers;
+                    List<Offer> filteredOffers = offers;
 
-                  if (isFilteredByCategories) {
-                    filteredOffers = offers
-                        .where((offer) =>
-                        offer.category![0].name!.toLowerCase().startsWith(category.toLowerCase()))
-                        .toList();
+                    if (isFilteredByCategories) {
+                      filteredOffers = offers
+                          .where((offer) =>
+                          offer.category![0].name!.toLowerCase().startsWith(category.toLowerCase()))
+                          .toList();
+                    }
+
+                    return GridView.builder(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
+                      itemCount: filteredOffers.length,
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () async {
+                            Offer? offer = await getOfferById(filteredOffers[index].idService!.toInt());
+                            if (offer != null) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => OfferDetailsPage(offer: offer),
+                                ),
+                              );
+                            }
+                          },
+                          child: CartOffre(offer: filteredOffers[index]),
+                        );
+                      },
+                    );
                   }
-
-                  return GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 8.0,
-                      mainAxisSpacing: 8.0,
-                    ),
-                    itemCount: filteredOffers.length,
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () async {
-                          Offer? offer = await getOfferById(filteredOffers[index].idService!.toInt());
-                          if (offer != null) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => OfferDetailsPage(offer: offer),
-                              ),
-                            );
-                          }
-                        },
-                        child: CartOffre(offer: filteredOffers[index]),
-                      );
-                    },
-                  );
-                }
-              },
+                },
+              ),
             ),
           ),
         ],
