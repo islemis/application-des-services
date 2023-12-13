@@ -66,7 +66,7 @@ class _SearchBarAppState extends State<SearchBarApp> {
                 onPressed: clearSearch,
               ),
             ),
-            onChanged: (_) {
+            onTap: () {
               controller.openView();
             },
           );

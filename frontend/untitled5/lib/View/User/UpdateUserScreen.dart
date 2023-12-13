@@ -1,10 +1,10 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:untitled5/Model/images.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
+import '../../Model/images.dart';
 import '../../Model/offer/Category.dart';
 import '../../Model/user.dart';
 import '../../Services/user/UserService.dart';

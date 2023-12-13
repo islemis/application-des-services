@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:untitled5/View/User/Login.dart';
 import '../../Model/user.dart';
 import '../../Services/user/UserService.dart';
+import '../User/Login.dart';
 import '../User/UpdateUserScreen.dart';
 import '../offer/OfferListWidget.dart';
 import '../offer/addOffer.dart';

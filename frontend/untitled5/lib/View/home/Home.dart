@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:untitled5/Model/offer/offer.dart';
-import 'package:untitled5/View/component/NavBar.dart';
-import 'package:untitled5/View/offer/CartOffre.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import '../../Model/offer/offer.dart';
 import '../../Services/Offer/OfferService.dart';
+import '../component/NavBar.dart';
 import '../component/SearchBarApp.dart';
+import '../offer/CartOffre.dart';
 import '../offer/OfferDetailsPage.dart';
 
 void main() {
@@ -16,6 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Services',
       theme: ThemeData(
         scaffoldBackgroundColor: Color(0xFFF8F6E9),
         colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.teal)
@@ -24,20 +24,16 @@ class MyApp extends StatelessWidget {
       home: HomePage(),
     );
   }
-
 }
 
 class HomePage extends StatefulWidget {
   const HomePage();
 
-
   @override
   _HomePageState createState() => _HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage> {
-
   Future<List<Offer>>? _offersFuture;
   void clearSearch() => setState(() {
     category = "";
@@ -56,12 +52,12 @@ class _HomePageState extends State<HomePage> {
   ];
   String category = "Plomberie";
   bool isFilteredByCategories = false;
+
   Future<void> _refreshOffers() async {
     setState(() {
       _offersFuture = fetchOffers();
     });
   }
-
 
   void setCategory(String ca) => setState(() {
     category = ca;
@@ -98,9 +94,10 @@ class _HomePageState extends State<HomePage> {
         children: [
           Container(
             height: 50,
-          color: Colors.white    ,
-            child: SearchBarApp(              setCategoryCallBack: setCategory,
-              clearSearchCallBack: clearSearch, // Pass the clear search callback
+            color: Colors.white,
+            child: SearchBarApp(
+              setCategoryCallBack: setCategory,
+              clearSearchCallBack: clearSearch,
             ),
           ),
           Padding(
@@ -165,7 +162,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-
           Expanded(
             child: RefreshIndicator(
               onRefresh: _refreshOffers,
@@ -182,13 +178,13 @@ class _HomePageState extends State<HomePage> {
                     );
                   } else {
                     List<Offer> offers = snapshot.data as List<Offer>;
-
                     List<Offer> filteredOffers = offers;
 
                     if (isFilteredByCategories) {
                       filteredOffers = offers
-                          .where((offer) =>
-                          offer.category![0].name!.toLowerCase().startsWith(category.toLowerCase()))
+                          .where((offer) => offer.category![0].name!
+                          .toLowerCase()
+                          .startsWith(category.toLowerCase()))
                           .toList();
                     }
 
@@ -199,16 +195,20 @@ class _HomePageState extends State<HomePage> {
                         crossAxisSpacing: 8.0,
                         mainAxisSpacing: 8.0,
                       ),
-                      itemCount: filteredOffers.length,
+                      itemCount: isFilteredByCategories
+                          ? filteredOffers.length
+                          : (filteredOffers.length > 4 ? 4 : filteredOffers.length),
                       itemBuilder: (context, index) {
                         return GestureDetector(
                           onTap: () async {
-                            Offer? offer = await getOfferById(filteredOffers[index].idService!.toInt());
+                            Offer? offer = await getOfferById(
+                                filteredOffers[index].idService!.toInt());
                             if (offer != null) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => OfferDetailsPage(offer: offer),
+                                  builder: (context) =>
+                                      OfferDetailsPage(offer: offer),
                                 ),
                               );
                             }

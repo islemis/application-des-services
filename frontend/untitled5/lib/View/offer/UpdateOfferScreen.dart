@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:untitled5/Model/images.dart';
 import 'dart:io';
 import '../../Model/offer/Category.dart';
 import '../../Model/offer/offer.dart';

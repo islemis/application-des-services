@@ -1,8 +1,8 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
-import 'package:untitled5/Model/images.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../Model/images.dart';
 import '../../Model/user.dart';
 
 class ProfilePage extends StatelessWidget {

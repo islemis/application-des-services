@@ -3,11 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
-import 'package:untitled5/Services/Offer/OfferService.dart';
-import 'package:untitled5/View/User/ProfilePage.dart';
-import 'package:untitled5/View/User/UpdateUserScreen.dart';
 import '../../Model/offer/Category.dart';
 import '../../Model/user.dart';
+import '../../Services/Offer/OfferService.dart';
 import '../../Services/user/UserService.dart';
 import '../home/Home.dart';
 
