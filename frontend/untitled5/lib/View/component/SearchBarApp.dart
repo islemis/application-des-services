@@ -58,7 +58,7 @@ class _SearchBarAppState extends State<SearchBarApp> {
             controller: controller,
             decoration: InputDecoration(
               border: InputBorder.none,
-              hintText: 'Search...',
+              hintText: 'Rechercher...',
               hintStyle: TextStyle(color: Colors.black),
               prefixIcon: const Icon(Icons.search, color: Colors.black),
               suffixIcon: IconButton(

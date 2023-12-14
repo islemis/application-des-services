@@ -80,8 +80,14 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Éditer mon profil'),
-      ),
+        title: Text(
+          'Éditer mon profil',
+          style: TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+            color: Colors.teal,
+          ),
+        ),      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -200,11 +206,17 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                 SizedBox(height: 16.0),
                 // Bouton pour sauvegarder les modifications
                 ElevatedButton(
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formKey.currentState!.validate()) {
-                      updateUserAndNavigate();
+                        await updateUserAndNavigate();
+
+
                     }
                   },
+
+
+
+
                   child: Text(
                     'Modifier mon profil',
                     style: TextStyle(fontSize: 16.0, color: Colors.white),
@@ -347,7 +359,8 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
     );
   }
 
-  void updateUserAndNavigate() async {
+  Future<void> updateUserAndNavigate(
+  ) async  {
     setState(() {
       widget.user.firstName = firstNameController.text;
       widget.user.lastName = lastNameController.text;
@@ -367,10 +380,8 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
 
     await updateUser(widget.user, listFile, profil);
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => HomePage()),
-    );
+
+
   }
 
   Future<void> _pickImage() async {

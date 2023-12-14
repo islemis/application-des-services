@@ -217,12 +217,30 @@ Future<void> updateOffer(Offer offer ,List<File> imageFiles) async {
     final http.Response response = await http.Response.fromStream(await request.send());
 
     if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+        msg: "succés",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.teal,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
       print('Offer updated successfully');
     } else {
       print('Failed to update offer. Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
   } catch (error) {
+    Fluttertoast.showToast(
+      msg: "échec",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
     print('Error updating offer: $error');
   }
 }

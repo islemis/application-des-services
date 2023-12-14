@@ -208,12 +208,29 @@ Future<void> updateUser(User user ,List<File> imageFiles, File profileImage) asy
     final http.Response response = await http.Response.fromStream(await request.send());
 
     if (response.statusCode == 200) {
+      Fluttertoast.showToast(
+          msg: "succès",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.teal,
+          textColor: Colors.white,
+          fontSize: 16.0);
       print('user updated successfully');
     } else {
+
       print('Failed to update user. Status code: ${response.statusCode}');
       print('Response body: ${response.body}');
     }
   } catch (error) {
+    Fluttertoast.showToast(
+        msg: "échec",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
     print('Error updating user: $error');
   }
 }
