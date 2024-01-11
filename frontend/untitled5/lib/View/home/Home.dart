@@ -202,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                         return GestureDetector(
                           onTap: () async {
                             Offer? offer = await getOfferById(
-                                filteredOffers[index].idService!.toInt());
+                                filteredOffers[index].idOffre!.toInt());
                             if (offer != null) {
                               Navigator.push(
                                 context,

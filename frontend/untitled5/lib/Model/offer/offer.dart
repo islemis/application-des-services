@@ -5,7 +5,7 @@ import '../images.dart';
 import '../user.dart';
 import 'Category.dart';
 class Offer {
-  int? idService;
+  int? idOffre;
   String? adresse;
   DateTime? date;
   String? details;
@@ -17,7 +17,7 @@ class Offer {
   List<Category>? category;
 
   Offer(
-      {this.idService,
+      {this.idOffre,
         this.adresse,
         this.date,
         this.details,
@@ -29,7 +29,7 @@ class Offer {
         this.category
   });
   Offer.fromJson(Map<String, dynamic> json) {
-    idService = json['idService'];
+    idOffre = json['idOffre'];
     adresse = json['adresse'];
     if (json['date'] != null) {
       date = DateTime.fromMillisecondsSinceEpoch(json['date']);
@@ -57,7 +57,7 @@ class Offer {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['idService'] = this.idService;
+    data['idOffre'] = this.idOffre;
     data['adresse'] = this.adresse;
     if (this.date != null) {
       data['date'] = this.date!.millisecondsSinceEpoch;

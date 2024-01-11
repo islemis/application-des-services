@@ -118,7 +118,7 @@ class _OfferListWidgetState extends State<OfferListWidget> {
             TextButton(
               onPressed: () async {
                 Navigator.of(context).pop(); // Close the dialog
-                await deleteOffer(offer.idService!.toInt());
+                await deleteOffer(offer.idOffre!.toInt());
                 await _refreshOffers(); // Refresh the offers after deletion
               },
               child: Text('Supprimer', style: TextStyle(

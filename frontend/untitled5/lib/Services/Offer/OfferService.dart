@@ -3,8 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter_secure_storage/flutter_secure_storage.dart'; // Import the package
-
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../Model/offer/Category.dart';
 import '../../Model/offer/offer.dart';
 import '../env.dart';
@@ -17,14 +16,15 @@ Future<void> addOffre(String titre, String address, double prix, String descript
   try {
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
 
-    var request = http.MultipartRequest('POST', Uri.parse(VPNURL + 'services/addService'));
+
+    var request = http.MultipartRequest('POST', Uri.parse(VPNURL+'api/offres/add'));
     request.headers['Content-Type'] = 'multipart/form-data';
     request.headers['Authorization'] = basicAuth;
     request.headers['Accept'] = 'application/json';
 
     // Add form fields
     request.fields.addAll({
-      'service': jsonEncode({
+      'offre': jsonEncode({
         "titre": titre,
         "price": prix,
         "description": description,
@@ -89,14 +89,13 @@ Future<void> addOffre(String titre, String address, double prix, String descript
 Future <List<Offer>> fetchOffers()async{
 
  final response = await http.get(
-    Uri.parse(VPNURL+'services'),
+    Uri.parse(VPNURL+'api/offres/all'),
     headers: {
      // 'Authorization': 'Bearer $token',
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
   );
-
   if (response.statusCode == 200) {
     final List<dynamic> jsonData = json.decode(utf8.decode(response.bodyBytes));
     List<Offer> categories = jsonData.map((json) => Offer.fromJson(json)).toList();
@@ -110,16 +109,11 @@ Future <List<Offer>> fetchOffers()async{
 }
 
 
-
-
-
-
-
 //getOfferById
 Future<Offer?> getOfferById(int offerId) async {
   try {
     final response = await http.get(
-      Uri.parse(VPNURL + 'services/$offerId'),
+      Uri.parse(VPNURL+'api/offres/$offerId'),
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -151,11 +145,11 @@ Future <List<Offer>> fetchOffersUser()async{
 
   String? email = await secureStorage.read(key: 'email');
   String? password = await secureStorage.read(key: 'password');
-  String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
+  String basicAuth = 'Basic' + base64Encode(utf8.encode('$email:$password'));
 
 
   final response = await http.get(
-    Uri.parse(VPNURL+'services/UserServices'),
+    Uri.parse(VPNURL+'api/offres/byUser'),
     headers: {
       'Authorization': basicAuth,
       'Content-Type': 'application/json',
@@ -179,7 +173,7 @@ Future <List<Offer>> fetchOffersUser()async{
 Future<void> deleteOffer(int id) async {
 
   try {
-    final response = await http.delete(Uri.parse(VPNURL + 'services/$id'));
+    final response = await http.delete(Uri.parse(VPNURL + 'api/offres/delete/$id'));
 
     if (response.statusCode == 200) {
       print('Suppression réussie');
@@ -194,14 +188,14 @@ Future<void> deleteOffer(int id) async {
 
 
 Future<void> updateOffer(Offer offer ,List<File> imageFiles) async {
-  int? id = offer.idService;
+  int? id = offer.idOffre;
 
-  final url = Uri.parse(VPNURL + 'services/$id'); // Replace with your actual endpoint
+  final url = Uri.parse(VPNURL + 'api/offres/update/$id'); // Replace with your actual endpoint
   try {
     final http.MultipartRequest request = http.MultipartRequest('PUT', url);
 
     // Convert Offer object to JSON and attach it as a field
-    request.fields['service'] = json.encode(offer.toJson());
+    request.fields['offre'] = json.encode(offer.toJson());
     print("update fi service");
     print('Offer JSON: ${json.encode(offer.toJson())}');
 

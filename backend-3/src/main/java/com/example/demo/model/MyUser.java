@@ -57,7 +57,7 @@ public class MyUser  {
     private Role role;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Service> services;
+    private Set<Offre> offres;
     
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)

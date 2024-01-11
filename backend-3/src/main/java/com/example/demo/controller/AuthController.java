@@ -19,7 +19,8 @@ import com.example.demo.model.JwtAuthenticationResponse;
 import com.example.demo.model.LoginRequest;
 import com.example.demo.model.MyUser;
 import com.example.demo.security.JwtTokenProvider;
-import com.example.demo.service.UserServiceImp;
+import com.example.demo.service.ImageService;
+import com.example.demo.serviceimpl.UserServiceImp;
 import com.example.demo.util.UserUtil;
 
 @RestController
@@ -30,8 +31,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtTokenProvider jwtTokenProvider;
     private final UserServiceImp userService;
-	   @Autowired  
-	     private  UserUtil userUtil ; 
+	@Autowired
+	private ImageService imageDataService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager, JwtTokenProvider jwtTokenProvider, UserServiceImp userService) {
@@ -56,7 +57,7 @@ public class AuthController {
 
             // Fetch additional user data
             MyUserDto userDto = userService.findByEmail(loginRequest.getEmail());
-MyUser user=userUtil.convertToUser(userDto);
+MyUser user=UserUtil.convertToUser(userDto,imageDataService);
             // Create the response with token and user details
             JwtAuthenticationResponse response = new JwtAuthenticationResponse();
             response.setAccessToken(jwt);

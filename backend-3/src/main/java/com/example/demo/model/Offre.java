@@ -26,12 +26,12 @@ import lombok.Setter;
 @Setter
 @Getter
 @Entity
-@Table(name="Services")
-public class Service {
+@Table(name="offre")
+public class Offre {
 		 @Id
 		    @GeneratedValue(strategy = GenerationType.IDENTITY)
-		    @Column(name = "id_service")
-		    private Long idService;
+		    @Column(name = "id_offre")
+		    private Long idOffre;
 
 		    @Column(name = "titre")
 		    private String titre;
@@ -53,7 +53,7 @@ public class Service {
 		    @Column(name = "adresse")
 		    private String adresse;
 		    
-		    @OneToMany(mappedBy = "service", cascade = CascadeType.ALL)
+		    @OneToMany(mappedBy = "offre", cascade = CascadeType.ALL)
 		    private Set<ImageData> images;
 		    
 		   @ManyToOne
@@ -61,18 +61,18 @@ public class Service {
 		    private MyUser user;
 		   @ManyToMany
 		    @JoinTable(
-		        name = "service_category",
-		        joinColumns = @JoinColumn(name = "service_id"),
+		        name = "offre_category",
+		        joinColumns = @JoinColumn(name = "offre_id"),
 		        inverseJoinColumns = @JoinColumn(name = "category_id"))
 		    private Set<Category> categories = new HashSet<>();
+		@Override
+		public String toString() {
+			return "Offre [id=" + idOffre + ", titre=" + titre + ", price=" + price + ", description=" + description
+					+ ", details=" + details + ", date=" + date + ", adresse=" + adresse + "]";
+		}
 		    
 
 
-		@Override
-		public String toString() {
-			return "Service [idService=" + idService + ", titre=" + titre + ", price=" + price + ", description="
-					+ description + ", details=" + details + ", date=" + date + ", adresse=" + adresse + "]";
-		}
 
 		
 	

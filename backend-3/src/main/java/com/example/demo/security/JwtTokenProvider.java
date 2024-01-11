@@ -16,14 +16,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.model.MyUser;
-import com.example.demo.service.UserServiceImp;
+import com.example.demo.serviceimpl.UserServiceImp;
 
 import javax.servlet.http.HttpServletRequest;
 import java.security.Key;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Component
 @PropertySource("classpath:application.properties")

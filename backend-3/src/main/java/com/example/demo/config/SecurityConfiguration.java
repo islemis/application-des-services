@@ -3,6 +3,7 @@ package com.example.demo.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private BCryptPasswordEncoder passwordEncoder;
 	private UserDetailsService userDetailsService;
 	private JwtTokenProvider jwtTokenProvider;
-  
+	
 	 @Bean
 	    public JwtConfigurer jwtConfigurer(JwtTokenProvider jwtTokenProvider) {
 	        return new JwtConfigurer(jwtTokenProvider);
@@ -33,6 +34,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public BCryptPasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+    @Lazy
+
     public SecurityConfiguration(UserDetailsService userDetailsService, JwtTokenProvider jwtTokenProvider) {
         this.userDetailsService = userDetailsService;
         this.jwtTokenProvider = jwtTokenProvider;
@@ -47,8 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/MyUser","/MyUser/{userId}","/api/auth","/services/**","/services/{id}","/image/info/{Name}","/image/{Name}","/image/upload","/services/addService"
-                		,"/services/UserServices" ,"/MyUser/**","/image/**","/api/categories").permitAll()
+                .antMatchers("/api/auth","/api/offres/**","/image/info/{Name}","/image/{Name}","/image/upload"
+                		 ,"/api/MyUser/**","/image/**","/api/categories").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(this.jwtTokenProvider))
@@ -68,7 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userService);
+        authProvider.setUserDetailsService(userDetailsService);   
         authProvider.setPasswordEncoder(passwordEncoder);
         return authProvider;
     }

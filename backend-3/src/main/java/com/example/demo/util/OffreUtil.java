@@ -10,26 +10,26 @@ import org.springframework.stereotype.Component;
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.ImageDto;
 import com.example.demo.dto.MyUserDto;
-import com.example.demo.dto.ServiceDto;
+import com.example.demo.dto.OffreDto;
 import com.example.demo.model.Category;
 import com.example.demo.model.ImageData;
-import com.example.demo.model.Service;
+import com.example.demo.model.Offre;
 import com.example.demo.service.ImageService;
 @Component
 
-public  class ServiceUtil {
+public  class OffreUtil {
 	 private final ImageService imageService;
 
 	    @Autowired
-	    public ServiceUtil(ImageService imageService) {
-	        this.imageService = imageService;
+	    public OffreUtil(ImageService imageoffre) {
+	        this.imageService = imageoffre;
 	    }
 	
- 	public  ServiceDto Convert (Service service)
+ 	public  OffreDto Convert (Offre offre)
 	{
 		
-		Long id=service.getIdService();
-        ServiceDto servicedto=new ServiceDto();
+		Long id=offre.getIdOffre();
+        OffreDto offredto=new OffreDto();
           List  <ImageDto> imagedto= new ArrayList <>();
           List  <CategoryDto> categorydto= new ArrayList <>();
             MyUserDto userdto=new MyUserDto();
@@ -37,17 +37,17 @@ public  class ServiceUtil {
             
             
             
-            //service
-            servicedto.setIdService(id);
-            servicedto.setTitre(service.getTitre());
-            servicedto.setPrice(service.getPrice());
-            servicedto.setAdresse(service.getAdresse());
-            servicedto.setDescription(service.getDescription());
-            servicedto.setDetails(service.getDetails());
-            servicedto.setDate(service.getDate());
+            //offre
+            offredto.setIdOffre(id);
+            offredto.setTitre(offre.getTitre());
+            offredto.setPrice(offre.getPrice());
+            offredto.setAdresse(offre.getAdresse());
+            offredto.setDescription(offre.getDescription());
+            offredto.setDetails(offre.getDetails());
+            offredto.setDate(offre.getDate());
             
 //image
-for (ImageData image : service.getImages()) {
+for (ImageData image : offre.getImages()) {
 
     try {                                           
     	ImageDto	imageDto=new ImageDto();    
@@ -66,26 +66,26 @@ System.out.println(imageData);
         e.printStackTrace();
     }
 }
-            servicedto.setImages(imagedto);
+            offredto.setImages(imagedto);
 
             //user
-            userdto.setId(service.getUser().getId());
-            userdto.setFirstName(service.getUser().getFirstName());
-            userdto.setLastName(service.getUser().getLastName());
-            userdto.setEmail(service.getUser().getEmail());
-            userdto.setDiplome(service.getUser().getDiplome());
-            userdto.setAdresseDomicile(service.getUser().getAdresseDomicile());
-            userdto.setAdresseTravail(service.getUser().getAdresseTravail());
-            userdto.setTel(service.getUser().getTel());
+            userdto.setId(offre.getUser().getId());
+            userdto.setFirstName(offre.getUser().getFirstName());
+            userdto.setLastName(offre.getUser().getLastName());
+            userdto.setEmail(offre.getUser().getEmail());
+            userdto.setDiplome(offre.getUser().getDiplome());
+            userdto.setAdresseDomicile(offre.getUser().getAdresseDomicile());
+            userdto.setAdresseTravail(offre.getUser().getAdresseTravail());
+            userdto.setTel(offre.getUser().getTel());
             
-           servicedto.setUser(userdto);
+           offredto.setUser(userdto);
            //categories
-           for(Category  category :service.getCategories()  )
+           for(Category  category :offre.getCategories()  )
            {
         	   categorydto.add(new CategoryDto(category.getId(), category.getName())) ;      
            	
            }
-           servicedto.setCategory(categorydto);
+           offredto.setCategory(categorydto);
 
 		
 	
@@ -94,7 +94,7 @@ System.out.println(imageData);
 	
 	
 	
-return servicedto;
+return offredto;
 
 	
 	

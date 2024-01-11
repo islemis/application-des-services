@@ -1,17 +1,11 @@
 package com.example.demo.controller;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,135 +17,84 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.example.demo.dto.MyUserDto;
-import com.example.demo.model.Category;
+import com.example.demo.model.LoginRequest;
 import com.example.demo.model.MyUser;
-import com.example.demo.model.Service;
-import com.example.demo.service.UserServiceImp;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
+import com.example.demo.serviceimpl.UserServiceImp;
 
 @Controller
-
-@RequestMapping("/MyUser")
-@CrossOrigin(origins = "http://localhost:53942") 
+@RequestMapping("api/MyUser")
 
 public class UserController {
 @Autowired
-	private UserServiceImp userService;
-	
+	private UserServiceImp userServiceImp;
 
-	
-	@ModelAttribute("user")
-    public MyUser user() {
-        return new MyUser();
-    }
-	   @GetMapping("/secured-resource")
-	    //@PreAuthorize("hasRole('user')")
-	    public ResponseEntity<String> getSecuredResource() {
-	        // Your code here
-	        return ResponseEntity.ok("Access granted to secured resource!");
-	    }
-	
-	   @PostMapping("addUser")
+	  
+	//Register
+	   @PostMapping("add")
 	   public ResponseEntity<?> registerUserAccount(@RequestBody MyUser user) {
-		   MyUser registeredUser = userService.save(user);
-	       System.out.println("User registered: " + registeredUser.toString());
-	       // Return the registered user as JSON
+		   MyUser registeredUser = userServiceImp.save(user);
 	       return new ResponseEntity<>("the user "+registeredUser.getId()+" is registred successfully", HttpStatus.CREATED);
 	   }
 	   
 	   
-	   
+	
+	      
 	 //UpdateUser
-	   @PutMapping("/{userId}")
+	   @PutMapping("update/{userId}")
 
 	   public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("user") String userJson,
 	            @RequestParam("file") MultipartFile[] file,@RequestParam("profil") MultipartFile profil) {
-	        return userService.updateUser(userId, userJson, file,profil);
+	         userServiceImp.updateUser(userId, userJson, file,profil);
+		       return new ResponseEntity<>("the user "+userId+" is updated successfully", HttpStatus.CREATED);
+
+	         
 	    }
 	   
-	   
-	   
-	   @PutMapping("/changeRole/{userId}")
-	    public ResponseEntity<String> changeUserRole(@PathVariable Long userId) {
-	        try {
-	            userService.changeUserRole(userId);
-	            return ResponseEntity.ok("User role changed successfully");
-	        } catch (IllegalArgumentException e) {
-	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-	        }
-	    }
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-	 
 	   
 	
-	   
-	   
 
 	   //deleteUser
-	    @DeleteMapping("/deleteUser/{userId}")
+	    @DeleteMapping("/delete/{userId}")
 	    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
-	        userService.deleteUserById(userId);
+	        userServiceImp.deleteUserById(userId);
 	       
 	        return  ResponseEntity.ok("deleted successfully");
 	    }
-//getUserbyid
+	    
+        //getUserbyid
 	    @GetMapping("/{userId}")
 	    @ResponseBody
-
 	    public MyUserDto getUserById(@PathVariable Long userId) {
-	        return 	   userService.getUserById(userId);
+	        return 	   userServiceImp.getUserById(userId);
 
 	    }
 	    
 	  //getUserbyEmail
 	    @GetMapping("email/{email}")
 	    @ResponseBody
-
 	    public MyUserDto findByEmail(@PathVariable String email) {
-	        return userService.findByEmail(email);
+	        return userServiceImp.findByEmail(email);
 
 	    }   
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-	    
-//getALLusers
-	    @GetMapping("/getUsers")
+        //getALLusers
+	    @GetMapping("/Users")
 	    @ResponseBody
 
 	    public List<MyUserDto> getUsers() {
-	        return userService.getUsers();
+	        return userServiceImp.getUsers();
 	    }
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-	   
-
-	   
-	   
+	    //changeRoleUser
+		   @PutMapping("/changeRole/{userId}")
+		    public ResponseEntity<String> changeUserRole(@PathVariable Long userId) {
+		        try {
+		            userServiceImp.changeUserRole(userId);
+		            return ResponseEntity.ok("User role changed successfully");
+		        } catch (IllegalArgumentException e) {
+		            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+		        }
+		    }
+		   
 
 
 }

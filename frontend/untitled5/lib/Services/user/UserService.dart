@@ -1,21 +1,17 @@
-
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
 import '../../Model/user.dart';
 import '../env.dart';
 import 'dart:io';
 
-
 //user registre
 Future <String> register (firstName,lastName,email,password) async{
 final response = await http.post(
-  Uri.parse(VPNURL + "MyUser/addUser"),
+  Uri.parse("${VPNURL}api/MyUser/add"),
   headers: <String, String>{
     'Content-Type': 'application/json; charset=UTF-8',
   },
@@ -120,7 +116,7 @@ Future<User> getUserByEmail() async {
     String? email = await secureStorage.read(key: 'email');
 
     final response = await http.get(
-      Uri.parse("${VPNURL}MyUser/email/$email"),
+      Uri.parse("${VPNURL}api/MyUser/email/$email"),
       headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
     );
     print('Response Status Code: ${response.statusCode}');
@@ -131,6 +127,7 @@ Future<User> getUserByEmail() async {
       dynamic jsonData = json.decode(utf8.decode(response.bodyBytes));
       User user = User.fromJson(jsonData);
       print("byemail");
+      print(email);
       print(user.role?.roleName);
 
       return user;
@@ -148,7 +145,7 @@ Future<User> getUserByEmail() async {
 //getUserById
 Future<User> getUserById(int userId) async {
   try {
-    final response = await http.get(Uri.parse("${VPNURL}MyUser/$userId"));
+    final response = await http.get(Uri.parse("${VPNURL}api/MyUser/$userId"));
 
 
 
@@ -166,7 +163,7 @@ Future<User> getUserById(int userId) async {
 
 //getAllUsers
 Future<List<User>> getUsers() async {
-  final response = await http.get(Uri.parse('$VPNURL/getUsers'));
+  final response = await http.get(Uri.parse('$VPNURL/api/MyUser/Users'));
 
   if (response.statusCode == 200) {
     Iterable users = jsonDecode(response.body);
@@ -178,8 +175,7 @@ Future<List<User>> getUsers() async {
 //UpdateUser
 Future<void> updateUser(User user ,List<File> imageFiles, File profileImage) async {
   int? id = user.id;
-
-  final url = Uri.parse(VPNURL + 'MyUser/$id'); // Replace with your actual endpoint
+  final url = Uri.parse("${VPNURL}api/MyUser/update/$id"); // Replace with your actual endpoint
   try {
     final http.MultipartRequest request = http.MultipartRequest('PUT', url);
 

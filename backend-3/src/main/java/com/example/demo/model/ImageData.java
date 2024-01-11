@@ -30,8 +30,8 @@ public class ImageData {
 		   private byte[] url ;
 
 	    @ManyToOne
-	    @JoinColumn(name = "service_id")
-	    private Service service;
+	    @JoinColumn(name = "offre_id")
+	    private Offre offre;
 	 
 	    @ManyToOne
 	    @JoinColumn(name = "user_id")

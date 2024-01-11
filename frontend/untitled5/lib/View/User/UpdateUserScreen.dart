@@ -209,7 +209,10 @@ class _UpdateUserScreenState extends State<UpdateUserScreen> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                         await updateUserAndNavigate();
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
 
                     }
                   },

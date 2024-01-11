@@ -3,7 +3,8 @@ package com.example.demo;
 import com.example.demo.controller.UserController;
 import com.example.demo.dto.MyUserDto;
 import com.example.demo.model.MyUser;
-import com.example.demo.service.UserServiceImp;
+import com.example.demo.serviceimpl.UserServiceImp;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,7 +34,7 @@ class UserControllerTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
-/*
+
     @Test
     void registerUserAccountTest() {
         MyUser user = new MyUser();
@@ -44,8 +45,8 @@ class UserControllerTest {
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals("the user " + user.getId() + " is registred successfully", response.getBody());
-    }*/
-
+    }
+    /*
     @Test
     void updateUserTest() {
         Long userId = 1L;
@@ -63,7 +64,7 @@ class UserControllerTest {
         assertEquals(expectedResponse, response);
     }
 
-
+*/
 
    /* @Test
     void deleteUserTest() {

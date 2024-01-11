@@ -12,23 +12,24 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.model.ImageData;
 import com.example.demo.model.MyUser;
-import com.example.demo.model.Service;
+import com.example.demo.model.Offre;
 import com.example.demo.service.ImageService;
+import com.example.demo.serviceimpl.ImageServiceImp;
 
 
 @RestController
 @RequestMapping("/image")
-@CrossOrigin(origins = "http://localhost:53942") 
+//@CrossOrigin(origins = "http://localhost:53942") 
 
 public class StorageController {
 
 
     @Autowired
-    private ImageService imageService ;
+    private ImageServiceImp imageService ;
 
 	@PostMapping("/fileSystem")
-	public ResponseEntity<?> uploadImageToFIleSystem(@RequestParam("image")MultipartFile file,@RequestParam("Service") Service service,@RequestParam("user") MyUser user,@RequestParam("isProfil")Boolean b ) throws IOException {
-		String uploadImage = imageService.uploadImageToFileSystem(file,service,user,b);
+	public ResponseEntity<?> uploadImageToFIleSystem(@RequestParam("image")MultipartFile file,@RequestParam("Offre") Offre offre,@RequestParam("user") MyUser user,@RequestParam("isProfil")Boolean b ) throws IOException {
+		String uploadImage = imageService.uploadImageToFileSystem(file,offre,user,b);
 		return ResponseEntity.status(HttpStatus.OK)
 				.body(uploadImage);
 	}
