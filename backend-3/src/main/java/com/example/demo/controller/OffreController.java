@@ -1,14 +1,12 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.OffreDto;
-import com.example.demo.service.OffreService;
 import com.example.demo.serviceimpl.OffreServiceImp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,10 +30,9 @@ public class OffreController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> saveOffre(@RequestParam("offre") String offreJson,
-                                           @RequestParam("images") MultipartFile[] images,
+    public ResponseEntity<String> saveOffre(@RequestBody  String offreJson,
                                            @RequestHeader("Authorization") String authorizationHeader) {
-        offreService.saveOffre(offreJson, images, authorizationHeader);
+        offreService.saveOffre(offreJson, authorizationHeader);
         return new ResponseEntity<>("Offre added successfully", HttpStatus.CREATED);
     }
 
@@ -47,9 +44,10 @@ public class OffreController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateOffre(@PathVariable Long id,
-    		@RequestParam("offre") String offreJson,
-                                              @RequestParam("images") MultipartFile[] files) {
-        offreService.updateOffre(id, offreJson, files);
+    		@RequestBody String offreJson
+                                             )
+    {
+        offreService.updateOffre(id, offreJson);
         return new ResponseEntity<>("Offre updated successfully", HttpStatus.OK);
     }
 

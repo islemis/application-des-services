@@ -60,9 +60,7 @@ public class MyUser  {
     private Set<Offre> offres;
     
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL , orphanRemoval = true)
-    private Set<ImageData> images;
-    
+
     @ManyToMany
     @JoinTable(
         name = "my_user_categories",

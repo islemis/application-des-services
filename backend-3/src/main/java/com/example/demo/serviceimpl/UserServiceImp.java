@@ -1,22 +1,14 @@
 package com.example.demo.serviceimpl;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -29,11 +21,9 @@ import com.example.demo.dto.MyUserDto;
 
 import com.example.demo.model.MyUser;
 import com.example.demo.model.Role;
-import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
-import com.example.demo.service.ImageService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.UserUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -49,8 +39,6 @@ public class UserServiceImp implements UserService,UserDetailsService{
 	private final RoleRepository RoleRepository;
 	@Autowired
 	private ObjectMapper objectMapper;
-	@Autowired
-	private ImageService imageDataService;
 
 
 	private final AuthenticationManager authenticationManager;
@@ -69,7 +57,7 @@ public class UserServiceImp implements UserService,UserDetailsService{
 	// findUserByEmail
 	public MyUserDto findByEmail(String email) {
 	       MyUser user= userRepository.findByEmail(email);
-	       return UserUtil.convert(user,imageDataService);
+	       return UserUtil.convert(user);
 	                
 	    }
 
@@ -111,7 +99,7 @@ public class UserServiceImp implements UserService,UserDetailsService{
 	}
 
 //updateUser
-	public void updateUser(Long id, String userJson, MultipartFile[] images, MultipartFile profilImage) {
+	public void updateUser(Long id, String userJson) {
 		MyUser userUpdate = new MyUser();
 		MyUser user = userRepository.findById(id).orElseThrow();
 		try {
@@ -135,19 +123,7 @@ public class UserServiceImp implements UserService,UserDetailsService{
 		if(userUpdate.getTel()!=null)
 		user.setTel(userUpdate.getTel());
 
-		try {
-			for (MultipartFile file : images) {
-				String imageResponse = imageDataService.uploadImageToFileSystem(file, null, user, false);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
-		try {
-			String imageResponseProfil = imageDataService.uploadImageToFileSystem(profilImage, null, user, true);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		user.setCategories(userUpdate.getCategories());
 		MyUser updatedUser = userRepository.save(user);
 
@@ -165,7 +141,7 @@ public class UserServiceImp implements UserService,UserDetailsService{
 	public MyUserDto getUserById(Long userId) {
 		MyUser user = userRepository.findById(userId).orElse(null);
 
-		return UserUtil.convert(user, imageDataService);
+		return UserUtil.convert(user);
 
 	}
 
@@ -176,7 +152,7 @@ public class UserServiceImp implements UserService,UserDetailsService{
 
 		for (MyUser user : list) {
 
-			MyUserDto userdto = UserUtil.convert(user, imageDataService);
+			MyUserDto userdto = UserUtil.convert(user);
 
 			listeDto.add(userdto);
 		}
@@ -184,27 +160,6 @@ public class UserServiceImp implements UserService,UserDetailsService{
 
 	}
 
-	public void changeUserRole(Long userId) {
-		// Find the user by ID
-		MyUser user = userRepository.findById(userId).orElse(null);
-
-		if (user != null) {
-			// Find the role by name
-			Role newRole = RoleRepository.findByName("prestataire");
-
-			if (newRole != null) {
-				// Set the new role for the user
-				user.setRole(newRole);
-
-				// Save the updated user
-				userRepository.save(user);
-			} else {
-				throw new IllegalArgumentException("Role not found: ");
-			}
-		} else {
-			throw new IllegalArgumentException("User not found with ID: " + userId);
-		}
-	}
 
 
 

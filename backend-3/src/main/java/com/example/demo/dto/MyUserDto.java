@@ -22,7 +22,6 @@ public class MyUserDto {
 	    private String lastName;
 		private List<CategoryDto>  category;
 		private List<OffreDto>  offres;
-	  private List<ImageDto> images ;
 private RoleDto role ;
 
 }

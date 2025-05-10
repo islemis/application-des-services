@@ -13,7 +13,6 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.*;
@@ -25,7 +24,6 @@ import com.example.demo.model.Offre;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.OffreRepository;
 import com.example.demo.security.JwtTokenProvider;
-import com.example.demo.service.ImageService;
 import com.example.demo.service.OffreService;
 import com.example.demo.util.OffreUtil;
 import com.example.demo.util.UserUtil;
@@ -45,8 +43,6 @@ public class OffreServiceImp implements OffreService {
 	private  CategoryRepository categoryRepository;
 	 @Autowired
 	private ObjectMapper objectMapper;
-   @Autowired
-	 private ImageServiceImp imageDataService;
 
    @Autowired  
   private  JwtTokenProvider jwtTokenProvider;
@@ -109,7 +105,7 @@ public class OffreServiceImp implements OffreService {
  //addOffre
  @Override
  @Transactional
- public void saveOffre(String offreJson, MultipartFile[] images, String authorizationHeader) {
+ public void saveOffre(String offreJson, String authorizationHeader) {
 	 try {
 
          Offre offre = objectMapper.readValue(offreJson, Offre.class);
@@ -120,11 +116,19 @@ public class OffreServiceImp implements OffreService {
          
          
          String base64Credentials = authorizationHeader.substring("Basic".length()).trim();
-         String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
+       String  credentials="";
+        try {
+             credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
+        }catch (Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
          final String[] values = credentials.split(":", 2);
          String email = values[0];
+         System.out.println("here");
+         System.out.println(email);
            MyUserDto userDto = userService.findByEmail(email);
-           MyUser currentUser=UserUtil.convertToUser(userDto,imageDataService);
+           MyUser currentUser=UserUtil.convertToUser(userDto);
          offre.setUser(currentUser);
          
 	      
@@ -132,10 +136,7 @@ public class OffreServiceImp implements OffreService {
          
          savedoffre.setCategories(offre.getCategories());
 
-        for (MultipartFile file : images) {
-            String result = imageDataService.uploadImageToFileSystem(file, savedoffre,null,false);
-            System.out.println(result);
-        }
+
 
      } catch (IOException e) {
      }
@@ -146,7 +147,7 @@ public class OffreServiceImp implements OffreService {
 	 offreRepository.deleteById(id); }
 //updateoffre
  @Override
- public void  updateOffre(Long id, String offreJson, MultipartFile[] files) {
+ public void  updateOffre(Long id, String offreJson) {
      Offre offreUpdate = new Offre();
 
      Offre offre = offreRepository.findById(id)
@@ -171,15 +172,7 @@ public class OffreServiceImp implements OffreService {
      offre.setDate(new Date());
      offre.setAdresse(offreUpdate.getAdresse());
 
-     
-			try {
-				for (MultipartFile file : files) {
-				String imageResponse = imageDataService.uploadImageToFileSystem(file, offre,null,false)   ;
-				}
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 
 		
 

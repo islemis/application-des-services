@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import com.example.demo.dto.MyUserDto;
-import com.example.demo.model.LoginRequest;
 import com.example.demo.model.MyUser;
 import com.example.demo.serviceimpl.UserServiceImp;
 
@@ -31,29 +28,21 @@ public class UserController {
 
 	  
 	//Register
-	   @PostMapping("add")
+	   @PostMapping("register")
 	   public ResponseEntity<?> registerUserAccount(@RequestBody MyUser user) {
 		   MyUser registeredUser = userServiceImp.save(user);
 	       return new ResponseEntity<>("the user "+registeredUser.getId()+" is registred successfully", HttpStatus.CREATED);
 	   }
-	   
-	   
-	
-	      
+
 	 //UpdateUser
 	   @PutMapping("update/{userId}")
 
-	   public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("user") String userJson,
-	            @RequestParam("file") MultipartFile[] file,@RequestParam("profil") MultipartFile profil) {
-	         userServiceImp.updateUser(userId, userJson, file,profil);
+	   public ResponseEntity<?> updateUser(@PathVariable Long userId, @RequestParam("user") String userJson) {
+	         userServiceImp.updateUser(userId, userJson);
 		       return new ResponseEntity<>("the user "+userId+" is updated successfully", HttpStatus.CREATED);
 
 	         
 	    }
-	   
-	   
-	
-
 	   //deleteUser
 	    @DeleteMapping("/delete/{userId}")
 	    public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
@@ -84,17 +73,8 @@ public class UserController {
 	    public List<MyUserDto> getUsers() {
 	        return userServiceImp.getUsers();
 	    }
-	    //changeRoleUser
-		   @PutMapping("/changeRole/{userId}")
-		    public ResponseEntity<String> changeUserRole(@PathVariable Long userId) {
-		        try {
-		            userServiceImp.changeUserRole(userId);
-		            return ResponseEntity.ok("User role changed successfully");
-		        } catch (IllegalArgumentException e) {
-		            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-		        }
-		    }
-		   
+
+
 
 
 }

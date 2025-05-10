@@ -10,8 +10,8 @@ public interface OffreService {
     List<OffreDto> getAllUserOffres(String authorizationHeader);
     List<OffreDto> getAllOffres();
     OffreDto getOffreById(Long id);
-     void saveOffre(String offreJson, MultipartFile[] images, String authorizationHeader);
+     void saveOffre(String offreJson, String authorizationHeader);
    void deleteOffre(Long id);
-   void updateOffre(Long id, String offreJson, MultipartFile[] files);
+   void updateOffre(Long id, String offreJson);
     List<OffreDto> getOffresByCategory(String nom);
 }

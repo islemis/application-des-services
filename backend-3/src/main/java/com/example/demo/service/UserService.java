@@ -18,5 +18,4 @@ public interface UserService  {
 	List<MyUserDto> getUsers();
 	MyUserDto getUserById(Long id);
 	void deleteUserById(Long id);
-	void changeUserRole(Long id) ;
 }

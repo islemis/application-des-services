@@ -53,9 +53,7 @@ public class Offre {
 		    @Column(name = "adresse")
 		    private String adresse;
 		    
-		    @OneToMany(mappedBy = "offre", cascade = CascadeType.ALL)
-		    private Set<ImageData> images;
-		    
+
 		   @ManyToOne
 		    @JoinColumn(name = "user_id")
 		    private MyUser user;

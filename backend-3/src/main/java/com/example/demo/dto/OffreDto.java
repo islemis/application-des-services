@@ -21,7 +21,6 @@ public class OffreDto {
 	    private String description;
 	    private Float price;
 	    private String titre;
-	    private List<ImageDto> images ;
 		private MyUserDto user ;
 		private List<CategoryDto>  category;
 		
