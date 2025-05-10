@@ -20,8 +20,7 @@ import com.example.demo.service.ImageService;
 public class ImageServiceImp implements ImageService {
 	 @Autowired
 	    private ImageRepository imageRepository ;
-	    
-	    private final String FOLDER_PATH="C:/isetrades/semestre5/projet_dintegration/servicesProject/backend-3/images/";
+	    private final String FOLDER_PATH="C:\\semestre2\\java\\application-des-services\\backend-3\\images";
 	 @Override
 	    public String uploadImageToFileSystem(MultipartFile file, Offre offre, MyUser user,Boolean isProfile) throws IOException {
 	        String originalFilename = file.getOriginalFilename();

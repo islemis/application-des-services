@@ -121,11 +121,18 @@ public class UserServiceImp implements UserService,UserDetailsService{
 		} catch (JsonProcessingException e) {
 			e.printStackTrace();
 		}
+		if(userUpdate.getFirstName()!=null)
+
 		user.setFirstName(userUpdate.getFirstName());
+		if(userUpdate.getLastName()!=null)
 		user.setLastName(userUpdate.getLastName());
+		if(userUpdate.getDiplome()!=null)
 		user.setDiplome(userUpdate.getDiplome());
+		if(userUpdate.getAdresseDomicile()!=null)
 		user.setAdresseDomicile(userUpdate.getAdresseDomicile());
-		user.setAdresseTravail(userUpdate.getAdresseTravail());
+		if(userUpdate.getAdresseTravail()!=null)
+			user.setAdresseTravail(userUpdate.getAdresseTravail());
+		if(userUpdate.getTel()!=null)
 		user.setTel(userUpdate.getTel());
 
 		try {
