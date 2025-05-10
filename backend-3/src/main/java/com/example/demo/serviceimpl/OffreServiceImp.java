@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -57,7 +58,6 @@ public class OffreServiceImp implements OffreService {
  public List<OffreDto> getAllUserOffres(String authorizationHeader) {
 	 
      List<Offre> liste= offreRepository.findAll();
-     List<OffreDto> listeDto =new ArrayList<>();
      String base64Credentials = authorizationHeader.substring("Basic".length()).trim();
      String credentials = new String(Base64.getDecoder().decode(base64Credentials), StandardCharsets.UTF_8);
      final String[] values = credentials.split(":", 2);
@@ -66,31 +66,23 @@ public class OffreServiceImp implements OffreService {
 
 
  Long    userId=currentUser.getId();
-    
-     for(Offre offre:liste)
-     {
-         if (offre.getUser().getId().equals(userId)) {
 
-	         OffreDto   offredto =offreUtil.Convert(offre);
+     List<OffreDto> listeDto = liste.stream()
+             .filter(offre -> offre.getUser() != null && offre.getUser().getId().equals(userId))
+             .map(offre -> offreUtil.Convert(offre))
+             .collect(Collectors.toList());
 
-     	listeDto.add(offredto); 
-     	}
-     }
      return listeDto ; }
 	//getoffres
 
  @Override
  public List<OffreDto> getAllOffres() {
 	    List<Offre> liste= offreRepository.findAll();
-        List<OffreDto> listeDto =new ArrayList<>();
-       
-        for(Offre offre:liste)
-        {
-	         OffreDto   offredto =offreUtil.Convert(offre);
+     List<OffreDto> listeDto = liste.stream()
+             .map(offreUtil::Convert)
+             .collect(Collectors.toList());
 
-        	listeDto.add(offredto);
-        }
-        return listeDto ;
+     return listeDto ;
         
     }
     
@@ -111,8 +103,7 @@ public class OffreServiceImp implements OffreService {
          Offre offre = objectMapper.readValue(offreJson, Offre.class);
 
          offre.setDate(new Date());
-      //   UserDetails userDetails = jwtTokenProvider.getUserDetailsFromToken(token);
-    
+
          
          
          String base64Credentials = authorizationHeader.substring("Basic".length()).trim();
@@ -184,23 +175,12 @@ public class OffreServiceImp implements OffreService {
 	   List<Offre> offres = offreRepository.findAll();
 
    	Set<Category> c = new  HashSet<>();
-       List<OffreDto> offresCat =new  ArrayList<>();
-       for(Offre offre:offres)
-       {
-				c=offre.getCategories();
-				for(Category cat:c)
-				{
-					if(cat.getName().equals(nom))
-					{
-				         OffreDto   offredto =offreUtil.Convert(offre);
-							System.out.println("here");
-				         offresCat.add(offredto);
-						
-					}
-						
-				}
-				
-       }
+     List<OffreDto> offresCat = offres.stream()
+             .filter(offre -> offre.getCategories().stream()
+                     .anyMatch(cat -> cat.getName().equals(nom)))
+             .map(offreUtil::Convert)
+             .collect(Collectors.toList());
+
        return offresCat;
 
        	

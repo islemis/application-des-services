@@ -3,6 +3,7 @@ package com.example.demo.serviceimpl;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -148,14 +149,10 @@ public class UserServiceImp implements UserService,UserDetailsService{
 //getUsers
 	public List<MyUserDto> getUsers() {
 		List<MyUser> list = userRepository.findAll();
-		List<MyUserDto> listeDto = new ArrayList<>();
+		List<MyUserDto> listeDto = list.stream()
+				.map(UserUtil::convert)
+				.collect(Collectors.toList());
 
-		for (MyUser user : list) {
-
-			MyUserDto userdto = UserUtil.convert(user);
-
-			listeDto.add(userdto);
-		}
 		return listeDto;
 
 	}

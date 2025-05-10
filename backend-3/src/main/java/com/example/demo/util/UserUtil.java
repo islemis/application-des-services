@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.example.demo.dto.CategoryDto;
 import com.example.demo.dto.MyUserDto;
@@ -38,11 +39,10 @@ public final class UserUtil {
 
 
 		// set categories if needed
-		List<CategoryDto> categorydto = new ArrayList<>();
-		for (Category category : user.getCategories()) {
-			categorydto.add(new CategoryDto(category.getId(), category.getName()));
+		List<CategoryDto> categorydto = user.getCategories().stream()
+				.map(category -> new CategoryDto(category.getId(), category.getName()))
+				.collect(Collectors.toList());
 
-		}
 		userDto.setCategory(categorydto);
 
 		return userDto;
@@ -65,15 +65,16 @@ public final class UserUtil {
 
 
 
-		// Categories
-		Set<Category> categoryList = new HashSet<>();
-		for (CategoryDto categoryDto : userDto.getCategory()) {
-			Category category = new Category();
-			category.setId(categoryDto.getId());
-			category.setName(categoryDto.getName());
-			categoryList.add(category);
-		}
+		Set<Category> categoryList = userDto.getCategory().stream()
+				.map(categoryDto -> {
+					Category category = new Category();
+					category.setId(categoryDto.getId());
+					category.setName(categoryDto.getName());
+					return category;
+				})
+				.collect(Collectors.toSet());
 		user.setCategories(categoryList);
+
 
 		return user;
 	}

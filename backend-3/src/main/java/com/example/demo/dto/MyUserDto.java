@@ -17,7 +17,6 @@ public class MyUserDto {
     private String adresseDomicile ;
 	private String diplome ;
 	   private String tel   ;
-	    private String password;
 	    private String email;
 	    private String lastName;
 		private List<CategoryDto>  category;

@@ -3,6 +3,7 @@ package com.example.demo.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,6 @@ public  class OffreUtil {
 		
 		Long id=offre.getIdOffre();
         OffreDto offredto=new OffreDto();
-          List  <CategoryDto> categorydto= new ArrayList <>();
             MyUserDto userdto=new MyUserDto();
             
             
@@ -53,12 +53,11 @@ public  class OffreUtil {
             
            offredto.setUser(userdto);
            //categories
-           for(Category  category :offre.getCategories()  )
-           {
-        	   categorydto.add(new CategoryDto(category.getId(), category.getName())) ;      
-           	
-           }
-           offredto.setCategory(categorydto);
+        List<CategoryDto> categorydto = offre.getCategories().stream()
+                .map(category -> new CategoryDto(category.getId(), category.getName()))
+                .collect(Collectors.toList());
+
+        offredto.setCategory(categorydto);
 
 		
 	
