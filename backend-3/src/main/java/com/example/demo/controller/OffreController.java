@@ -30,10 +30,14 @@ public class OffreController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<String> saveOffre(@RequestBody  String offreJson,
-                                           @RequestHeader("Authorization") String authorizationHeader) {
-        offreService.saveOffre(offreJson, authorizationHeader);
-        return new ResponseEntity<>("Offre added successfully", HttpStatus.CREATED);
+    public ResponseEntity<String> saveOffre(@RequestBody String offreJson,
+                                            @RequestHeader("Authorization") String authorizationHeader) {
+        // Ensure we have a Bearer token
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            offreService.saveOffre(offreJson, authorizationHeader);
+            return new ResponseEntity<>("Offre added successfully", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 
     @DeleteMapping("/delete/{id}")
@@ -44,8 +48,8 @@ public class OffreController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<String> updateOffre(@PathVariable Long id,
-    		@RequestBody String offreJson
-                                             )
+                                              @RequestBody String offreJson
+    )
     {
         offreService.updateOffre(id, offreJson);
         return new ResponseEntity<>("Offre updated successfully", HttpStatus.OK);
@@ -58,7 +62,11 @@ public class OffreController {
     }
     @GetMapping("/byUser")
     public ResponseEntity<List<OffreDto>> getAllUserOffres(@RequestHeader("Authorization") String authorizationHeader) {
-        List<OffreDto> offres = offreService.getAllUserOffres(authorizationHeader);
-        return new ResponseEntity<>(offres, HttpStatus.OK);
+        // Ensure we have a Bearer token
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            List<OffreDto> offres = offreService.getAllUserOffres(authorizationHeader);
+            return new ResponseEntity<>(offres, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
     }
 }

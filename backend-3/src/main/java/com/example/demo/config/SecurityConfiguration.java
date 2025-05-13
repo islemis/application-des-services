@@ -19,8 +19,6 @@ import com.example.demo.service.UserService;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-    private UserService userService;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 	private UserDetailsService userDetailsService;
