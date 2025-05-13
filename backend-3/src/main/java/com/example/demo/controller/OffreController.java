@@ -25,6 +25,7 @@ public class OffreController {
 
     @GetMapping("/{id}")
     public ResponseEntity<OffreDto> getOffreById(@PathVariable Long id) {
+
         OffreDto offre = offreService.getOffreById(id);
         return new ResponseEntity<>(offre, HttpStatus.OK);
     }

@@ -36,9 +36,7 @@ public class Category {
     private Set<Offre> offres;
     
     
-    @JsonIgnore
-    @ManyToMany(mappedBy = "categories")
-    private Set<MyUser> users;
+
    
  
 }

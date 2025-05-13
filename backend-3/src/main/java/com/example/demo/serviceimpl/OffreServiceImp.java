@@ -1,9 +1,6 @@
 package com.example.demo.serviceimpl;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -15,7 +12,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.stereotype.*;
 import com.example.demo.dto.MyUserDto;
@@ -81,6 +77,7 @@ public class OffreServiceImp implements OffreService {
 
     @Override
     public List<OffreDto> getAllOffres() {
+
         List<Offre> liste= offreRepository.findAll();
         List<OffreDto> listeDto = liste.stream()
                 .map(offreUtil::Convert)

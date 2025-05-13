@@ -19,7 +19,6 @@ public class MyUserDto {
 	   private String tel   ;
 	    private String email;
 	    private String lastName;
-		private List<CategoryDto>  category;
 		private List<OffreDto>  offres;
 private RoleDto role ;
 

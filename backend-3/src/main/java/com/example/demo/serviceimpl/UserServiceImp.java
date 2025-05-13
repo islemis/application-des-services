@@ -1,6 +1,5 @@
 package com.example.demo.serviceimpl;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.dto.MyUserDto;
 
@@ -84,7 +82,6 @@ public class UserServiceImp implements UserService,UserDetailsService{
 	public MyUser save(MyUser user) {
 		// Get or create the role with the name "user"
 		Role userRole = RoleRepository.findByName(Role.DEFAULT_ROLE);
-		// user.setImages(user.getImages());
 
 		// Set the obtained role to the user
 		user.setRole(userRole);
@@ -125,7 +122,6 @@ public class UserServiceImp implements UserService,UserDetailsService{
 		user.setTel(userUpdate.getTel());
 
 
-		user.setCategories(userUpdate.getCategories());
 		MyUser updatedUser = userRepository.save(user);
 
 
